@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useConfigStore, PRESET_BACKGROUNDS } from '@/stores/config'
-import { X, Sun, Moon, Pencil, RotateCcw, Palette, Eye, Check, Image, Github, Search, Globe } from 'lucide-vue-next'
-import type { ThemeMode } from '@/types'
+import { X, RotateCcw, Palette, Eye, Check, Image, Github, Search, Globe, SlidersVertical } from 'lucide-vue-next'
+import { THEMES } from '@/themes/registry'
 
 // 导入本地图标
 import iconBing from '@/assets/icons/bing.png'
@@ -23,18 +23,8 @@ function close() {
   configStore.toggleSettingsPanel(false)
 }
 
-// 主题选项
-const themeOptions: { value: ThemeMode; label: string; icon: typeof Sun; color: string }[] = [
-  { value: 'light', label: '浅色', icon: Sun, color: 'var(--warning)' },
-  { value: 'dark', label: '深色', icon: Moon, color: 'var(--neon-purple)' },
-  { value: 'sketch-light', label: '素描浅', icon: Pencil, color: 'var(--neon-blue)' },
-  { value: 'sketch-dark', label: '素描深', icon: Pencil, color: 'var(--neon-cyan)' }
-]
-
-// 是否为素描主题（素描主题不支持自定义背景）
-const isSketchTheme = computed(() => 
-  configStore.theme === 'sketch-light' || configStore.theme === 'sketch-dark'
-)
+// 主题选项（来自注册表）
+const themeOptions = THEMES
 
 // 搜索引擎选项（与 SearchBar.vue 保持一致）
 const SEARCH_ENGINES = [
@@ -52,6 +42,42 @@ const customSearchUrlInput = ref(configStore.customSearchUrl)
 // 保存自定义搜索 URL
 function saveCustomSearchUrl() {
   configStore.setCustomSearchUrl(customSearchUrlInput.value)
+}
+
+// 布局缩放
+function onLayoutScaleInput(e: Event) {
+  const target = e.target as HTMLInputElement
+  configStore.setLayoutScale(Number(target.value))
+}
+
+const layoutScalePercent = computed(() => Math.round(configStore.layoutScale * 100))
+
+// ============ 细节调整 ============
+
+type DetailField =
+  | 'detailTextContrast'
+  | 'detailRadiusScale'
+  | 'detailGlassBlurScale'
+  | 'detailGlassOpacityScale'
+
+const DETAIL_RANGES: Record<DetailField, { min: number; max: number; hint: string }> = {
+  detailTextContrast: { min: 80, max: 130, hint: '增强或减弱文字可读性' },
+  detailRadiusScale: { min: 60, max: 150, hint: '卡片与面板的圆润程度' },
+  detailGlassBlurScale: { min: 25, max: 200, hint: '毛玻璃背景模糊强度' },
+  detailGlassOpacityScale: { min: 50, max: 150, hint: '卡片与面板的透明程度' }
+}
+
+function onDetailInput(field: DetailField, e: Event) {
+  const target = e.target as HTMLInputElement
+  configStore.updateConfig(field, Number(target.value))
+}
+
+function resetDetails() {
+  configStore.updateConfig('detailTextContrast', 100)
+  configStore.updateConfig('detailRadiusScale', 100)
+  configStore.updateConfig('detailGlassBlurScale', 100)
+  configStore.updateConfig('detailGlassOpacityScale', 100)
+  configStore.updateConfig('detailReduceMotion', false)
 }
 
 </script>
@@ -134,7 +160,7 @@ function saveCustomSearchUrl() {
         </section>
 
         <!-- 背景设置 -->
-        <section v-if="!isSketchTheme" class="settings-section">
+        <section class="settings-section">
           <div class="section-header">
             <span class="section-emoji">🌅</span>
             <h3 class="section-title">背景</h3>
@@ -221,7 +247,72 @@ function saveCustomSearchUrl() {
                 @click="configStore.updateConfig('showTime', !configStore.showTime)"
               />
             </label>
+
+            <!-- 布局比例 -->
+            <label class="toggle-item scale-item">
+              <span class="toggle-label">布局比例</span>
+              <div class="scale-control">
+                <input
+                  type="range"
+                  class="scale-slider"
+                  min="0.8"
+                  max="1.5"
+                  step="0.05"
+                  :value="configStore.layoutScale"
+                  :title="`布局缩放：${layoutScalePercent}%`"
+                  @input="onLayoutScaleInput"
+                />
+                <span class="scale-value">{{ layoutScalePercent }}%</span>
+              </div>
+            </label>
+            <p class="toggle-hint">
+              缩放内容区大小，100% 为默认；过大时可放大卡片便于阅读
+            </p>
           </div>
+        </section>
+
+        <!-- 细节设置 -->
+        <section class="settings-section">
+          <div class="section-header">
+            <SlidersVertical class="section-icon purple" />
+            <h3 class="section-title">细节</h3>
+            <button class="detail-reset" @click="resetDetails">还原</button>
+          </div>
+          <div class="toggle-options">
+            <label
+              v-for="(range, field) in DETAIL_RANGES"
+              :key="field"
+              class="toggle-item scale-item"
+            >
+              <span class="toggle-label">{{ field === 'detailTextContrast' ? '文字对比度' : field === 'detailRadiusScale' ? '圆角大小' : field === 'detailGlassBlurScale' ? '玻璃模糊' : '卡片不透明度' }}</span>
+              <div class="scale-control">
+                <input
+                  type="range"
+                  class="scale-slider"
+                  :min="range.min"
+                  :max="range.max"
+                  step="5"
+                  :value="configStore.config[field]"
+                  :title="`${configStore.config[field]}% · ${range.hint}`"
+                  @input="onDetailInput(field, $event)"
+                />
+                <span class="scale-value">{{ configStore.config[field] }}%</span>
+              </div>
+            </label>
+
+            <!-- 减弱动效 -->
+            <label class="toggle-item">
+              <span class="toggle-label">减弱动效</span>
+              <div
+                class="switch-modern"
+                :class="{ active: configStore.config.detailReduceMotion }"
+                @click="configStore.updateConfig('detailReduceMotion', !configStore.config.detailReduceMotion)"
+              />
+            </label>
+          </div>
+          <p class="toggle-hint">
+            100% 为各主题默认值；调整后对所有主题生效
+          </p>
         </section>
 
         <!-- 搜索设置 -->
@@ -483,7 +574,7 @@ function saveCustomSearchUrl() {
 /* 主题网格 */
 .theme-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
 }
 
@@ -651,6 +742,70 @@ function saveCustomSearchUrl() {
   border-left: 2px solid hsl(var(--neon-cyan) / 0.5);
 }
 
+/* 布局比例滑杆 */
+.scale-item {
+  cursor: default;
+}
+
+.scale-control {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.scale-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 7.5rem;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, hsl(var(--neon-cyan)), hsl(var(--neon-purple)));
+  outline: none;
+  cursor: pointer;
+}
+
+.scale-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid hsl(var(--neon-cyan));
+  box-shadow: 0 0 8px hsl(var(--neon-cyan) / 0.6);
+  cursor: grab;
+  transition: transform 150ms;
+}
+
+.scale-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.scale-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid hsl(var(--neon-cyan));
+  box-shadow: 0 0 8px hsl(var(--neon-cyan) / 0.6);
+  cursor: grab;
+}
+
+.scale-slider::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, hsl(var(--neon-cyan)), hsl(var(--neon-purple)));
+}
+
+.scale-value {
+  min-width: 2.75rem;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: hsl(var(--neon-cyan));
+  font-variant-numeric: tabular-nums;
+}
+
 /* 搜索引擎网格 */
 .engine-grid {
   display: grid;
@@ -748,6 +903,24 @@ function saveCustomSearchUrl() {
 /* 图标颜色 */
 .section-icon.cyan { color: hsl(var(--neon-cyan)); }
 .section-icon.purple { color: hsl(var(--neon-purple)); }
+
+/* 细节还原按钮 */
+.detail-reset {
+  margin-left: auto;
+  padding: 0.125rem 0.5rem;
+  border: 1px solid hsl(var(--glass-border));
+  border-radius: 0.375rem;
+  background: hsl(var(--glass-bg));
+  font-size: 0.6875rem;
+  color: hsl(var(--text-muted));
+  cursor: pointer;
+  transition: all 200ms;
+}
+
+.detail-reset:hover {
+  color: hsl(var(--neon-cyan));
+  border-color: hsl(var(--neon-cyan) / 0.4);
+}
 
 /* 底部 */
 .panel-footer {

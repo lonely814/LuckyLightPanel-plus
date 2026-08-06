@@ -5,21 +5,30 @@ import type { LayoutMode } from '@/types'
 
 const configStore = useConfigStore()
 
+// 通用数据区（Docker / Lucky 服务）布局切换器
+const props = defineProps<{
+  // 布局配置键名（Docker 或 Lucky 服务）
+  layoutKey: 'dockerLayout' | 'luckyServicesLayout'
+  // 强调色 RGB 三元组，如 "249, 115, 22"（Docker 橙）或 "34, 197, 94"（Lucky 绿）
+  accentRgb: string
+}>()
+
 const isOpen = ref(false)
 const dropdownRef = ref<HTMLElement | null>(null)
 const dropdownMenuRef = ref<HTMLElement | null>(null)
 const alignRight = ref(false)
 
-// Docker 布局选项配置 - 四种布局
+// 布局选项配置 - 五种布局
 const layoutOptions: { value: LayoutMode; label: string; icon: string; desc: string }[] = [
   { value: 'list', label: '列表', icon: 'list', desc: '横向展示' },
   { value: 'normal', label: '详情', icon: 'detail', desc: '完整统计' },
   { value: 'compact', label: '紧凑', icon: 'compact', desc: '精简显示' },
-  { value: 'minimal', label: '极简', icon: 'minimal', desc: '状态预览' }
+  { value: 'minimal', label: '极简', icon: 'minimal', desc: '状态预览' },
+  { value: 'rack', label: '机柜', icon: 'rack', desc: '1U 前面板' }
 ]
 
 // 当前选中的布局
-const currentLayout = computed(() => configStore.dockerLayout)
+const currentLayout = computed(() => configStore[props.layoutKey])
 
 // 获取当前布局的显示名称
 const displayLabel = computed(() => {
@@ -56,7 +65,7 @@ function toggleDropdown() {
 
 // 选择布局
 function selectLayout(layout: LayoutMode) {
-  configStore.setDockerLayout(layout)
+  configStore.updateConfig(props.layoutKey, layout)
   isOpen.value = false
 }
 
@@ -81,6 +90,7 @@ onUnmounted(() => {
     ref="dropdownRef"
     class="layout-switcher-wrapper"
     :class="{ open: isOpen }"
+    :style="{ '--accent-rgb': props.accentRgb }"
   >
     <button class="layout-badge" @click="toggleDropdown" title="切换布局样式">
       <i class="fas fa-th-large badge-icon"></i>
@@ -98,7 +108,7 @@ onUnmounted(() => {
           :class="{ active: currentLayout === option.value }"
           @click="selectLayout(option.value)"
         >
-          <!-- 布局预览图标 - Docker 专属设计 -->
+          <!-- 布局预览图标 -->
           <div class="layout-preview" :class="`preview-${option.icon}`">
             <template v-if="option.icon === 'detail'">
               <div class="preview-detail">
@@ -177,6 +187,24 @@ onUnmounted(() => {
                 </div>
               </div>
             </template>
+            <template v-else-if="option.icon === 'rack'">
+              <div class="preview-rack">
+                <div class="preview-rack-unit">
+                  <span class="preview-rack-led"></span>
+                  <span class="preview-rack-led"></span>
+                  <span class="preview-rack-block"></span>
+                  <span class="preview-rack-line"></span>
+                  <span class="preview-rack-chip"></span>
+                </div>
+                <div class="preview-rack-unit">
+                  <span class="preview-rack-led"></span>
+                  <span class="preview-rack-led"></span>
+                  <span class="preview-rack-block"></span>
+                  <span class="preview-rack-line"></span>
+                  <span class="preview-rack-chip"></span>
+                </div>
+              </div>
+            </template>
           </div>
           <span class="layout-label">{{ option.label }}</span>
         </button>
@@ -190,7 +218,7 @@ onUnmounted(() => {
   position: relative;
 }
 
-/* 布局切换徽章按钮 - Docker 统一毛玻璃风格 */
+/* 布局切换徽章按钮 - 统一毛玻璃风格 */
 .layout-badge {
   display: flex;
   align-items: center;
@@ -205,7 +233,7 @@ onUnmounted(() => {
   background: rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(12px) saturate(150%);
   -webkit-backdrop-filter: blur(12px) saturate(150%);
-  color: rgba(249, 115, 22, 0.95);
+  color: rgb(var(--accent-rgb), 0.95);
   box-shadow: 
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
     0 2px 8px -2px rgba(0, 0, 0, 0.15);
@@ -213,11 +241,11 @@ onUnmounted(() => {
 
 .layout-badge:hover {
   background: rgba(0, 0, 0, 0.35);
-  border-color: rgba(249, 115, 22, 0.35);
+  border-color: rgb(var(--accent-rgb), 0.35);
   box-shadow: 
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
     0 2px 8px -2px rgba(0, 0, 0, 0.15),
-    0 0 12px -4px rgba(249, 115, 22, 0.3);
+    0 0 12px -4px rgb(var(--accent-rgb), 0.3);
 }
 
 .badge-icon {
@@ -304,8 +332,8 @@ onUnmounted(() => {
 }
 
 .layout-option.active {
-  background: rgba(249, 115, 22, 0.15);
-  color: #f97316;
+  background: rgb(var(--accent-rgb), 0.15);
+  color: rgb(var(--accent-rgb));
 }
 
 .layout-option.active::after {
@@ -316,13 +344,13 @@ onUnmounted(() => {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #f97316;
-  box-shadow: 0 0 8px rgba(249, 115, 22, 0.6);
+  background: rgb(var(--accent-rgb));
+  box-shadow: 0 0 8px rgb(var(--accent-rgb), 0.6);
 }
 
 .layout-option.active .layout-preview {
-  border-color: rgba(249, 115, 22, 0.4);
-  background: rgba(249, 115, 22, 0.08);
+  border-color: rgb(var(--accent-rgb), 0.4);
+  background: rgb(var(--accent-rgb), 0.08);
 }
 
 /* 布局预览框 */
@@ -359,7 +387,7 @@ onUnmounted(() => {
   width: 8px;
   height: 8px;
   border-radius: 2px;
-  background: rgba(249, 115, 22, 0.6);
+  background: rgb(var(--accent-rgb), 0.6);
   flex-shrink: 0;
 }
 
@@ -393,8 +421,8 @@ onUnmounted(() => {
 .preview-stat-box {
   flex: 1;
   border-radius: 2px;
-  background: rgba(249, 115, 22, 0.2);
-  border: 1px solid rgba(249, 115, 22, 0.25);
+  background: rgb(var(--accent-rgb), 0.2);
+  border: 1px solid rgb(var(--accent-rgb), 0.25);
 }
 
 /* 紧凑布局预览 */
@@ -412,14 +440,14 @@ onUnmounted(() => {
   gap: 2px;
   padding: 2px;
   border-radius: 2px;
-  background: rgba(249, 115, 22, 0.15);
+  background: rgb(var(--accent-rgb), 0.15);
 }
 
 .preview-dot {
   width: 4px;
   height: 4px;
   border-radius: 1px;
-  background: rgba(249, 115, 22, 0.6);
+  background: rgb(var(--accent-rgb), 0.6);
   flex-shrink: 0;
 }
 
@@ -444,14 +472,14 @@ onUnmounted(() => {
   gap: 3px;
   padding: 2px 3px;
   border-radius: 2px;
-  background: rgba(249, 115, 22, 0.15);
+  background: rgb(var(--accent-rgb), 0.15);
 }
 
 .preview-list-dot {
   width: 5px;
   height: 5px;
   border-radius: 1px;
-  background: rgba(249, 115, 22, 0.6);
+  background: rgb(var(--accent-rgb), 0.6);
   flex-shrink: 0;
 }
 
@@ -486,7 +514,7 @@ onUnmounted(() => {
   justify-content: center;
   gap: 1px;
   border-radius: 2px;
-  background: rgba(249, 115, 22, 0.15);
+  background: rgb(var(--accent-rgb), 0.15);
   position: relative;
 }
 
@@ -494,7 +522,7 @@ onUnmounted(() => {
   width: 5px;
   height: 5px;
   border-radius: 1px;
-  background: rgba(249, 115, 22, 0.5);
+  background: rgb(var(--accent-rgb), 0.5);
 }
 
 .preview-mini-dot {
@@ -502,6 +530,57 @@ onUnmounted(() => {
   height: 3px;
   border-radius: 50%;
   background: rgba(0, 255, 128, 0.7);
+}
+
+/* 机柜布局预览 - 1U 面板堆叠 */
+.preview-rack {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  width: 100%;
+  height: 100%;
+}
+
+.preview-rack-unit {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 3px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgb(var(--accent-rgb), 0.28) 0%, rgb(var(--accent-rgb), 0.12) 100%);
+  border: 1px solid rgb(var(--accent-rgb), 0.2);
+}
+
+.preview-rack-led {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(0, 255, 128, 0.8);
+  flex-shrink: 0;
+}
+
+.preview-rack-block {
+  width: 5px;
+  height: 5px;
+  border-radius: 1px;
+  background: rgb(var(--accent-rgb), 0.6);
+  flex-shrink: 0;
+}
+
+.preview-rack-line {
+  flex: 1;
+  height: 2px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.preview-rack-chip {
+  width: 8px;
+  height: 3px;
+  border-radius: 1px;
+  background: rgb(var(--accent-rgb), 0.5);
+  flex-shrink: 0;
 }
 
 /* 布局标签 */
@@ -522,7 +601,7 @@ onUnmounted(() => {
 
 [data-theme="light"] .layout-badge:hover {
   background: rgba(255, 255, 255, 0.75);
-  border-color: rgba(249, 115, 22, 0.4);
+  border-color: rgb(var(--accent-rgb), 0.4);
 }
 
 [data-theme="light"] .layout-dropdown {
@@ -550,125 +629,6 @@ onUnmounted(() => {
 [data-theme="light"] .preview-line-short,
 [data-theme="light"] .preview-list-line {
   background: rgba(0, 0, 0, 0.2);
-}
-
-/* 素描浅色主题适配 */
-[data-theme="sketch-light"] .layout-badge {
-  background: rgba(255, 255, 255, 0.5);
-  border-color: rgba(100, 110, 120, 0.2);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 2px 8px -2px rgba(100, 110, 120, 0.1);
-}
-
-[data-theme="sketch-light"] .layout-badge:hover {
-  background: rgba(255, 255, 255, 0.65);
-  border-color: rgba(100, 110, 120, 0.3);
-}
-
-[data-theme="sketch-light"] .layout-dropdown {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(100, 110, 120, 0.15);
-  box-shadow:
-    0 8px 32px rgba(100, 110, 120, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-
-[data-theme="sketch-light"] .layout-option {
-  color: rgba(80, 90, 100, 0.85);
-}
-
-[data-theme="sketch-light"] .layout-option:hover {
-  background: rgba(100, 110, 120, 0.06);
-}
-
-[data-theme="sketch-light"] .layout-option.active::after {
-  background: rgba(100, 110, 120, 0.6);
-  box-shadow: 0 0 6px rgba(100, 110, 120, 0.4);
-}
-
-[data-theme="sketch-light"] .layout-preview {
-  border-color: rgba(100, 110, 120, 0.18);
-  background: rgba(100, 110, 120, 0.05);
-}
-
-[data-theme="sketch-light"] .preview-icon-box,
-[data-theme="sketch-light"] .preview-dot,
-[data-theme="sketch-light"] .preview-list-dot,
-[data-theme="sketch-light"] .preview-mini-icon {
-  background: rgba(100, 110, 120, 0.4);
-}
-
-[data-theme="sketch-light"] .preview-line,
-[data-theme="sketch-light"] .preview-line-short,
-[data-theme="sketch-light"] .preview-list-line {
-  background: rgba(100, 110, 120, 0.22);
-}
-
-[data-theme="sketch-light"] .preview-badge,
-[data-theme="sketch-light"] .preview-list-badge,
-[data-theme="sketch-light"] .preview-mini-dot {
-  background: rgba(100, 110, 120, 0.45);
-}
-
-[data-theme="sketch-light"] .preview-stat-box {
-  background: rgba(100, 110, 120, 0.1);
-  border-color: rgba(100, 110, 120, 0.2);
-}
-
-[data-theme="sketch-light"] .preview-compact-item,
-[data-theme="sketch-light"] .preview-list-row,
-[data-theme="sketch-light"] .preview-mini-card {
-  background: rgba(100, 110, 120, 0.1);
-}
-
-/* 素描深色主题适配 */
-[data-theme="sketch-dark"] .layout-dropdown {
-  background: rgba(35, 30, 25, 0.95);
-  border-color: rgba(255, 255, 255, 0.08);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
-}
-
-[data-theme="sketch-dark"] .layout-option.active::after {
-  background: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
-}
-
-[data-theme="sketch-dark"] .layout-preview {
-  border-color: rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.03);
-}
-
-[data-theme="sketch-dark"] .preview-icon-box,
-[data-theme="sketch-dark"] .preview-dot,
-[data-theme="sketch-dark"] .preview-list-dot,
-[data-theme="sketch-dark"] .preview-mini-icon {
-  background: rgba(255, 255, 255, 0.25);
-}
-
-[data-theme="sketch-dark"] .preview-line,
-[data-theme="sketch-dark"] .preview-line-short,
-[data-theme="sketch-dark"] .preview-list-line {
-  background: rgba(255, 255, 255, 0.18);
-}
-
-[data-theme="sketch-dark"] .preview-badge,
-[data-theme="sketch-dark"] .preview-list-badge,
-[data-theme="sketch-dark"] .preview-mini-dot {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-[data-theme="sketch-dark"] .preview-stat-box {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-[data-theme="sketch-dark"] .preview-compact-item,
-[data-theme="sketch-dark"] .preview-list-row,
-[data-theme="sketch-dark"] .preview-mini-card {
-  background: rgba(255, 255, 255, 0.06);
 }
 
 /* 深色主题适配 */

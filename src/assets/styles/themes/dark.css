@@ -1,87 +1,78 @@
 /* ============================================
    Dark Theme - 深色主题
-   LightPanel Pro - Cyberpunk Glass Design
+   LightPanel Pro - Minimal Glass Design
    ============================================ */
 
 [data-theme="dark"] {
-  /* 暗黑模式下降低霓虹色亮度，避免太刺眼 */
-  --neon-cyan: 180 85% 42%;
-  --neon-cyan-rgb: 16, 196, 196;
-  --neon-purple: 270 75% 52%;
-  --neon-purple-rgb: 138, 82, 204;
-  --neon-pink: 320 80% 52%;
-  --neon-pink-rgb: 230, 54, 138;
-  --neon-blue: 210 85% 48%;
-  --neon-blue-rgb: 18, 122, 226;
-  --neon-green: 150 80% 40%;
-  --neon-green-rgb: 20, 184, 102;
-  
-  /* Docker 主题色 - 暗黑模式稍柔和 */
-  --docker-orange: 25 85% 48%;
-  --docker-orange-rgb: 226, 108, 24;
+  /* 柔和降饱和的强调色 */
+  --neon-cyan: 192 45% 50%;
+  --neon-cyan-rgb: 80, 165, 180;
+  --neon-purple: 265 38% 55%;
+  --neon-purple-rgb: 150, 130, 200;
+  --neon-pink: 330 42% 55%;
+  --neon-pink-rgb: 185, 118, 152;
+  --neon-blue: 215 48% 52%;
+  --neon-blue-rgb: 82, 132, 190;
+  --neon-green: 155 40% 45%;
+  --neon-green-rgb: 82, 160, 128;
 
-  /* 图标区域亮度控制 - 深色模式下降低亮度 */
-  --icon-brightness: 0.82;
+  /* Docker 主题色 */
+  --docker-orange: 25 62% 52%;
+  --docker-orange-rgb: 205, 128, 72;
 
-  /* 透明图标占位背景 - 半透明白色，柔和通透 */
-  --icon-placeholder-bg: 0 0% 100% / 0.1;
+  /* 图标区域亮度 */
+  --icon-brightness: 0.92;
 
-  /* 毛玻璃效果 - 更深邃 */
-  --glass-bg: 220 40% 4% / 0.85;
-  --glass-bg-hover: 220 40% 7% / 0.9;
-  --glass-border: 210 60% 35% / 0.18;
-  --glass-border-glow: 180 100% 50% / 0.4;
-  --glass-shine: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 50%);
+  /* 透明图标占位背景 */
+  --icon-placeholder-bg: 0 0% 100% / 0.09;
 
-  /* 卡片样式 - 更深沉 */
-  --card-bg: 220 40% 5% / 0.88;
-  --card-shadow: 
-    0 4px 24px -4px rgba(0, 0, 0, 0.6),
-    0 12px 40px -8px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.02);
-  --card-shadow-hover: 
-    0 12px 40px -6px rgba(0, 0, 0, 0.6),
-    0 24px 60px -12px rgba(0, 255, 255, 0.12),
-    0 0 0 1px rgba(0, 255, 255, 0.12);
-  --card-glow: 0 0 80px -20px rgba(var(--neon-cyan-rgb), 0.4);
-  --card-glow-hover: 0 0 100px -15px rgba(var(--neon-cyan-rgb), 0.5);
+  /* 毛玻璃效果 - 更深邃通透 */
+  --glass-bg: 222 32% 13% / 0.4;
+  --glass-bg-hover: 222 32% 18% / 0.5;
+  --glass-border: 220 25% 65% / 0.13;
+  --glass-border-glow: 210 60% 60% / 0.22;
+  --glass-shine: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 45%);
+
+  /* 卡片样式 - 柔和深邃 */
+  --card-bg: 222 32% 15% / 0.48;
+  --card-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.07),
+    0 8px 26px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --card-shadow-hover:
+    0 2px 2px rgba(0, 0, 0, 0.07),
+    0 18px 44px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  --card-glow: 0 0 36px -14px rgba(var(--primary-rgb), 0.3);
+  --card-glow-hover: 0 0 56px -12px rgba(var(--primary-rgb), 0.38);
 
   /* 文字颜色 */
-  --text-primary: 210 50% 96%;
-  --text-secondary: 210 28% 70%;
-  --text-muted: 210 20% 50%;
+  --text-primary: 210 28% 97%;
+  --text-secondary: 215 18% 74%;
+  --text-muted: 215 15% 60%;
 
   /* 边框和背景 */
-  --border-color: 220 45% 18%;
-  --border-subtle: 220 40% 12%;
-  --bg-page: 222 55% 2%;
-  --bg-elevated: 222 50% 5%;
+  --border-color: 220 25% 24%;
+  --border-subtle: 220 20% 18%;
+  --bg-page: 222 30% 6.5%;
+  --bg-elevated: 222 30% 10.5%;
 
-  /* 站点卡片专属样式 - 深暗磨砂 */
-  --site-card-bg: 220 30% 8% / 0.55;
-  --site-card-bg-hover: 220 30% 11% / 0.65;
-  --site-card-blur: 20px;
-  --site-card-saturation: 170%;
-  --site-card-border: 0 0% 100% / 0.08;
-  --site-card-border-hover: 180 70% 55% / 0.25;
-  --site-card-inner-glow: 0 0% 100% / 0.03;
-  --site-card-shadow: 
-    0 2px 12px -2px rgba(0, 0, 0, 0.5),
-    0 4px 16px -4px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.03);
-  --site-card-shadow-hover: 
-    0 8px 24px -4px rgba(0, 0, 0, 0.55),
-    0 16px 40px -8px rgba(0, 255, 255, 0.08),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  /* 站点卡片专属样式 - 深沉通透 */
+  --site-card-bg: 220 28% 13% / 0.34;
+  --site-card-bg-hover: 220 28% 19% / 0.44;
+  --site-card-blur: 22px;
+  --site-card-saturation: 150%;
+  --site-card-border: 220 22% 72% / 0.11;
+  --site-card-border-hover: 210 50% 62% / 0.26;
+  --site-card-inner-glow: 0 0% 100% / 0.04;
+  --site-card-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.06),
+    0 6px 20px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --site-card-shadow-hover:
+    0 2px 2px rgba(0, 0, 0, 0.07),
+    0 18px 42px rgba(0, 0, 0, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
   --site-card-shine-opacity: 0.04;
-  --site-card-shine-hover: 0.08;
-}
-
-/* 深色主题下的极光背景增强 */
-[data-theme="dark"] .bg-gradient-aurora {
-  background: 
-    radial-gradient(ellipse at 20% 0%, hsl(var(--neon-purple) / 0.5) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 0%, hsl(var(--neon-cyan) / 0.4) 0%, transparent 50%),
-    radial-gradient(ellipse at 40% 100%, hsl(var(--neon-pink) / 0.25) 0%, transparent 50%),
-    linear-gradient(180deg, hsl(222 50% 4%) 0%, hsl(222 55% 2%) 100%);
+  --site-card-shine-hover: 0.09;
 }

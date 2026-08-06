@@ -276,8 +276,52 @@ const cardClass = computed(() => {
   const classes = ['cyber-card', 'group']
   if (layout.value === 'list') classes.push('layout-list')
   else if (layout.value === 'minimal') classes.push('layout-minimal')
+  else if (layout.value === 'compact') classes.push('layout-compact')
+  else if (layout.value === 'rack') classes.push('layout-rack')
+  else if (layout.value === 'map') classes.push('layout-map')
   else classes.push('layout-default')
   return classes.join(' ')
+})
+
+// 站点是否启用
+const isEnabled = computed(() => props.site.enable !== false)
+
+// 站点链接数量（用于地铁换乘站判定）
+const linkCount = computed(() => {
+  const { frontendUrls = [], backendUrls = [] } = props.site
+  return [...frontendUrls, ...backendUrls].filter(u => u && u.trim()).length
+})
+
+// 是否换乘站（有多个链接）
+const isTransfer = computed(() => linkCount.value > 1)
+
+// 机柜布局 LED 电源灯样式
+const rackLedStyle = computed(() => {
+  const active = isEnabled.value
+  return {
+    backgroundColor: active ? 'hsl(var(--neon-green))' : 'hsl(var(--text-muted))',
+    boxShadow: active ? '0 0 6px hsl(var(--neon-green) / 0.9)' : 'none'
+  }
+})
+
+// 机柜布局活动灯样式
+const rackActLedStyle = computed(() => ({
+  backgroundColor: 'hsl(var(--neon-cyan))',
+  boxShadow: '0 0 6px hsl(var(--neon-cyan) / 0.9)'
+}))
+
+// 机柜布局图标背景样式
+const rackIconBgStyle = computed(() => {
+  if (iconUrl.value) {
+    return {
+      boxShadow: `0 2px 10px -2px hsl(var(--icon-placeholder-bg) / 0.4)`
+    }
+  } else {
+    return {
+      background: `linear-gradient(135deg, hsl(${fallbackGradient.value.from}) 0%, hsl(${fallbackGradient.value.to}) 100%)`,
+      boxShadow: `0 2px 10px -2px hsl(${fallbackGradient.value.shadow} / 0.4)`
+    }
+  }
 })
 
 // 图标类名
@@ -325,6 +369,82 @@ const iconClass = computed(() => {
         <div class="minimal-name">
           <span>{{ site.name }}</span>
         </div>
+      </div>
+    </template>
+
+    <!-- ========== Map 布局：地铁线路站台 ========== -->
+    <template v-else-if="layout === 'map'">
+      <div class="card-inner-map">
+        <!-- 站台圆点（坐在地铁线上） -->
+        <span
+          class="map-station"
+          :class="{ transfer: isTransfer }"
+          :title="isTransfer ? '换乘站：多个链接' : '站点'"
+        />
+        <!-- 站点图标 -->
+        <div class="map-icon">
+          <div v-if="iconLoading && iconUrl" class="icon-skeleton" />
+          <img
+            v-if="iconUrl"
+            :src="iconUrl"
+            :alt="site.name"
+            class="icon-img"
+            loading="lazy"
+            @load="handleIconLoad"
+            @error="handleIconError"
+          />
+          <span v-else class="icon-text">
+            {{ site.name.charAt(0).toUpperCase() }}
+          </span>
+        </div>
+        <!-- 站名 -->
+        <div class="map-label">
+          <span class="map-name">{{ site.name }}</span>
+          <span v-if="showDesc" class="map-desc">{{ site.description }}</span>
+        </div>
+        <!-- 外链指示 -->
+        <ArrowUpRight class="map-arrow" />
+      </div>
+    </template>
+
+    <!-- ========== Rack 布局：1U 前面板 ========== -->
+    <template v-else-if="layout === 'rack'">
+      <div class="card-inner-rack">
+        <!-- 前面板顶盖装饰线 -->
+        <div class="rack-top-edge" />
+        <!-- 指示灯组 -->
+        <div class="rack-leds">
+          <span class="rack-led" :style="rackLedStyle" title="启用状态" />
+          <span class="rack-led rack-led-act blink" :style="rackActLedStyle" title="在线" />
+        </div>
+        <!-- 图标/铭牌 -->
+        <div class="rack-head">
+          <div class="rack-icon" :style="rackIconBgStyle">
+            <div v-if="iconLoading && iconUrl" class="icon-skeleton" />
+            <img
+              v-if="iconUrl"
+              :src="iconUrl"
+              :alt="site.name"
+              class="icon-img"
+              loading="lazy"
+              @load="handleIconLoad"
+              @error="handleIconError"
+            />
+            <span v-else class="icon-text">
+              {{ site.name.charAt(0).toUpperCase() }}
+            </span>
+          </div>
+          <div class="rack-nameplate">
+            <span class="rack-name">{{ site.name }}</span>
+            <span v-if="showDesc" class="rack-desc">{{ site.description }}</span>
+          </div>
+        </div>
+        <!-- 外链指示 -->
+        <div class="rack-open">
+          <ArrowUpRight class="rack-open-icon" />
+        </div>
+        <!-- 面板把手 -->
+        <div class="rack-handle" />
       </div>
     </template>
 
@@ -815,6 +935,359 @@ const iconClass = computed(() => {
   color: hsl(var(--neon-cyan));
 }
 
+/* ========== Rack 布局 - 1U 前面板样式 ========== */
+.cyber-card.layout-rack {
+  padding: 0;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+.cyber-card.layout-rack:hover {
+  transform: translateX(-6px);
+  box-shadow:
+    var(--site-card-shadow-hover),
+    0 0 20px -6px hsl(var(--neon-cyan) / 0.3),
+    0 0 40px -10px hsl(var(--neon-purple) / 0.15);
+}
+
+/* 机柜内前面板 */
+.card-inner-rack {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.625rem 0.75rem;
+  min-height: 3.25rem;
+  background:
+    linear-gradient(90deg, hsl(var(--site-card-inner-glow)) 0%, transparent 30%),
+    linear-gradient(180deg, hsl(var(--site-card-bg-hover)) 0%, hsl(var(--site-card-bg)) 100%);
+}
+
+/* 前面板顶部发光棱线 */
+.rack-top-edge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, hsl(var(--neon-cyan) / 0.6), transparent);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* 指示灯组 */
+.rack-leds {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  padding: 0.25rem 0.375rem;
+  border-radius: 0.375rem;
+  background: hsl(var(--glass-bg));
+}
+
+.rack-led {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 50%;
+}
+
+.rack-led-act.blink {
+  animation: rack-led-blink 1.2s ease-in-out infinite;
+}
+
+@keyframes rack-led-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+/* 铭牌区 */
+.rack-head {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.rack-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  filter: brightness(var(--icon-brightness, 1));
+  position: relative;
+  background: hsl(var(--icon-placeholder-bg));
+}
+
+.rack-icon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, var(--icon-overlay-opacity, 0));
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.rack-icon .icon-text {
+  font-size: 0.875rem;
+}
+
+.rack-nameplate {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.rack-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: hsl(var(--text-primary));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: ui-monospace, monospace;
+  letter-spacing: 0.02em;
+  transition: color 300ms;
+}
+
+.cyber-card:hover .rack-name {
+  color: hsl(var(--neon-cyan));
+}
+
+.rack-desc {
+  font-size: 0.6875rem;
+  color: hsl(var(--text-muted));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: ui-monospace, monospace;
+}
+
+/* 外链指示 */
+.rack-open {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rack-open-icon {
+  width: 1rem;
+  height: 1rem;
+  color: hsl(var(--text-muted));
+  opacity: 0.6;
+  transform: translateX(-0.25rem) translateY(0.25rem);
+  transition: all 300ms;
+}
+
+.cyber-card:hover .rack-open-icon {
+  opacity: 1;
+  transform: translateX(0) translateY(0);
+  color: hsl(var(--neon-cyan));
+}
+
+/* 面板把手 */
+.rack-handle {
+  width: 0.375rem;
+  height: 1.75rem;
+  border-radius: 0.1875rem;
+  flex-shrink: 0;
+  background:
+    linear-gradient(180deg, hsl(var(--glass-border)) 0%, transparent 40%, transparent 60%, hsl(var(--glass-border)) 100%),
+    hsl(var(--glass-bg));
+  border: 1px solid hsl(var(--glass-border));
+}
+
+/* 机柜布局响应式 */
+@media (max-width: 720px) {
+  .card-inner-rack {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .rack-nameplate {
+    flex: 1;
+  }
+
+  .rack-desc {
+    display: none;
+  }
+
+  .rack-open {
+    margin-left: auto;
+  }
+
+  .rack-handle {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-inner-rack {
+    gap: 0.375rem;
+  }
+}
+
+/* ========== Map 布局 - 地铁线路站台样式 ========== */
+.cyber-card.layout-map {
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-radius: 0;
+}
+
+.cyber-card.layout-map::before,
+.cyber-card.layout-map .card-border-glow {
+  display: none;
+}
+
+.cyber-card.layout-map:hover {
+  transform: none;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+}
+
+/* 站台行 */
+.card-inner-map {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.375rem 0.875rem 0.375rem 2.75rem;
+  min-height: 2.75rem;
+}
+
+/* 站台圆点 - 坐在地铁线上 */
+.map-station {
+  position: absolute;
+  left: 1.0625rem;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 50%;
+  background: hsl(var(--map-line, var(--neon-cyan)));
+  box-shadow:
+    0 0 0 3px hsl(var(--map-line, var(--neon-cyan)) / 0.15),
+    0 0 12px hsl(var(--map-line, var(--neon-cyan)) / 0.5);
+  transition:
+    transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 300ms ease;
+  z-index: 2;
+}
+
+/* 换乘站 - 空心双环 */
+.map-station.transfer {
+  background: transparent;
+  border: 2px solid hsl(var(--map-line, var(--neon-cyan)));
+  box-shadow:
+    inset 0 0 0 2px hsl(var(--map-line, var(--neon-cyan)) / 0.2),
+    0 0 12px hsl(var(--map-line, var(--neon-cyan)) / 0.5);
+}
+
+.cyber-card:hover .map-station {
+  transform: translate(-50%, -50%) scale(1.35);
+  box-shadow:
+    0 0 0 5px hsl(var(--map-line, var(--neon-cyan)) / 0.2),
+    0 0 18px hsl(var(--map-line, var(--neon-cyan)) / 0.8);
+}
+
+/* 站点图标 */
+.map-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  filter: brightness(var(--icon-brightness, 1));
+  position: relative;
+  background: hsl(var(--icon-placeholder-bg));
+  z-index: 2;
+}
+
+.map-icon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, var(--icon-overlay-opacity, 0));
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.map-icon .icon-text {
+  font-size: 0.75rem;
+}
+
+/* 站名 */
+.map-label {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  z-index: 2;
+}
+
+.map-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: hsl(var(--text-primary));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: ui-monospace, monospace;
+  letter-spacing: 0.02em;
+  transition: color 300ms, text-shadow 300ms;
+}
+
+.cyber-card:hover .map-name {
+  color: hsl(var(--neon-cyan));
+  text-shadow: 0 0 12px hsl(var(--neon-cyan) / 0.4);
+}
+
+.map-desc {
+  font-size: 0.6875rem;
+  color: hsl(var(--text-muted));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: ui-monospace, monospace;
+}
+
+/* 外链箭头 */
+.map-arrow {
+  width: 1rem;
+  height: 1rem;
+  color: hsl(var(--text-muted));
+  opacity: 0;
+  transform: translateX(-0.25rem) translateY(0.25rem);
+  transition: all 300ms;
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+.cyber-card:hover .map-arrow {
+  opacity: 1;
+  transform: translateX(0) translateY(0);
+  color: hsl(var(--neon-cyan));
+}
+
 /* 可访问性 - 焦点状态 */
 .cyber-card:focus {
   outline: none;
@@ -860,6 +1333,14 @@ const iconClass = computed(() => {
     opacity: 1;
     visibility: visible;
   }
+
+  .rack-led-act.blink {
+    animation: none;
+  }
+
+  .cyber-card:hover .map-station {
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
 
 /* ========== 浅色主题适配 ========== */
@@ -871,27 +1352,5 @@ const iconClass = computed(() => {
 
 [data-theme="light"] .minimal-name span {
   color: hsl(220 45% 15%);
-}
-
-/* ========== 素描浅色主题适配 ========== */
-[data-theme="sketch-light"] .minimal-name {
-  background: hsl(210 5% 98% / 0.95);
-  border-color: hsl(210 10% 85%);
-  box-shadow: 0 4px 12px rgba(100, 110, 120, 0.1);
-}
-
-[data-theme="sketch-light"] .minimal-name span {
-  color: hsl(210 15% 20%);
-}
-
-/* ========== 素描深色主题适配 ========== */
-[data-theme="sketch-dark"] .minimal-name {
-  background: hsl(35 15% 12% / 0.95);
-  border-color: hsl(35 10% 25%);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-[data-theme="sketch-dark"] .minimal-name span {
-  color: hsl(40 10% 90%);
 }
 </style>

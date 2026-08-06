@@ -108,8 +108,9 @@ watch([currentTab, () => navStore.isLoading], async ([newTab, isLoading], [oldTa
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
   border: 1px solid hsl(var(--glass-border));
   border-radius: 16px;
-  box-shadow: 
-    0 8px 32px rgba(31, 38, 135, 0.15),
+  box-shadow:
+    0 1px 2px rgba(31, 38, 135, 0.06),
+    0 8px 28px rgba(31, 38, 135, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
@@ -145,7 +146,7 @@ watch([currentTab, () => navStore.isLoading], async ([newTab, isLoading], [oldTa
 .content-tab.active {
   background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-dark)) 100%);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 140, 255, 0.35);
+  box-shadow: 0 4px 14px rgba(var(--primary-rgb) / 0.35);
 }
 
 .content-tab.active .tab-icon {
@@ -159,7 +160,7 @@ watch([currentTab, () => navStore.isLoading], async ([newTab, isLoading], [oldTa
 
 .content-tab.tab-docker.active {
   background: linear-gradient(135deg, #2496ed 0%, #0db7ed 100%);
-  box-shadow: 0 4px 12px rgba(36, 150, 237, 0.35);
+  box-shadow: 0 4px 14px rgba(36, 150, 237, 0.3);
 }
 
 .content-tab.tab-docker.active .tab-icon {
@@ -173,7 +174,7 @@ watch([currentTab, () => navStore.isLoading], async ([newTab, isLoading], [oldTa
 
 .content-tab.tab-luckyServices.active {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
 }
 
 .content-tab.tab-luckyServices.active .tab-icon {

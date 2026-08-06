@@ -2,7 +2,8 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useConfigStore } from '@/stores/config'
 import { useNavStore } from '@/stores/nav'
-import { Settings, Moon, Sun, Pencil, Clock, Zap, ChevronDown, Check } from 'lucide-vue-next'
+import { Settings, Zap, ChevronDown, Check, Wifi, Globe } from 'lucide-vue-next'
+import { THEMES } from '@/themes/registry'
 import type { ThemeMode } from '@/types'
 
 const configStore = useConfigStore()
@@ -15,18 +16,13 @@ const logo = computed(() => navStore.panelLogo)
 // 主题下拉菜单状态
 const themeDropdownOpen = ref(false)
 
-// 主题选项列表
-const themeOptions: { value: ThemeMode; label: string; icon: typeof Sun }[] = [
-  { value: 'light', label: '浅色', icon: Sun },
-  { value: 'dark', label: '深色', icon: Moon },
-  { value: 'sketch-light', label: '素描浅', icon: Pencil },
-  { value: 'sketch-dark', label: '素描深', icon: Pencil }
-]
+// 主题选项列表（来自注册表）
+const themeOptions = THEMES
 
 // 获取当前主题图标
 const currentThemeIcon = computed(() => {
   const option = themeOptions.find(o => o.value === configStore.theme)
-  return option?.icon || Sun
+  return option?.icon || THEMES[0].icon
 })
 
 // 获取当前主题名称
@@ -54,33 +50,21 @@ function closeThemeDropdown(event: MouseEvent) {
   }
 }
 
-// 时间相关
-const now = ref(new Date())
-let timer: ReturnType<typeof setInterval>
+// 网络状态徽章
+const isInternal = computed(() => navStore.networkType === 'internal')
+const networkLabel = computed(() => (isInternal.value ? '内网' : '外网'))
+const networkTip = computed(() => {
+  const ip = navStore.clientIP
+  return ip ? `${networkLabel.value} · ${ip}` : networkLabel.value
+})
 
 onMounted(() => {
-  timer = setInterval(() => {
-    now.value = new Date()
-  }, 1000)
   // 监听全局点击关闭下拉菜单
   document.addEventListener('click', closeThemeDropdown)
 })
 
 onUnmounted(() => {
-  if (timer) clearInterval(timer)
   document.removeEventListener('click', closeThemeDropdown)
-})
-
-const currentTime = computed(() => {
-  return now.value.toLocaleTimeString('zh-CN', {
-    hour: '2-digit',
-    minute: '2-digit'
-  })
-})
-
-const currentDate = computed(() => {
-  const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
-  return `${now.value.getMonth() + 1}/${now.value.getDate()} ${weekdays[now.value.getDay()]}`
 })
 
 // 拼接后的 Logo URL
@@ -154,18 +138,19 @@ function openSettings() {
         </div>
       </div>
 
-      <!-- 右侧：时间 + 操作按钮 -->
+      <!-- 右侧：网络状态 + 操作按钮 -->
       <div class="header-right">
-        <!-- 时间显示 -->
-        <div v-if="configStore.showTime" class="time-widget">
-          <Clock class="time-icon" />
-          <span class="time-value">{{ currentTime }}</span>
-          <span class="time-divider" />
-          <span class="time-date">{{ currentDate }}</span>
+        <!-- 网络状态徽章 -->
+        <div v-if="!navStore.networkTypeFetchFailed" class="net-badge" :class="{ internal: isInternal }" :title="networkTip">
+          <div class="net-badge-inner">
+            <Wifi v-if="isInternal" class="net-badge-icon" />
+            <Globe v-else class="net-badge-icon" />
+            <span class="net-badge-label">{{ networkLabel }}</span>
+          </div>
         </div>
         
         <!-- 分隔线 -->
-        <div v-if="configStore.showTime" class="actions-divider" />
+        <div class="actions-divider" />
         
         <!-- 主题下拉选择器 -->
         <div class="theme-dropdown-wrapper">
@@ -232,10 +217,10 @@ function openSettings() {
 .header-bg {
   position: absolute;
   inset: 0;
-  background: hsl(var(--bg-elevated) / 0.8);
-  backdrop-filter: blur(20px) saturate(1.4);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4);
-  border: 1px solid hsl(var(--border-subtle) / 0.3);
+  background: hsl(var(--glass-bg));
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  border: 1px solid hsl(var(--glass-border));
   border-radius: inherit;
 }
 
@@ -433,47 +418,60 @@ function openSettings() {
 }
 
 /* ============================================
-   时间组件 - 透明融入背景
+   网络状态徽章
    ============================================ */
 
-.time-widget {
-  display: none;
+.net-badge {
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.25rem 0;
-  font-family: var(--font-mono, ui-monospace, monospace);
+  padding: 0.25rem 0.625rem;
+  border-radius: 999px;
+  border: 1px solid hsl(var(--neon-blue) / 0.3);
+  background: hsl(var(--neon-blue) / 0.08);
+  cursor: default;
+  transition: all var(--duration-fast) ease;
 }
 
-@media (min-width: 640px) {
-  .time-widget {
-    display: flex;
-  }
+.net-badge:hover {
+  border-color: hsl(var(--neon-blue) / 0.5);
+  background: hsl(var(--neon-blue) / 0.14);
 }
 
-.time-icon {
-  width: 0.875rem;
-  height: 0.875rem;
-  color: hsl(var(--text-muted));
-  opacity: 0.6;
+.net-badge.internal {
+  border-color: hsl(var(--neon-green) / 0.3);
+  background: hsl(var(--neon-green) / 0.08);
 }
 
-.time-value {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: hsl(var(--text-primary) / 0.75);
-  letter-spacing: 0.02em;
+.net-badge.internal:hover {
+  border-color: hsl(var(--neon-green) / 0.5);
+  background: hsl(var(--neon-green) / 0.14);
 }
 
-.time-divider {
-  width: 1px;
-  height: 0.625rem;
-  background: hsl(var(--text-primary) / 0.15);
+.net-badge-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
-.time-date {
-  font-size: 0.75rem;
-  color: hsl(var(--text-primary) / 0.55);
-  font-weight: 400;
+.net-badge-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  color: hsl(var(--neon-blue));
+}
+
+.net-badge.internal .net-badge-icon {
+  color: hsl(var(--neon-green));
+}
+
+.net-badge-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: hsl(var(--neon-blue));
+}
+
+.net-badge.internal .net-badge-label {
+  color: hsl(var(--neon-green));
 }
 
 .actions-divider {
@@ -504,16 +502,16 @@ function openSettings() {
   position: relative;
   width: 2.25rem;
   height: 2.25rem;
-  border-radius: 0.625rem;
+  border-radius: 0.75rem;
   background: transparent;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .action-btn:hover {
-  background: hsl(var(--bg-elevated) / 0.7);
-  border-color: hsl(var(--border-subtle) / 0.4);
+  background: hsl(var(--glass-bg-hover));
+  border-color: hsl(var(--glass-border));
 }
 
 .action-btn:active {
@@ -563,8 +561,8 @@ function openSettings() {
 }
 
 .theme-btn.active {
-  background: hsl(var(--bg-elevated) / 0.7);
-  border-color: hsl(var(--border-subtle) / 0.4);
+  background: hsl(var(--glass-bg-hover));
+  border-color: hsl(var(--glass-border));
 }
 
 .dropdown-arrow {
@@ -584,14 +582,14 @@ function openSettings() {
   right: 0;
   min-width: 120px;
   padding: 0.375rem;
-  border-radius: 0.75rem;
-  background: hsl(var(--bg-elevated));
-  backdrop-filter: blur(20px) saturate(1.5);
-  -webkit-backdrop-filter: blur(20px) saturate(1.5);
-  border: 1px solid hsl(var(--border-subtle) / 0.5);
+  border-radius: 0.875rem;
+  background: hsl(var(--bg-elevated) / 0.92);
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  border: 1px solid hsl(var(--glass-border));
   box-shadow:
-    0 4px 24px -4px rgba(0, 0, 0, 0.3),
-    0 8px 32px -8px rgba(0, 0, 0, 0.2);
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 16px 40px rgba(0, 0, 0, 0.25);
   z-index: 200;
 }
 

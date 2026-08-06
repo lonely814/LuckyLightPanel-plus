@@ -53,6 +53,21 @@ export const useNavStore = defineStore('nav', () => {
   const luckyServicesStats = ref<Map<string, LuckyServiceStat>>(new Map())
   const luckyServicesStatsTimer = ref<ReturnType<typeof setInterval> | null>(null)
 
+  // 历史数据（用于实时走势图）
+  const HISTORY_LIMIT = 60
+  interface DockerHistoryEntry {
+    cpu: number[]
+    memory: number[]
+    rx: number[]
+    tx: number[]
+  }
+  interface LuckyHistoryEntry {
+    inSpeed: number[]
+    outSpeed: number[]
+  }
+  const dockerHistory = ref<Map<string, DockerHistoryEntry>>(new Map())
+  const luckyServicesHistory = ref<Map<string, LuckyHistoryEntry>>(new Map())
+
   // 配置数据
   const serverConfig = ref<Record<string, any>>({}) // 服务器下发的用户配置
 
@@ -154,6 +169,8 @@ export const useNavStore = defineStore('nav', () => {
     const data = await fetchJson<DockerData>(API.docker)
     if (data) {
       dockerData.value = data
+      // 数据重新加载时清空历史，避免混入旧样本
+      dockerHistory.value = new Map()
     }
     return data
   }
@@ -163,6 +180,8 @@ export const useNavStore = defineStore('nav', () => {
     const data = await fetchJson<LuckyServicesData>(API.luckyServices)
     if (data) {
       luckyServicesData.value = data
+      // 数据重新加载时清空历史，避免混入旧样本
+      luckyServicesHistory.value = new Map()
     }
     return data
   }
@@ -249,6 +268,13 @@ export const useNavStore = defineStore('nav', () => {
       const newStats = new Map<string, DockerStat>()
       data.stats.forEach(stat => {
         newStats.set(stat.containerName, stat)
+        // 累积历史数据用于走势图
+        const entry = dockerHistory.value.get(stat.containerName) || { cpu: [], memory: [], rx: [], tx: [] }
+        entry.cpu = pushHistory(entry.cpu, parseFloat(stat.cpuPercent) || 0)
+        entry.memory = pushHistory(entry.memory, parseFloat(stat.memoryPercent) || 0)
+        entry.rx = pushHistory(entry.rx, stat.networkRxSpeed || 0)
+        entry.tx = pushHistory(entry.tx, stat.networkTxSpeed || 0)
+        dockerHistory.value.set(stat.containerName, entry)
       })
       dockerStats.value = newStats
     }
@@ -276,6 +302,11 @@ export const useNavStore = defineStore('nav', () => {
       const newStats = new Map<string, LuckyServiceStat>()
       data.stats.forEach(stat => {
         newStats.set(stat.key, stat)
+        // 累积历史数据用于走势图
+        const entry = luckyServicesHistory.value.get(stat.key) || { inSpeed: [], outSpeed: [] }
+        entry.inSpeed = pushHistory(entry.inSpeed, stat.inSpeed || 0)
+        entry.outSpeed = pushHistory(entry.outSpeed, stat.outSpeed || 0)
+        luckyServicesHistory.value.set(stat.key, entry)
       })
       luckyServicesStats.value = newStats
     }
@@ -306,6 +337,23 @@ export const useNavStore = defineStore('nav', () => {
     return luckyServicesStats.value.get(key)
   }
 
+  // 向历史数组追加数据（超出上限自动截断）
+  function pushHistory(arr: number[], value: number): number[] {
+    const next = arr.length >= HISTORY_LIMIT ? arr.slice(1) : [...arr]
+    next.push(value)
+    return next
+  }
+
+  // 获取容器历史数据（用于走势图）
+  function getContainerHistory(containerName: string): DockerHistoryEntry | undefined {
+    return dockerHistory.value.get(containerName)
+  }
+
+  // 获取服务历史数据（用于走势图）
+  function getServiceHistory(key: string): LuckyHistoryEntry | undefined {
+    return luckyServicesHistory.value.get(key)
+  }
+
   return {
     // 状态
     isLoading,
@@ -317,8 +365,10 @@ export const useNavStore = defineStore('nav', () => {
     clientIP,
     dockerData,
     dockerStats,
+    dockerHistory,
     luckyServicesData,
     luckyServicesStats,
+    luckyServicesHistory,
     serverConfig,
 
     // 计算属性
@@ -351,6 +401,8 @@ export const useNavStore = defineStore('nav', () => {
     startLuckyServicesStatsPolling,
     stopLuckyServicesStatsPolling,
     getContainerStats,
-    getServiceStats
+    getServiceStats,
+    getContainerHistory,
+    getServiceHistory
   }
 })

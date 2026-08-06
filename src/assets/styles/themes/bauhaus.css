@@ -1,0 +1,787 @@
+/* ============================================
+   Bauhaus Theme - 包豪斯风格主题
+   LightPanel Pro
+   大胆几何 + 红黄蓝三原色 + 硬边框硬阴影 + 海报排版
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap');
+
+[data-theme="bauhaus"] {
+  /* 包豪斯三原色 */
+  --bauhaus-red: 7 88% 45%;
+  --bauhaus-red-rgb: 216, 37, 14;
+  --bauhaus-yellow: 48 100% 50%;
+  --bauhaus-yellow-rgb: 255, 212, 0;
+  --bauhaus-blue: 214 100% 36%;
+  --bauhaus-blue-rgb: 0, 87, 183;
+  --bauhaus-black: 0 0% 10%;
+  --bauhaus-paper: 45 45% 96%;
+
+  /* 主色调 - 包豪斯蓝 */
+  --primary: 214 100% 36%;
+  --primary-light: 214 92% 46%;
+  --primary-dark: 222 100% 24%;
+  --primary-rgb: 0, 87, 183;
+
+  --accent: 7 88% 45%;
+  --accent-light: 8 90% 55%;
+  --accent-rgb: 216, 37, 14;
+
+  /* 强调色 - 高饱和海报色 */
+  --neon-cyan: 214 100% 36%;
+  --neon-cyan-rgb: 0, 87, 183;
+  --neon-purple: 262 75% 45%;
+  --neon-purple-rgb: 96, 40, 165;
+  --neon-pink: 348 85% 45%;
+  --neon-pink-rgb: 205, 20, 60;
+  --neon-blue: 206 96% 42%;
+  --neon-blue-rgb: 5, 118, 205;
+  --neon-green: 142 70% 32%;
+  --neon-green-rgb: 24, 135, 84;
+
+  /* Docker 主题色 - 包豪斯红 */
+  --docker-orange: 7 88% 45%;
+  --docker-orange-rgb: 216, 37, 14;
+
+  /* 图标 - 海报式双色（高对比黑白） */
+  --icon-brightness: 1.0;
+  --icon-filter: grayscale(100%) contrast(1.4) brightness(0.92);
+  --icon-filter-hover: grayscale(100%) contrast(1.5) brightness(0.8);
+  --icon-placeholder-bg: 0 0% 12% / 0.06;
+
+  /* 玻璃变量 - 改为实心纸面 */
+  --glass-bg: 45 45% 96% / 0.97;
+  --glass-bg-hover: 48 100% 92% / 0.98;
+  --glass-border: 0 0% 12%;
+  --glass-border-glow: 48 100% 50%;
+  --glass-blur: 0px;
+  --glass-saturation: 100%;
+  --glass-shine: none;
+
+  /* 卡片 - 硬边框 + 硬阴影（无模糊） */
+  --card-bg: 45 40% 97%;
+  --card-shadow:
+    4px 4px 0 hsl(0 0% 10%),
+    0 0 0 1.5px hsl(0 0% 10%);
+  --card-shadow-hover:
+    7px 7px 0 hsl(0 0% 10%),
+    0 0 0 1.5px hsl(0 0% 10%);
+  --card-glow: none;
+  --card-glow-hover: none;
+
+  /* 文字 - 海报式黑白高对比 */
+  --text-primary: 0 0% 10%;
+  --text-secondary: 0 0% 32%;
+  --text-muted: 0 0% 48%;
+  --text-on-primary: 0 0% 100%;
+
+  /* 边框和背景 - 暖白纸面 */
+  --border-color: 0 0% 12%;
+  --border-subtle: 0 0% 22%;
+  --bg-page: 45 45% 96%;
+  --bg-elevated: 45 40% 98%;
+
+  /* 状态色 */
+  --success: 142 70% 30%;
+  --warning: 48 100% 50%;
+  --error: 7 88% 42%;
+
+  /* 站点卡片 - 硬边框 + 硬阴影 */
+  --site-card-bg: 45 40% 97% / 0.97;
+  --site-card-bg-hover: 48 100% 92% / 0.98;
+  --site-card-blur: 0px;
+  --site-card-saturation: 100%;
+  --site-card-border: 0 0% 12%;
+  --site-card-border-hover: 7 88% 45%;
+  --site-card-inner-glow: none;
+  --site-card-shadow:
+    3px 3px 0 hsl(0 0% 10%),
+    0 0 0 1.5px hsl(0 0% 10%);
+  --site-card-shadow-hover:
+    6px 6px 0 hsl(0 0% 10%),
+    0 0 0 1.5px hsl(0 0% 10%);
+  --site-card-shine-opacity: 0;
+  --site-card-shine-hover: 0;
+}
+
+/* 圆角归零 + 几何字体 - 包豪斯硬朗切割感 */
+[data-theme="bauhaus"] {
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --font-sans: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* ============================================
+   背景 - 纯色纸面（禁用动态光斑）
+   ============================================ */
+
+[data-theme="bauhaus"] .tech-background,
+[data-theme="bauhaus"] .bg-gradient-aurora {
+  background: hsl(var(--bg-page)) !important;
+}
+
+[data-theme="bauhaus"] .bg-aurora,
+[data-theme="bauhaus"] .particle,
+[data-theme="bauhaus"] .grid-line {
+  display: none !important;
+}
+
+/* ============================================
+   卡片 - 包豪斯 hover：位移 + 硬阴影生长 + 倾斜
+   ============================================ */
+
+[data-theme="bauhaus"] .glass-card,
+[data-theme="bauhaus"] .glass-card-neon {
+  border-radius: 0;
+  border: 2px solid hsl(var(--bauhaus-black)) !important;
+  box-shadow: var(--card-shadow) !important;
+}
+
+[data-theme="bauhaus"] .glass-card::after,
+[data-theme="bauhaus"] .glass-card-neon::after {
+  display: none;
+}
+
+[data-theme="bauhaus"] .glass-card:hover,
+[data-theme="bauhaus"] .glass-card-neon:hover {
+  transform: translate(-2px, -2px) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+}
+
+/* ============================================
+   页头 - 包豪斯横幅
+   ============================================ */
+
+[data-theme="bauhaus"] .app-header {
+  height: var(--header-height, 3.5rem);
+  border-radius: 0;
+}
+
+[data-theme="bauhaus"] .header-bg {
+  background: hsl(var(--bauhaus-yellow));
+  border: 2px solid hsl(var(--bauhaus-black));
+  border-radius: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* 顶部高光线：包豪斯三色条纹 */
+[data-theme="bauhaus"] .header-highlight {
+  display: none;
+}
+
+/* 页头加三色顶边 */
+[data-theme="bauhaus"] .header-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    hsl(var(--bauhaus-red)) 0 33%,
+    hsl(var(--bauhaus-blue)) 33% 66%,
+    hsl(var(--bauhaus-black)) 66% 100%
+  );
+}
+
+[data-theme="bauhaus"] .header-bg::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: repeating-linear-gradient(
+    135deg,
+    hsl(var(--bauhaus-black)) 0 8px,
+    transparent 8px 16px
+  );
+}
+
+/* 页头按钮 - 方形 + 硬边框 */
+[data-theme="bauhaus"] .action-btn {
+  border-radius: 0;
+  border: 2px solid hsl(var(--bauhaus-black));
+  background: hsl(var(--bg-elevated));
+  box-shadow: 3px 3px 0 hsl(var(--bauhaus-black));
+  transition: transform var(--duration-fast) ease, box-shadow var(--duration-fast) ease, background var(--duration-fast) ease;
+}
+
+[data-theme="bauhaus"] .action-btn:hover {
+  background: hsl(var(--bauhaus-yellow));
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 hsl(var(--bauhaus-black));
+}
+
+[data-theme="bauhaus"] .action-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 hsl(var(--bauhaus-black));
+}
+
+[data-theme="bauhaus"] .btn-icon,
+[data-theme="bauhaus"] .action-btn:hover .btn-icon {
+  color: hsl(var(--text-primary)) !important;
+}
+
+/* 主题下拉菜单 */
+[data-theme="bauhaus"] .theme-dropdown {
+  border-radius: 0;
+  background: hsl(var(--bg-elevated));
+  border: 2px solid hsl(var(--bauhaus-black));
+  box-shadow: 6px 6px 0 hsl(var(--bauhaus-black));
+  backdrop-filter: none;
+}
+
+[data-theme="bauhaus"] .theme-option {
+  border-radius: 0;
+}
+
+[data-theme="bauhaus"] .theme-option.active {
+  background: hsl(var(--bauhaus-yellow));
+  color: hsl(var(--text-primary)) !important;
+}
+
+/* ============================================
+   网络徽章 - 包豪斯徽章
+   ============================================ */
+
+[data-theme="bauhaus"] .net-badge {
+  border-radius: 0;
+  border: 2px solid hsl(var(--bauhaus-black));
+  background: hsl(var(--bauhaus-blue));
+  box-shadow: 3px 3px 0 hsl(var(--bauhaus-black));
+}
+
+[data-theme="bauhaus"] .net-badge:hover {
+  background: hsl(var(--bauhaus-blue));
+  box-shadow: 4px 4px 0 hsl(var(--bauhaus-black));
+  transform: translate(-1px, -1px);
+}
+
+[data-theme="bauhaus"] .net-badge.internal {
+  background: hsl(var(--neon-green));
+}
+
+[data-theme="bauhaus"] .net-badge-icon,
+[data-theme="bauhaus"] .net-badge-label,
+[data-theme="bauhaus"] .net-badge.internal .net-badge-icon,
+[data-theme="bauhaus"] .net-badge.internal .net-badge-label {
+  color: hsl(var(--text-on-primary)) !important;
+}
+
+/* ============================================
+   问候时钟 - 包豪斯大字排版
+   ============================================ */
+
+[data-theme="bauhaus"] .greeting-clock {
+  border-left: 10px solid hsl(var(--bauhaus-red));
+  padding-left: 1rem;
+}
+
+[data-theme="bauhaus"] .gc-time-value {
+  font-weight: 700;
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="bauhaus"] .gc-seconds {
+  color: hsl(var(--bauhaus-red));
+}
+
+[data-theme="bauhaus"] .gc-greeting-text {
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="bauhaus"] .gc-date {
+  color: hsl(var(--text-secondary));
+}
+
+/* ============================================
+   内容标签页 - 海报标签
+   ============================================ */
+
+[data-theme="bauhaus"] .content-tabs {
+  background: hsl(var(--bg-elevated));
+  border: 2px solid hsl(var(--bauhaus-black));
+  border-radius: 0;
+  box-shadow: 5px 5px 0 hsl(var(--bauhaus-black));
+}
+
+[data-theme="bauhaus"] .content-tab {
+  border-radius: 0;
+  color: hsl(var(--text-secondary));
+  border: 2px solid transparent;
+  position: relative;
+}
+
+[data-theme="bauhaus"] .content-tab:hover {
+  background: hsl(var(--bauhaus-paper));
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="bauhaus"] .content-tab.active {
+  background: hsl(var(--bauhaus-yellow)) !important;
+  color: hsl(var(--text-primary)) !important;
+  border: 2px solid hsl(var(--bauhaus-black)) !important;
+  box-shadow: 3px 3px 0 hsl(var(--bauhaus-black)) !important;
+}
+
+[data-theme="bauhaus"] .content-tab.tab-docker.active,
+[data-theme="bauhaus"] .content-tab.tab-luckyServices.active {
+  background: hsl(var(--bauhaus-yellow)) !important;
+  box-shadow: 3px 3px 0 hsl(var(--bauhaus-black)) !important;
+}
+
+[data-theme="bauhaus"] .content-tab .tab-icon {
+  color: hsl(var(--text-secondary)) !important;
+}
+
+[data-theme="bauhaus"] .content-tab.active .tab-icon {
+  color: hsl(var(--text-primary)) !important;
+}
+
+/* 活动标签 - 动画斜纹 */
+[data-theme="bauhaus"] .content-tab.active::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    135deg,
+    transparent 0 6px,
+    hsl(var(--bauhaus-red) / 0.12) 6px 12px
+  );
+  background-size: 17px 17px;
+  animation: bauhaus-stripes 1.2s linear infinite;
+}
+
+/* ============================================
+   分组徽章 / 布局切换器 - 包豪斯方形按钮
+   ============================================ */
+
+[data-theme="bauhaus"] .group-badge,
+[data-theme="bauhaus"] .layout-badge,
+[data-theme="bauhaus"] .overview-badge,
+[data-theme="bauhaus"] .network-badge {
+  background: hsl(var(--bg-elevated));
+  border: 2px solid hsl(var(--bauhaus-black));
+  border-radius: 0;
+  box-shadow: 3px 3px 0 hsl(var(--bauhaus-black));
+  color: hsl(var(--text-primary)) !important;
+  backdrop-filter: none;
+}
+
+[data-theme="bauhaus"] .group-badge:hover,
+[data-theme="bauhaus"] .layout-badge:hover,
+[data-theme="bauhaus"] .overview-badge:hover,
+[data-theme="bauhaus"] .network-badge:hover {
+  background: hsl(var(--bauhaus-yellow));
+  box-shadow: 4px 4px 0 hsl(var(--bauhaus-black)) !important;
+  transform: translate(-1px, -1px);
+}
+
+[data-theme="bauhaus"] .group-dropdown,
+[data-theme="bauhaus"] .layout-dropdown,
+[data-theme="bauhaus"] .network-dropdown {
+  background: hsl(var(--bg-elevated));
+  border: 2px solid hsl(var(--bauhaus-black));
+  border-radius: 0;
+  box-shadow: 6px 6px 0 hsl(var(--bauhaus-black));
+  backdrop-filter: none;
+}
+
+[data-theme="bauhaus"] .group-option,
+[data-theme="bauhaus"] .layout-option,
+[data-theme="bauhaus"] .network-option {
+  color: hsl(var(--text-secondary));
+  border-radius: 0;
+}
+
+[data-theme="bauhaus"] .group-option:hover,
+[data-theme="bauhaus"] .layout-option:hover,
+[data-theme="bauhaus"] .network-option:hover,
+[data-theme="bauhaus"] .option-main:hover {
+  background: hsl(var(--bauhaus-paper));
+}
+
+[data-theme="bauhaus"] .group-option.active,
+[data-theme="bauhaus"] .layout-option.active,
+[data-theme="bauhaus"] .network-option.active {
+  background: hsl(var(--bauhaus-yellow)) !important;
+  color: hsl(var(--text-primary)) !important;
+  border: 1px solid hsl(var(--bauhaus-black));
+}
+
+/* ============================================
+   分组标签页
+   ============================================ */
+
+[data-theme="bauhaus"] .group-tabs {
+  background: hsl(var(--bg-elevated));
+  border: 2px solid hsl(var(--bauhaus-black));
+  border-radius: 0;
+  box-shadow: 4px 4px 0 hsl(var(--bauhaus-black));
+}
+
+[data-theme="bauhaus"] .group-tab {
+  border-radius: 0;
+  color: hsl(var(--text-secondary));
+}
+
+[data-theme="bauhaus"] .group-tab:hover {
+  background: hsl(var(--bauhaus-paper));
+}
+
+[data-theme="bauhaus"] .group-tab.active,
+[data-theme="bauhaus"] .group-tab.color-cyan.active,
+[data-theme="bauhaus"] .group-tab.color-docker.active,
+[data-theme="bauhaus"] .group-tab.color-green.active {
+  background: hsl(var(--bauhaus-yellow)) !important;
+  color: hsl(var(--text-primary)) !important;
+  border: 2px solid hsl(var(--bauhaus-black));
+  box-shadow: 2px 2px 0 hsl(var(--bauhaus-black)) !important;
+}
+
+/* ============================================
+   搜索栏 - 包豪斯搜索
+   ============================================ */
+
+[data-theme="bauhaus"] .search-bar-container .search-glow,
+[data-theme="bauhaus"] .search-bar-container .search-highlight {
+  display: none;
+}
+
+[data-theme="bauhaus"] .search-bar-container .glass-search {
+  background: hsl(var(--bg-elevated));
+  border: 2px solid hsl(var(--bauhaus-black));
+  border-radius: 0;
+  box-shadow: 5px 5px 0 hsl(var(--bauhaus-black));
+  backdrop-filter: none;
+}
+
+[data-theme="bauhaus"] .search-bar-container .glass-search:hover,
+[data-theme="bauhaus"] .search-bar-container .glass-search:focus-within {
+  border-color: hsl(var(--bauhaus-black));
+  box-shadow: 6px 6px 0 hsl(var(--bauhaus-black)) !important;
+  transform: translateY(-2px);
+}
+
+[data-theme="bauhaus"] .search-bar-container .search-btn {
+  background: hsl(var(--bauhaus-red));
+  border-radius: 0;
+  box-shadow: 3px 3px 0 hsl(var(--bauhaus-black));
+}
+
+[data-theme="bauhaus"] .search-bar-container .search-btn .btn-bg {
+  display: none;
+}
+
+[data-theme="bauhaus"] .search-bar-container .search-btn:hover {
+  background: hsl(var(--bauhaus-red));
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 hsl(var(--bauhaus-black)) !important;
+}
+
+[data-theme="bauhaus"] .search-bar-container .engine-selector {
+  border-radius: 0;
+  border-right: 2px solid hsl(var(--bauhaus-black));
+}
+
+[data-theme="bauhaus"] .search-bar-container .engine-dropdown {
+  background: hsl(var(--bg-elevated));
+  border: 2px solid hsl(var(--bauhaus-black));
+  border-radius: 0;
+  box-shadow: 5px 5px 0 hsl(var(--bauhaus-black));
+  backdrop-filter: none;
+}
+
+[data-theme="bauhaus"] .search-bar-container .engine-option {
+  border-radius: 0;
+}
+
+[data-theme="bauhaus"] .search-bar-container .engine-option:hover {
+  background: hsl(var(--bauhaus-paper));
+  transform: translateX(2px);
+}
+
+[data-theme="bauhaus"] .search-bar-container .engine-option.active {
+  background: hsl(var(--bauhaus-yellow)) !important;
+  color: hsl(var(--text-primary)) !important;
+}
+
+/* ============================================
+   Docker 总览面板 - 包豪斯看板
+   ============================================ */
+
+[data-theme="bauhaus"] .overview-panel {
+  background: hsl(var(--bg-elevated));
+  border: 2px solid hsl(var(--bauhaus-black));
+  border-radius: 0;
+  box-shadow: 6px 6px 0 hsl(var(--bauhaus-black));
+  backdrop-filter: none;
+}
+
+[data-theme="bauhaus"] .panel-header {
+  background: hsl(var(--bauhaus-yellow));
+  border-bottom: 2px solid hsl(var(--bauhaus-black));
+}
+
+[data-theme="bauhaus"] .header-glow,
+[data-theme="bauhaus"] .divider-glow,
+[data-theme="bauhaus"] .footer-line {
+  display: none;
+}
+
+[data-theme="bauhaus"] .header-icon {
+  background: none !important;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: hsl(var(--text-primary));
+  background-clip: unset;
+}
+
+[data-theme="bauhaus"] .header-badge {
+  background: hsl(var(--bg-elevated));
+  color: hsl(var(--text-primary));
+  border: 2px solid hsl(var(--bauhaus-black));
+  border-radius: 0;
+}
+
+[data-theme="bauhaus"] .section-icon {
+  background: hsl(var(--bauhaus-blue)) !important;
+  color: hsl(var(--text-on-primary)) !important;
+  border-radius: 0;
+  box-shadow: 3px 3px 0 hsl(var(--bauhaus-black)) !important;
+}
+
+[data-theme="bauhaus"] .rank-item {
+  background: hsl(var(--bg-elevated));
+  border: 2px solid hsl(var(--bauhaus-black));
+  border-radius: 0;
+  box-shadow: 3px 3px 0 hsl(var(--bauhaus-black));
+}
+
+[data-theme="bauhaus"] .rank-item:hover {
+  background: hsl(var(--bauhaus-paper));
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 hsl(var(--bauhaus-black));
+}
+
+[data-theme="bauhaus"] .rank-item.rank-1 {
+  background: hsl(var(--bauhaus-yellow)) !important;
+  border-color: hsl(var(--bauhaus-black));
+}
+
+[data-theme="bauhaus"] .rank-number {
+  background: hsl(var(--bg-elevated));
+  border: 2px solid hsl(var(--bauhaus-black));
+  border-radius: 0;
+  color: hsl(var(--text-primary)) !important;
+}
+
+[data-theme="bauhaus"] .rank-bar-wrapper {
+  background: hsl(var(--bauhaus-black) / 0.1);
+}
+
+/* ============================================
+   Docker / 服务卡片 - 包豪斯
+   ============================================ */
+
+[data-theme="bauhaus"] .docker-card,
+[data-theme="bauhaus"] .service-card,
+[data-theme="bauhaus"] .cyber-card {
+  border-radius: 0;
+  border: 2px solid hsl(var(--bauhaus-black)) !important;
+  box-shadow: var(--card-shadow) !important;
+}
+
+[data-theme="bauhaus"] .docker-card:not(.layout-minimal):hover,
+[data-theme="bauhaus"] .service-card:not(.layout-minimal):hover,
+[data-theme="bauhaus"] .cyber-card:not(.layout-minimal):hover {
+  transform: translate(-2px, -2px) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+}
+
+/* 纯图标模式保留无边框 */
+[data-theme="bauhaus"] .docker-card.layout-minimal,
+[data-theme="bauhaus"] .service-card.layout-minimal,
+[data-theme="bauhaus"] .cyber-card.layout-minimal {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent;
+}
+
+[data-theme="bauhaus"] .icon-box,
+[data-theme="bauhaus"] .compact-icon,
+[data-theme="bauhaus"] .minimal-icon {
+  border-radius: 0 !important;
+  border: 2px solid hsl(var(--bauhaus-black)) !important;
+}
+
+/* 状态徽章 - 方形 */
+[data-theme="bauhaus"] .status-badge,
+[data-theme="bauhaus"] .type-badge,
+[data-theme="bauhaus"] .list-status-badge,
+[data-theme="bauhaus"] .list-type-badge {
+  border-radius: 0;
+  border: 1px solid currentColor;
+}
+
+[data-theme="bauhaus"] .status-indicator.status-running {
+  background: hsl(var(--neon-green));
+  box-shadow: 0 0 0 2px hsl(var(--neon-green) / 0.3);
+}
+
+[data-theme="bauhaus"] .status-indicator.status-stopped {
+  background: hsl(var(--bauhaus-red));
+  box-shadow: 0 0 0 2px hsl(var(--bauhaus-red) / 0.3);
+}
+
+[data-theme="bauhaus"] .status-indicator.status-paused {
+  background: hsl(var(--warning));
+  box-shadow: 0 0 0 2px hsl(var(--warning) / 0.3);
+}
+
+/* ============================================
+   设置面板 - 包豪斯
+   ============================================ */
+
+[data-theme="bauhaus"] .settings-panel {
+  border-radius: 0;
+  background: hsl(var(--bg-elevated));
+  border-left: 3px solid hsl(var(--bauhaus-black));
+}
+
+[data-theme="bauhaus"] .settings-title {
+  border-bottom: 3px solid hsl(var(--bauhaus-black));
+}
+
+[data-theme="bauhaus"] .section-title {
+  border-left: 6px solid hsl(var(--bauhaus-red));
+  padding-left: 0.5rem;
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="bauhaus"] input[type="text"],
+[data-theme="bauhaus"] select,
+[data-theme="bauhaus"] .settings-input {
+  border-radius: 0;
+  border: 2px solid hsl(var(--bauhaus-black));
+  background: hsl(var(--bg-page));
+}
+
+/* 开关 - 包豪斯方形 */
+[data-theme="bauhaus"] .toggle-track,
+[data-theme="bauhaus"] .switch-track {
+  border-radius: 0;
+  border: 2px solid hsl(var(--bauhaus-black));
+}
+
+[data-theme="bauhaus"] .toggle-thumb,
+[data-theme="bauhaus"] .switch-thumb {
+  border-radius: 0;
+}
+
+/* ============================================
+   通用按钮 - 包豪斯
+   ============================================ */
+
+[data-theme="bauhaus"] button:not(.content-tab):not(.group-tab):not(.group-option):not(.layout-option):not(.network-option):not(.theme-option):not(.engine-option):not(.action-btn) {
+  border-radius: 0;
+  border: 2px solid hsl(var(--bauhaus-black));
+}
+
+[data-theme="bauhaus"] .btn-primary,
+[data-theme="bauhaus"] .btn-primary:hover {
+  background: hsl(var(--bauhaus-blue));
+  color: hsl(var(--text-on-primary));
+  border-color: hsl(var(--bauhaus-black));
+  box-shadow: 3px 3px 0 hsl(var(--bauhaus-black));
+}
+
+[data-theme="bauhaus"] .btn-primary:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 hsl(var(--bauhaus-black));
+}
+
+/* ============================================
+   走势图 - 包豪斯加粗线条
+   ============================================ */
+
+[data-theme="bauhaus"] .sparkline-line {
+  stroke-width: 2.5;
+}
+
+[data-theme="bauhaus"] .stat-trend {
+  margin-top: 0.5rem;
+}
+
+/* ============================================
+   骨架屏 - 包豪斯斜纹
+   ============================================ */
+
+[data-theme="bauhaus"] .icon-skeleton,
+[data-theme="bauhaus"] .icon-skeleton-sm,
+[data-theme="bauhaus"] .icon-skeleton-md {
+  background: repeating-linear-gradient(
+    135deg,
+    hsl(var(--bauhaus-black) / 0.06) 0 8px,
+    transparent 8px 16px
+  );
+  border: 1px solid hsl(var(--bauhaus-black) / 0.15);
+}
+
+/* ============================================
+   全局动效 - 现代 CSS 特效
+   ============================================ */
+
+/* 斜纹移动动画 */
+@keyframes bauhaus-stripes {
+  from { background-position: 0 0; }
+  to { background-position: 34px 0; }
+}
+
+/* 卡片入场 - 包豪斯弹出（backwards 使 hover 位移不被锁定） */
+@keyframes bauhaus-pop-in {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+[data-theme="bauhaus"] .docker-card:not(.layout-minimal),
+[data-theme="bauhaus"] .service-card:not(.layout-minimal),
+[data-theme="bauhaus"] .cyber-card:not(.layout-minimal),
+[data-theme="bauhaus"] .glass-card {
+  animation: bauhaus-pop-in var(--duration-slower) var(--ease-out) backwards;
+}
+
+[data-theme="bauhaus"] .docker-card:nth-child(2n),
+[data-theme="bauhaus"] .service-card:nth-child(2n),
+[data-theme="bauhaus"] .cyber-card:nth-child(2n) {
+  animation-delay: 60ms;
+}
+
+[data-theme="bauhaus"] .docker-card:nth-child(3n),
+[data-theme="bauhaus"] .service-card:nth-child(3n),
+[data-theme="bauhaus"] .cyber-card:nth-child(3n) {
+  animation-delay: 120ms;
+}
+
+/* 减少动画偏好 */
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="bauhaus"] .content-tab.active::after,
+  [data-theme="bauhaus"] .docker-card:not(.layout-minimal),
+  [data-theme="bauhaus"] .service-card:not(.layout-minimal),
+  [data-theme="bauhaus"] .cyber-card:not(.layout-minimal),
+  [data-theme="bauhaus"] .glass-card {
+    animation: none;
+  }
+}

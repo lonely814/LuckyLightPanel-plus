@@ -6,7 +6,7 @@ import { useConfigStore } from '@/stores/config'
 import DockerCard from './DockerCard.vue'
 import SearchBox from '@/components/common/SearchBox.vue'
 import GroupDropdown from '@/components/common/GroupDropdown.vue'
-import DockerLayoutSwitcher from './DockerLayoutSwitcher.vue'
+import DataLayoutSwitcher from '@/components/common/DataLayoutSwitcher.vue'
 import DockerOverview from './DockerOverview.vue'
 import type { DockerContainer, Group } from '@/types'
 
@@ -114,6 +114,8 @@ const gridClass = computed(() => {
       return 'docker-grid list'
     case 'minimal':
       return 'docker-grid minimal'
+    case 'rack':
+      return 'docker-grid rack'
     default: // normal
       return 'docker-grid normal'
   }
@@ -253,7 +255,7 @@ onMounted(() => {
           @toggle="configStore.toggleGroup"
         />
         <DockerOverview />
-        <DockerLayoutSwitcher />
+        <DataLayoutSwitcher layout-key="dockerLayout" accent-rgb="249, 115, 22" />
       </div>
     </div>
 
@@ -382,11 +384,6 @@ onMounted(() => {
   color: hsl(210 40% 85%);
 }
 
-/* 素描深色主题分组标题 */
-[data-theme="sketch-dark"] .group-title {
-  color: hsl(40 12% 80%);
-}
-
 /* ============ Docker 网格布局 ============ */
 .docker-grid {
   display: grid;
@@ -426,6 +423,28 @@ onMounted(() => {
   gap: clamp(0.5rem, 1.5vw, 0.625rem);
 }
 
+/* Rack 布局 - 单列 1U 面板，像标准 19" 机柜 */
+.docker-grid.rack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* 大屏幕下机柜布局双列 */
+@media (min-width: 1600px) {
+  .docker-grid.rack {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem 0.875rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .docker-grid.rack {
+    gap: 0.375rem;
+  }
+}
+
 /* 空状态 */
 .empty-state {
   text-align: center;
@@ -459,14 +478,5 @@ onMounted(() => {
 
 [data-theme="light"] .empty-text {
   color: rgba(0, 0, 0, 0.45);
-}
-
-/* 素描浅色主题适配 */
-[data-theme="sketch-light"] .empty-icon {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-[data-theme="sketch-light"] .empty-text {
-  color: rgba(100, 110, 120, 0.5);
 }
 </style>

@@ -1,72 +1,75 @@
 /* ============================================
    Light Theme - 浅色主题
-   LightPanel Pro - Cyberpunk Glass Design
-   优化对比度以符合 WCAG AA 标准
+   LightPanel Pro - Minimal Glass Design
    ============================================ */
 
 [data-theme="light"] {
-  /* 浅色模式下降低霓虹色亮度和饱和度，避免太刺眼 */
-  --neon-cyan: 180 65% 38%;
-  --neon-cyan-rgb: 45, 160, 160;
-  --neon-purple: 270 55% 48%;
-  --neon-purple-rgb: 120, 75, 170;
-  --neon-pink: 320 60% 48%;
-  --neon-pink-rgb: 195, 65, 130;
-  --neon-blue: 210 65% 45%;
-  --neon-blue-rgb: 55, 115, 185;
-  --neon-green: 150 60% 36%;
-  --neon-green-rgb: 50, 145, 90;
+  /* 柔和降饱和的强调色 */
+  --neon-cyan: 192 48% 42%;
+  --neon-cyan-rgb: 48, 148, 163;
+  --neon-purple: 265 40% 50%;
+  --neon-purple-rgb: 138, 118, 178;
+  --neon-pink: 330 45% 50%;
+  --neon-pink-rgb: 178, 105, 140;
+  --neon-blue: 215 50% 48%;
+  --neon-blue-rgb: 76, 122, 178;
+  --neon-green: 155 40% 40%;
+  --neon-green-rgb: 76, 148, 116;
 
-  /* Docker 主题色 - 浅色模式柔和 */
-  --docker-orange: 25 70% 45%;
-  --docker-orange-rgb: 195, 105, 45;
+  /* Docker 主题色 */
+  --docker-orange: 25 60% 45%;
+  --docker-orange-rgb: 190, 116, 66;
 
-  /* 透明图标占位背景 - 浅色模式使用透明背景 */
-  --icon-placeholder-bg: 0 0% 0% / 0.06;
+  /* 透明图标占位背景 */
+  --icon-placeholder-bg: 220 15% 55% / 0.12;
 
-  /* 毛玻璃效果 - 通透清晰，提高可见性 */
-  --glass-bg: 220 15% 92% / 0.88;
-  --glass-bg-hover: 220 15% 95% / 0.92;
-  --glass-border: 220 25% 70% / 0.55;
-  --glass-border-glow: 210 70% 55% / 0.25;
+  /* 毛玻璃效果 - 高亮通透 */
+  --glass-bg: 220 40% 100% / 0.55;
+  --glass-bg-hover: 220 40% 100% / 0.7;
+  --glass-border: 220 20% 82% / 0.65;
+  --glass-border-glow: 210 60% 60% / 0.3;
+  --glass-shine: linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0) 50%);
 
   /* 卡片样式 - 柔和明亮 */
-  --card-bg: 220 15% 94% / 0.90;
+  --card-bg: 220 35% 100% / 0.62;
   --card-shadow:
-    0 4px 16px -2px rgba(0, 0, 0, 0.1),
-    0 8px 24px -4px rgba(0, 0, 0, 0.08);
+    0 1px 2px rgba(20, 30, 50, 0.04),
+    0 8px 24px rgba(20, 30, 50, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
   --card-shadow-hover:
-    0 8px 24px -4px rgba(0, 0, 0, 0.14),
-    0 16px 40px -8px rgba(0, 100, 200, 0.1);
-  --card-glow: 0 0 40px -10px rgba(var(--primary-rgb), 0.15);
+    0 2px 4px rgba(20, 30, 50, 0.06),
+    0 16px 40px rgba(20, 30, 50, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --card-glow: 0 0 30px -14px rgba(var(--primary-rgb), 0.3);
+  --card-glow-hover: 0 0 44px -12px rgba(var(--primary-rgb), 0.36);
 
-  /* 文字颜色 - 优化对比度符合 WCAG AA 标准 (4.5:1) */
-  --text-primary: 220 45% 10%;
-  --text-secondary: 220 25% 28%;
-  --text-muted: 220 18% 38%;
+  /* 文字颜色 */
+  --text-primary: 220 30% 12%;
+  --text-secondary: 220 22% 30%;
+  --text-muted: 220 16% 40%;
 
   /* 边框和背景 */
   --border-color: 220 18% 80%;
-  --border-subtle: 220 12% 88%;
-  --bg-page: 220 18% 90%;
-  --bg-elevated: 220 12% 96%;
+  --border-subtle: 220 14% 87%;
+  --bg-page: 218 22% 93%;
+  --bg-elevated: 220 30% 97%;
 
-  /* 站点卡片专属样式 - 增强可见性 */
-  --site-card-bg: 220 12% 96% / 0.65;
-  --site-card-bg-hover: 220 12% 98% / 0.75;
-  --site-card-blur: 14px;
-  --site-card-saturation: 130%;
-  --site-card-border: 220 15% 80% / 0.65;
-  --site-card-border-hover: 210 50% 50% / 0.6;
-  --site-card-inner-glow: 0 0% 100% / 0.15;
+  /* 站点卡片专属样式 - 明亮通透 */
+  --site-card-bg: 220 30% 100% / 0.5;
+  --site-card-bg-hover: 220 30% 100% / 0.72;
+  --site-card-blur: 20px;
+  --site-card-saturation: 140%;
+  --site-card-border: 220 18% 85% / 0.75;
+  --site-card-border-hover: 210 50% 58% / 0.55;
+  --site-card-inner-glow: 0 0% 100% / 0.75;
   --site-card-shadow:
-    0 2px 8px -2px rgba(0, 0, 0, 0.1),
-    0 4px 12px -2px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+    0 1px 2px rgba(20, 30, 50, 0.05),
+    0 6px 20px rgba(20, 30, 50, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
   --site-card-shadow-hover:
-    0 6px 20px -4px rgba(0, 0, 0, 0.14),
-    0 10px 28px -6px rgba(0, 100, 200, 0.1),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
-  --site-card-shine-opacity: 0.1;
-  --site-card-shine-hover: 0.18;
+    0 2px 4px rgba(20, 30, 50, 0.06),
+    0 16px 36px rgba(20, 30, 50, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --site-card-shine-opacity: 0.12;
+  --site-card-shine-hover: 0.24;
 }

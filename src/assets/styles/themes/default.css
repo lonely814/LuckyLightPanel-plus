@@ -1,111 +1,111 @@
 /* ============================================
-   Default Theme - 默认主题（科技蓝）
-   LightPanel Pro - Cyberpunk Glass Design
+   Default Theme - 默认主题（柔和玻璃）
+   LightPanel Pro - Minimal Glass Design
    ============================================ */
 
 :root {
-  /* 主色调 - 科技蓝 */
-  --primary: 210 100% 55%;
-  --primary-light: 200 100% 65%;
-  --primary-dark: 220 100% 45%;
-  --primary-rgb: 0, 140, 255;
+  /* 主色调 - 柔和靛蓝 */
+  --primary: 217 65% 60%;
+  --primary-light: 204 70% 65%;
+  --primary-dark: 229 60% 52%;
+  --primary-rgb: 82, 130, 220;
 
-  /* 强调色 - 霓虹紫 */
-  --accent: 270 100% 60%;
-  --accent-light: 280 100% 70%;
-  --accent-rgb: 178, 102, 255;
+  /* 强调色 - 柔和紫罗兰 */
+  --accent: 265 45% 62%;
+  --accent-light: 270 50% 70%;
+  --accent-rgb: 160, 140, 220;
 
-  /* 霓虹色系 - 科技感核心 */
-  --neon-cyan: 180 100% 50%;
-  --neon-cyan-rgb: 0, 255, 255;
-  --neon-purple: 270 100% 60%;
-  --neon-purple-rgb: 178, 102, 255;
-  --neon-pink: 320 100% 60%;
-  --neon-pink-rgb: 255, 51, 153;
-  --neon-blue: 210 100% 55%;
-  --neon-blue-rgb: 0, 140, 255;
-  --neon-green: 150 100% 50%;
-  --neon-green-rgb: 0, 255, 128;
-    
+  /* 霓虹色系（保留命名兼容）- 柔和降饱和 */
+  --neon-cyan: 192 55% 58%;
+  --neon-cyan-rgb: 90, 190, 205;
+  --neon-purple: 265 45% 62%;
+  --neon-purple-rgb: 160, 140, 220;
+  --neon-pink: 330 50% 62%;
+  --neon-pink-rgb: 205, 130, 165;
+  --neon-blue: 215 60% 60%;
+  --neon-blue-rgb: 90, 140, 210;
+  --neon-green: 155 45% 52%;
+  --neon-green-rgb: 90, 175, 135;
+
   /* Docker 主题色 */
-  --docker-orange: 25 95% 55%;
-  --docker-orange-rgb: 249, 115, 22;
-  --docker-blue: 200 80% 50%;
-  --docker-blue-rgb: 26, 159, 230;
+  --docker-orange: 25 70% 58%;
+  --docker-orange-rgb: 230, 140, 80;
+  --docker-blue: 205 60% 55%;
+  --docker-blue-rgb: 60, 150, 210;
 
-  /* 成功/错误/警告 - 霓虹风格 */
-  --success: 150 100% 45%;
-  --success-rgb: 0, 230, 115;
-  --error: 350 100% 60%;
-  --error-rgb: 255, 51, 82;
-  --warning: 45 100% 55%;
-  --warning-rgb: 255, 200, 0;
+  /* 成功/错误/警告 - 柔和状态色 */
+  --success: 155 45% 48%;
+  --success-rgb: 70, 170, 125;
+  --error: 350 60% 58%;
+  --error-rgb: 210, 90, 110;
+  --warning: 40 75% 55%;
+  --warning-rgb: 230, 170, 60;
 
-  /* 增强毛玻璃效果 */
-  --glass-bg: 220 30% 8% / 0.75;
-  --glass-bg-hover: 220 30% 12% / 0.85;
-  --glass-blur: 32px;
-  --glass-saturation: 200%;
-  --glass-border: 220 50% 50% / 0.15;
-  --glass-border-glow: 210 100% 60% / 0.3;
-  --glass-shine: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%);
+  /* 毛玻璃效果 - 高通透 + 高模糊 */
+  --glass-bg: 222 35% 14% / 0.42;
+  --glass-bg-hover: 222 35% 20% / 0.5;
+  --glass-blur: 30px;
+  --glass-saturation: 150%;
+  --glass-border: 220 25% 70% / 0.14;
+  --glass-border-glow: 210 60% 65% / 0.25;
+  --glass-shine: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 45%);
 
-  /* 卡片样式 - 霓虹发光 */
-  --card-bg: 220 30% 10% / 0.8;
-  --card-shadow: 
-    0 4px 20px -2px rgba(0, 0, 0, 0.3),
-    0 8px 32px -4px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  --card-shadow-hover: 
-    0 8px 32px -4px rgba(0, 0, 0, 0.4),
-    0 16px 48px -8px rgba(0, 140, 255, 0.2),
-    0 0 0 1px rgba(0, 255, 255, 0.1);
-  --card-glow: 0 0 60px -15px rgba(var(--neon-cyan-rgb), 0.4);
-  --card-glow-hover: 0 0 80px -10px rgba(var(--neon-cyan-rgb), 0.5);
+  /* 卡片样式 - 柔和分层阴影 */
+  --card-bg: 222 35% 16% / 0.5;
+  --card-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.06),
+    0 8px 28px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --card-shadow-hover:
+    0 2px 2px rgba(0, 0, 0, 0.06),
+    0 16px 40px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --card-glow: 0 0 40px -12px rgba(var(--primary-rgb), 0.35);
+  --card-glow-hover: 0 0 60px -12px rgba(var(--primary-rgb), 0.4);
 
-  /* 霓虹光效 */
-  --neon-glow-sm: 0 0 10px;
-  --neon-glow-md: 0 0 20px;
-  --neon-glow-lg: 0 0 40px;
-  --neon-glow-xl: 0 0 60px;
+  /* 光效（保留命名兼容） */
+  --neon-glow-sm: 0 0 8px;
+  --neon-glow-md: 0 0 16px;
+  --neon-glow-lg: 0 0 28px;
+  --neon-glow-xl: 0 0 40px;
 
-  /* 文字颜色 - 科技感 */
-  --text-primary: 210 40% 98%;
-  --text-secondary: 215 25% 70%;
-  --text-muted: 215 20% 50%;
+  /* 文字颜色 - 柔和高级灰 */
+  --text-primary: 210 30% 97%;
+  --text-secondary: 215 20% 76%;
+  --text-muted: 215 16% 62%;
   --text-on-primary: 0 0% 100%;
-  --text-glow: 0 0 10px currentColor;
+  --text-glow: none;
 
   /* 边框和背景 */
-  --border-color: 220 50% 25%;
-  --border-subtle: 220 40% 18%;
-  --border-glow: 210 100% 50%;
-  --bg-page: 222 47% 6%;
-  --bg-elevated: 222 40% 10%;
+  --border-color: 220 25% 26%;
+  --border-subtle: 220 22% 20%;
+  --border-glow: 210 60% 60%;
+  --bg-page: 222 30% 7%;
+  --bg-elevated: 222 30% 11%;
 
-  /* 图标区域亮度控制 - 默认不减暗 */
+  /* 图标区域 */
   --icon-brightness: 1;
   --icon-overlay-opacity: 0;
 
-  /* 透明图标占位背景 - 半透明白色，通透感 */
-  --icon-placeholder-bg: 0 0% 100% / 0.12;
+  /* 透明图标占位背景 */
+  --icon-placeholder-bg: 0 0% 100% / 0.1;
 
-  /* 站点卡片专属样式 - 默认暗黑磨砂 */
-  --site-card-bg: 220 25% 12% / 0.52;
-  --site-card-bg-hover: 220 25% 15% / 0.6;
-  --site-card-blur: 18px;
-  --site-card-saturation: 160%;
-  --site-card-border: 0 0% 100% / 0.1;
-  --site-card-border-hover: 180 70% 55% / 0.3;
-  --site-card-inner-glow: 0 0% 100% / 0.04;
-  --site-card-shadow: 
-    0 2px 12px -2px rgba(0, 0, 0, 0.35),
-    0 4px 16px -4px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-  --site-card-shadow-hover: 
-    0 8px 24px -4px rgba(0, 0, 0, 0.4),
-    0 16px 40px -8px rgba(0, 255, 255, 0.1),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
-  --site-card-shine-opacity: 0.06;
-  --site-card-shine-hover: 0.12;
+  /* 站点卡片专属样式 - 通透玻璃 */
+  --site-card-bg: 220 30% 14% / 0.38;
+  --site-card-bg-hover: 220 30% 20% / 0.46;
+  --site-card-blur: 22px;
+  --site-card-saturation: 150%;
+  --site-card-border: 220 25% 75% / 0.12;
+  --site-card-border-hover: 210 55% 65% / 0.28;
+  --site-card-inner-glow: 0 0% 100% / 0.05;
+  --site-card-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.05),
+    0 6px 20px rgba(0, 0, 0, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --site-card-shadow-hover:
+    0 2px 2px rgba(0, 0, 0, 0.06),
+    0 18px 40px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --site-card-shine-opacity: 0.05;
+  --site-card-shine-hover: 0.1;
 }

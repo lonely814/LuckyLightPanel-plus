@@ -1,6 +1,6 @@
 /* ============================================
-   LightPanel Pro - Cyberpunk Glass Design 2024
-   赛博朋克科技感毛玻璃设计系统
+   LightPanel Pro - Minimal Glass Design
+   极简玻璃拟态设计系统
    
    主入口文件 - 导入所有样式模块
    ============================================ */
@@ -15,10 +15,16 @@
 @import './themes/dark.css';
 /* 浅色主题 */
 @import './themes/light.css';
-/* 素描深色主题 */
-@import './themes/sketch-dark.css';
-/* 素描浅色主题 */
-@import './themes/sketch-light.css';
+/* 包豪斯主题 */
+@import './themes/bauhaus.css';
+/* 复古终端主题 */
+@import './themes/crt-terminal.css';
+/* 光牌点阵主题 */
+@import './themes/light-panel.css';
+/* 调光控制台主题 */
+@import './themes/console.css';
+/* 运维小票主题 */
+@import './themes/receipt.css';
 
 /* 
  * 扩展主题示例：
@@ -46,3 +52,12 @@
 @import './utilities/_spacing.css';
 @import './utilities/_sizing.css';
 @import './utilities/_misc.css';
+
+/* ============ 7. 设置：减弱动效 ============ */
+.motion-reduced *,
+.motion-reduced *::before,
+.motion-reduced *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}

@@ -1,0 +1,738 @@
+/* ============================================
+   Console Theme - 调光控制台主题
+   LightPanel Pro
+   机房实体照明控制面板：阳极氧化铝 + 丝印铭牌 + 内凹模块 + 拨杆开关 + 指示灯
+   质感语汇：拉丝铝、内凹井、背光丝印字、琥珀"在役"辉光
+   ============================================ */
+
+[data-theme="console"] {
+  /* 控制台专用色 - 金属/丝印/指示灯 */
+  --cs-face: 220 14% 12%;
+  --cs-face-rgb: 27, 30, 36;
+  --cs-well: 222 15% 17%;
+  --cs-well-rgb: 38, 42, 51;
+  --cs-backlit: 45 4% 88%;
+  --cs-backlit-rgb: 232, 228, 216;
+  --cs-amber: 32 100% 59%;
+  --cs-amber-rgb: 255, 159, 46;
+  --cs-green: 151 100% 62%;
+  --cs-green-rgb: 76, 240, 160;
+  --cs-red: 0 100% 68%;
+  --cs-red-rgb: 255, 90, 90;
+
+  /* 主色 - 琥珀"通电"辉光 */
+  --primary: 32 100% 59%;
+  --primary-light: 32 100% 68%;
+  --primary-dark: 32 80% 42%;
+  --primary-rgb: 255, 159, 46;
+
+  --accent: 151 100% 62%;
+  --accent-light: 151 100% 70%;
+  --accent-rgb: 76, 240, 160;
+
+  --neon-cyan: 32 100% 59%;
+  --neon-cyan-rgb: 255, 159, 46;
+  --neon-purple: 225 12% 26%;
+  --neon-purple-rgb: 60, 64, 76;
+  --neon-pink: 32 45% 42%;
+  --neon-pink-rgb: 150, 105, 52;
+  --neon-blue: 210 30% 52%;
+  --neon-blue-rgb: 88, 120, 160;
+  --neon-green: 151 100% 62%;
+  --neon-green-rgb: 76, 240, 160;
+
+  --docker-orange: 32 100% 59%;
+  --docker-orange-rgb: 255, 159, 46;
+
+  --success: 151 100% 62%;
+  --success-rgb: 76, 240, 160;
+  --error: 0 100% 68%;
+  --error-rgb: 255, 90, 90;
+  --warning: 32 100% 59%;
+  --warning-rgb: 255, 159, 46;
+
+  /* 图标 - 丝印中性 */
+  --icon-brightness: 0.96;
+  --icon-placeholder-bg: 0 0% 100% / 0.06;
+
+  /* 面板变量 - 实心铝面 */
+  --glass-bg: 220 14% 13% / 0.95;
+  --glass-bg-hover: 220 14% 17% / 0.96;
+  --glass-border: 0 0% 0% / 0.55;
+  --glass-border-glow: 32 100% 59% / 0.6;
+  --glass-blur: 0px;
+  --glass-saturation: 100%;
+  --glass-shine: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 30%);
+
+  /* 卡片 - 内凹模块 */
+  --card-bg: 220 14% 12% / 0.9;
+  --card-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.055),
+    inset 0 -1px 0 hsl(0 0% 0% / 0.35),
+    inset 0 12px 24px -14px hsl(0 0% 0% / 0.55),
+    0 1px 0 hsl(0 0% 100% / 0.03);
+  --card-shadow-hover:
+    inset 0 1px 0 hsl(0 0% 100% / 0.07),
+    inset 0 -1px 0 hsl(0 0% 0% / 0.3),
+    inset 0 0 0 1px hsl(var(--cs-amber) / 0.3),
+    0 6px 18px -8px hsl(0 0% 0% / 0.6);
+  --card-glow: 0 0 22px -10px hsl(var(--cs-amber) / 0.4);
+  --card-glow-hover: 0 0 30px -8px hsl(var(--cs-amber) / 0.55);
+
+  /* 文字 - 背光丝印字 */
+  --text-primary: 45 4% 88%;
+  --text-secondary: 45 3% 66%;
+  --text-muted: 45 3% 46%;
+  --text-on-primary: 220 14% 12%;
+
+  --border-color: 0 0% 0% / 0.5;
+  --border-subtle: 0 0% 0% / 0.35;
+  --bg-page: 220 14% 12%;
+  --bg-elevated: 222 15% 17%;
+
+  /* 站点卡片 - 内凹井 */
+  --site-card-bg: 222 15% 16% / 0.9;
+  --site-card-bg-hover: 222 15% 19% / 0.94;
+  --site-card-blur: 0px;
+  --site-card-saturation: 100%;
+  --site-card-border: 0 0% 0% / 0.5;
+  --site-card-border-hover: 32 100% 59% / 0.6;
+  --site-card-inner-glow: 0 0% 100% / 0.04;
+  --site-card-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.055),
+    inset 0 -1px 0 hsl(0 0% 0% / 0.35),
+    inset 0 12px 24px -14px hsl(0 0% 0% / 0.55),
+    0 1px 0 hsl(0 0% 100% / 0.03);
+  --site-card-shadow-hover:
+    inset 0 1px 0 hsl(0 0% 100% / 0.07),
+    inset 0 0 0 1px hsl(var(--cs-amber) / 0.3),
+    0 6px 18px -8px hsl(0 0% 0% / 0.6);
+  --site-card-shine-opacity: 1;
+  --site-card-shine-hover: 1;
+}
+
+/* 圆角收敛 - 加工金属不圆润 */
+[data-theme="console"] {
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 5px;
+  --radius-xl: 6px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* ============================================
+   背景 - 独立组件 ConsoleBackground.vue
+   ============================================ */
+
+/* 滚动条 */
+[data-theme="console"] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+[data-theme="console"] ::-webkit-scrollbar-thumb {
+  background: hsl(0 0% 0% / 0.5);
+  border: 1px solid hsl(0 0% 0% / 0.6);
+}
+
+[data-theme="console"] ::-webkit-scrollbar-track {
+  background: hsl(var(--bg-page));
+}
+
+[data-theme="console"] ::selection {
+  background: hsl(var(--cs-amber) / 0.35);
+  color: hsl(var(--text-primary));
+}
+
+/* ============================================
+   卡片 - 内凹模块 + 铭牌
+   ============================================ */
+
+[data-theme="console"] .glass-card,
+[data-theme="console"] .glass-card-neon,
+[data-theme="console"] .cyber-card,
+[data-theme="console"] .docker-card,
+[data-theme="console"] .service-card {
+  border: 1px solid hsl(0 0% 0% / 0.5) !important;
+  box-shadow: var(--card-shadow) !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+[data-theme="console"] .glass-card::after,
+[data-theme="console"] .glass-card-neon::after,
+[data-theme="console"] .card-border-glow {
+  display: none !important;
+}
+
+[data-theme="console"] .cyber-card:not(.layout-minimal):hover,
+[data-theme="console"] .docker-card:not(.layout-minimal):hover,
+[data-theme="console"] .service-card:not(.layout-minimal):hover {
+  transform: translateY(-1px) !important;
+  border-color: hsl(var(--cs-amber) / 0.5) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+}
+
+[data-theme="console"] .cyber-card.layout-minimal,
+[data-theme="console"] .docker-card.layout-minimal,
+[data-theme="console"] .service-card.layout-minimal {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent;
+}
+
+/* 铭牌标题 - 丝印背光字 */
+[data-theme="console"] .card-title,
+[data-theme="console"] .list-title,
+[data-theme="console"] .compact-title,
+[data-theme="console"] .minimal-name {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+[data-theme="console"] .card-desc {
+  color: hsl(var(--text-muted));
+}
+
+[data-theme="console"] .icon-box,
+[data-theme="console"] .compact-icon,
+[data-theme="console"] .minimal-icon {
+  border-radius: var(--radius-xs) !important;
+  border: 1px solid hsl(0 0% 0% / 0.5) !important;
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.06) !important;
+  background-color: hsl(var(--cs-well) / 0.6) !important;
+}
+
+/* ============================================
+   页头 - 加工铝控制条
+   ============================================ */
+
+[data-theme="console"] .app-header {
+  height: var(--header-height, 3.5rem);
+}
+
+[data-theme="console"] .header-bg {
+  background: linear-gradient(180deg, hsl(220 13% 15%) 0%, hsl(220 14% 11%) 100%);
+  border: 1px solid hsl(0 0% 0% / 0.55);
+  border-top: 1px solid hsl(0 0% 100% / 0.08);
+  border-radius: var(--radius-sm);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.06), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="console"] .header-highlight {
+  display: none;
+}
+
+[data-theme="console"] .title-main {
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.9375rem;
+}
+
+[data-theme="console"] .title-text {
+  color: hsl(var(--cs-backlit));
+}
+
+[data-theme="console"] .title-icon {
+  color: hsl(var(--cs-amber));
+}
+
+[data-theme="console"] .title-sub {
+  display: block;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--text-muted));
+}
+
+/* 页头按钮 - 拨杆开关（带下压行程） */
+[data-theme="console"] .action-btn {
+  border-radius: var(--radius-xs);
+  border: 1px solid hsl(0 0% 0% / 0.55);
+  background: linear-gradient(180deg, hsl(220 13% 17%) 0%, hsl(220 13% 12%) 100%);
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.09),
+    inset 0 -1px 0 hsl(0 0% 0% / 0.35),
+    0 1px 2px hsl(0 0% 0% / 0.5);
+  transition: transform var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+}
+
+[data-theme="console"] .action-btn:hover {
+  border-color: hsl(var(--cs-amber) / 0.5);
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.1),
+    inset 0 -1px 0 hsl(0 0% 0% / 0.3),
+    0 0 14px -6px hsl(var(--cs-amber) / 0.5);
+}
+
+[data-theme="console"] .action-btn:active {
+  transform: translateY(1.5px);
+  box-shadow:
+    inset 0 2px 4px hsl(0 0% 0% / 0.45),
+    inset 0 -1px 0 hsl(0 0% 100% / 0.05);
+}
+
+[data-theme="console"] .btn-icon,
+[data-theme="console"] .action-btn:hover .btn-icon {
+  color: hsl(var(--cs-backlit)) !important;
+}
+
+[data-theme="console"] .theme-dropdown {
+  border-radius: var(--radius-xs);
+  background: hsl(220 14% 14%);
+  border: 1px solid hsl(0 0% 0% / 0.55);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 hsl(0 0% 100% / 0.06);
+  backdrop-filter: none;
+}
+
+[data-theme="console"] .theme-option {
+  border-radius: var(--radius-xs);
+  color: hsl(var(--text-secondary));
+}
+
+[data-theme="console"] .theme-option:hover {
+  background: hsl(var(--cs-amber) / 0.08);
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="console"] .theme-option.active {
+  background: hsl(var(--cs-amber) / 0.14);
+  color: hsl(var(--cs-amber)) !important;
+}
+
+/* 网络徽章 - 指示灯座 */
+[data-theme="console"] .net-badge {
+  border-radius: var(--radius-xs);
+  border: 1px solid hsl(0 0% 0% / 0.55);
+  background: hsl(0 0% 0% / 0.3);
+  box-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.5);
+}
+
+[data-theme="console"] .net-badge:hover {
+  box-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.5), 0 0 12px -6px hsl(var(--cs-amber) / 0.6);
+}
+
+[data-theme="console"] .net-badge.internal {
+  border-color: hsl(var(--cs-green) / 0.6);
+}
+
+[data-theme="console"] .net-badge-icon,
+[data-theme="console"] .net-badge-label {
+  color: hsl(var(--cs-amber)) !important;
+}
+
+[data-theme="console"] .net-badge.internal .net-badge-icon,
+[data-theme="console"] .net-badge.internal .net-badge-label {
+  color: hsl(var(--cs-green)) !important;
+}
+
+/* ============================================
+   问候时钟 - LCD 读数
+   ============================================ */
+
+[data-theme="console"] .greeting-clock {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid hsl(0 0% 0% / 0.6);
+  background: linear-gradient(180deg, hsl(220 14% 11%) 0%, hsl(220 15% 14%) 100%);
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.05),
+    inset 0 8px 20px -14px hsl(0 0% 0% / 0.6);
+}
+
+[data-theme="console"] .gc-greeting-text {
+  color: hsl(var(--cs-backlit));
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+}
+
+[data-theme="console"] .gc-greeting-sep {
+  color: hsl(var(--text-muted));
+}
+
+[data-theme="console"] .gc-date {
+  color: hsl(var(--text-secondary));
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="console"] .gc-time-value {
+  font-weight: 600;
+  color: hsl(var(--cs-amber));
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 10px hsl(var(--cs-amber) / 0.45);
+}
+
+[data-theme="console"] .gc-seconds {
+  color: hsl(var(--cs-amber));
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="console"] .gc-seconds.night {
+  color: hsl(var(--cs-green));
+}
+
+/* ============================================
+   内容标签页 - 面板按钮组
+   ============================================ */
+
+[data-theme="console"] .content-tabs {
+  background: hsl(0 0% 0% / 0.22);
+  border: 1px solid hsl(0 0% 0% / 0.5);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.4);
+}
+
+[data-theme="console"] .content-tab {
+  border-radius: var(--radius-xs);
+  color: hsl(var(--text-secondary));
+  border: 1px solid transparent;
+}
+
+[data-theme="console"] .content-tab:hover {
+  background: hsl(var(--cs-amber) / 0.07);
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="console"] .content-tab.active {
+  background: hsl(var(--cs-amber)) !important;
+  color: hsl(var(--text-on-primary)) !important;
+  border: 1px solid hsl(var(--cs-amber)) !important;
+  box-shadow: 0 0 14px -4px hsl(var(--cs-amber) / 0.7) !important;
+}
+
+[data-theme="console"] .content-tab.tab-docker.active,
+[data-theme="console"] .content-tab.tab-luckyServices.active {
+  background: hsl(var(--cs-amber)) !important;
+  box-shadow: 0 0 14px -4px hsl(var(--cs-amber) / 0.7) !important;
+}
+
+[data-theme="console"] .content-tab.active .tab-icon {
+  color: hsl(var(--text-on-primary)) !important;
+}
+
+/* ============================================
+   分组徽章 / 布局 / 网络 / 总览徽章
+   ============================================ */
+
+[data-theme="console"] .group-badge,
+[data-theme="console"] .layout-badge,
+[data-theme="console"] .overview-badge,
+[data-theme="console"] .network-badge {
+  background: hsl(0 0% 0% / 0.25);
+  border: 1px solid hsl(0 0% 0% / 0.5);
+  border-radius: var(--radius-xs);
+  color: hsl(var(--text-primary)) !important;
+  backdrop-filter: none;
+  box-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.4);
+}
+
+[data-theme="console"] .group-badge:hover,
+[data-theme="console"] .layout-badge:hover,
+[data-theme="console"] .overview-badge:hover,
+[data-theme="console"] .network-badge:hover {
+  background: hsl(var(--cs-amber) / 0.08);
+  border-color: hsl(var(--cs-amber) / 0.55);
+  box-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.4), 0 0 12px -6px hsl(var(--cs-amber) / 0.6) !important;
+}
+
+[data-theme="console"] .group-dropdown,
+[data-theme="console"] .layout-dropdown,
+[data-theme="console"] .network-dropdown {
+  background: hsl(220 14% 14%);
+  border: 1px solid hsl(0 0% 0% / 0.55);
+  border-radius: var(--radius-xs);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 hsl(0 0% 100% / 0.06);
+  backdrop-filter: none;
+}
+
+[data-theme="console"] .group-option,
+[data-theme="console"] .layout-option,
+[data-theme="console"] .network-option {
+  color: hsl(var(--text-secondary));
+  border-radius: var(--radius-xs);
+}
+
+[data-theme="console"] .group-option:hover,
+[data-theme="console"] .layout-option:hover,
+[data-theme="console"] .network-option:hover,
+[data-theme="console"] .option-main:hover {
+  background: hsl(var(--cs-amber) / 0.07);
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="console"] .group-option.active,
+[data-theme="console"] .layout-option.active,
+[data-theme="console"] .network-option.active {
+  background: hsl(var(--cs-amber) / 0.13) !important;
+  color: hsl(var(--cs-amber)) !important;
+  border: 1px solid hsl(0 0% 0% / 0.4);
+}
+
+/* 分组标签页 */
+[data-theme="console"] .group-tabs {
+  background: hsl(0 0% 0% / 0.22);
+  border: 1px solid hsl(0 0% 0% / 0.5);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.4);
+}
+
+[data-theme="console"] .group-tab {
+  border-radius: var(--radius-xs);
+  color: hsl(var(--text-secondary));
+}
+
+[data-theme="console"] .group-tab:hover {
+  background: hsl(var(--cs-amber) / 0.07);
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="console"] .group-tab.active,
+[data-theme="console"] .group-tab.color-cyan.active,
+[data-theme="console"] .group-tab.color-docker.active,
+[data-theme="console"] .group-tab.color-green.active {
+  background: hsl(var(--cs-amber)) !important;
+  color: hsl(var(--text-on-primary)) !important;
+  border: 1px solid hsl(var(--cs-amber)) !important;
+  box-shadow: 0 0 12px -4px hsl(var(--cs-amber) / 0.6) !important;
+}
+
+/* ============================================
+   搜索栏 - 面板输入
+   ============================================ */
+
+[data-theme="console"] .search-bar-container .search-glow,
+[data-theme="console"] .search-bar-container .search-highlight {
+  display: none;
+}
+
+[data-theme="console"] .search-bar-container .glass-search {
+  background: hsl(0 0% 0% / 0.28);
+  border: 1px solid hsl(0 0% 0% / 0.55);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 2px 4px hsl(0 0% 0% / 0.45);
+  backdrop-filter: none;
+}
+
+[data-theme="console"] .search-bar-container .glass-search:hover,
+[data-theme="console"] .search-bar-container .glass-search:focus-within {
+  border-color: hsl(var(--cs-amber) / 0.6);
+  box-shadow: inset 0 2px 4px hsl(0 0% 0% / 0.45), 0 0 16px -8px hsl(var(--cs-amber) / 0.5);
+}
+
+[data-theme="console"] .search-bar-container .search-input::placeholder {
+  color: hsl(var(--text-muted));
+}
+
+[data-theme="console"] .search-bar-container .search-btn {
+  background: hsl(var(--cs-amber));
+  border-radius: var(--radius-xs);
+  color: hsl(var(--text-on-primary));
+}
+
+[data-theme="console"] .search-bar-container .search-btn .btn-bg {
+  display: none;
+}
+
+[data-theme="console"] .search-bar-container .search-btn:hover {
+  background: hsl(var(--cs-amber));
+  box-shadow: 0 0 16px -6px hsl(var(--cs-amber) / 0.8) !important;
+}
+
+[data-theme="console"] .search-bar-container .engine-selector {
+  border-radius: var(--radius-xs);
+  border-right: 1px solid hsl(0 0% 0% / 0.5);
+}
+
+[data-theme="console"] .search-bar-container .engine-dropdown {
+  background: hsl(220 14% 14%);
+  border: 1px solid hsl(0 0% 0% / 0.55);
+  border-radius: var(--radius-xs);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+  backdrop-filter: none;
+}
+
+[data-theme="console"] .search-bar-container .engine-option {
+  border-radius: var(--radius-xs);
+}
+
+[data-theme="console"] .search-bar-container .engine-option:hover {
+  background: hsl(var(--cs-amber) / 0.07);
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="console"] .search-bar-container .engine-option.active {
+  background: hsl(var(--cs-amber) / 0.13) !important;
+  color: hsl(var(--cs-amber)) !important;
+}
+
+/* ============================================
+   Docker 总览面板 - 仪表板
+   ============================================ */
+
+[data-theme="console"] .overview-panel {
+  background: hsl(220 14% 13%);
+  border: 1px solid hsl(0 0% 0% / 0.55);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.05), 0 12px 32px -16px rgba(0, 0, 0, 0.7);
+  backdrop-filter: none;
+}
+
+[data-theme="console"] .panel-header {
+  background: hsl(0 0% 0% / 0.22);
+  border-bottom: 1px solid hsl(0 0% 0% / 0.5);
+}
+
+[data-theme="console"] .header-glow,
+[data-theme="console"] .divider-glow,
+[data-theme="console"] .footer-line {
+  display: none;
+}
+
+[data-theme="console"] .header-icon {
+  background: none !important;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: hsl(var(--cs-amber));
+  background-clip: unset;
+}
+
+[data-theme="console"] .header-badge {
+  background: hsl(var(--cs-amber) / 0.1);
+  color: hsl(var(--cs-amber));
+  border: 1px solid hsl(0 0% 0% / 0.4);
+  border-radius: var(--radius-xs);
+}
+
+[data-theme="console"] .section-icon {
+  background: hsl(var(--cs-amber) / 0.12) !important;
+  color: hsl(var(--cs-amber)) !important;
+  border-radius: var(--radius-xs);
+}
+
+[data-theme="console"] .rank-item {
+  background: hsl(0 0% 0% / 0.22);
+  border: 1px solid hsl(0 0% 0% / 0.45);
+  border-radius: var(--radius-xs);
+}
+
+[data-theme="console"] .rank-item:hover {
+  background: hsl(var(--cs-amber) / 0.05);
+  border-color: hsl(var(--cs-amber) / 0.35);
+}
+
+[data-theme="console"] .rank-item.rank-1 {
+  background: hsl(var(--cs-amber) / 0.08) !important;
+  border-color: hsl(var(--cs-amber) / 0.4);
+}
+
+[data-theme="console"] .rank-number {
+  background: hsl(var(--cs-amber) / 0.08);
+  border: 1px solid hsl(0 0% 0% / 0.4);
+  border-radius: var(--radius-xs);
+  color: hsl(var(--cs-amber)) !important;
+}
+
+[data-theme="console"] .rank-bar-wrapper {
+  background: hsl(0 0% 0% / 0.4);
+}
+
+[data-theme="console"] .rank-bar.cpu-bar,
+[data-theme="console"] .rank-bar.memory-bar {
+  background: hsl(var(--cs-amber)) !important;
+  box-shadow: 0 0 10px -2px hsl(var(--cs-amber) / 0.5) !important;
+}
+
+/* 状态徽章 */
+[data-theme="console"] .status-badge,
+[data-theme="console"] .type-badge,
+[data-theme="console"] .list-status-badge,
+[data-theme="console"] .list-type-badge {
+  border-radius: var(--radius-xs);
+  border: 1px solid currentColor;
+}
+
+/* 状态指示灯 - 指示灯珠 */
+[data-theme="console"] .status-indicator.status-running {
+  background: hsl(var(--cs-green));
+  box-shadow: 0 0 6px hsl(var(--cs-green) / 0.9);
+}
+
+[data-theme="console"] .status-indicator.status-stopped {
+  background: hsl(var(--cs-red));
+  box-shadow: 0 0 6px hsl(var(--cs-red) / 0.7);
+}
+
+[data-theme="console"] .status-indicator.status-paused {
+  background: hsl(var(--cs-amber));
+  box-shadow: 0 0 6px hsl(var(--cs-amber) / 0.7);
+}
+
+/* 走势图 */
+[data-theme="console"] .sparkline-line {
+  stroke: hsl(var(--cs-amber));
+  stroke-width: 1.8;
+}
+
+/* ============================================
+   设置面板
+   ============================================ */
+
+[data-theme="console"] .settings-panel {
+  border-radius: var(--radius-sm);
+  background: hsl(220 14% 13%);
+  border-left: 2px solid hsl(0 0% 0% / 0.6);
+  box-shadow: inset 1px 0 0 hsl(0 0% 100% / 0.05);
+}
+
+[data-theme="console"] .settings-title {
+  border-bottom: 2px solid hsl(0 0% 0% / 0.5);
+}
+
+[data-theme="console"] .section-title {
+  border-left: 4px solid hsl(var(--cs-amber));
+  padding-left: 0.5rem;
+  color: hsl(var(--text-primary));
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+[data-theme="console"] input[type="text"],
+[data-theme="console"] select,
+[data-theme="console"] .settings-input {
+  border-radius: var(--radius-xs);
+  border: 1px solid hsl(0 0% 0% / 0.5);
+  background: hsl(0 0% 0% / 0.28);
+  color: hsl(var(--text-primary));
+}
+
+/* 通用按钮 - 按键 */
+[data-theme="console"] button:not(.content-tab):not(.group-tab):not(.group-option):not(.layout-option):not(.network-option):not(.theme-option):not(.engine-option):not(.action-btn) {
+  border-radius: var(--radius-xs);
+  border: 1px solid hsl(0 0% 0% / 0.5);
+  background: linear-gradient(180deg, hsl(220 13% 17%) 0%, hsl(220 13% 12%) 100%);
+  color: hsl(var(--text-primary));
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.08), inset 0 -1px 0 hsl(0 0% 0% / 0.3);
+}
+
+[data-theme="console"] button:not(.content-tab):not(.group-tab):not(.group-option):not(.layout-option):not(.network-option):not(.theme-option):not(.engine-option):not(.action-btn):active {
+  transform: translateY(1px);
+}
+
+[data-theme="console"] .btn-primary,
+[data-theme="console"] .btn-primary:hover {
+  background: hsl(var(--cs-amber));
+  color: hsl(var(--text-on-primary));
+  border-color: hsl(var(--cs-amber));
+  box-shadow: 0 0 14px -6px hsl(var(--cs-amber) / 0.7);
+}
+
+/* 走势图 */
+[data-theme="console"] .stat-trend {
+  margin-top: 0.5rem;
+}

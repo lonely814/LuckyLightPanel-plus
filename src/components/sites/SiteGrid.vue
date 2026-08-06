@@ -125,10 +125,29 @@ const gridClass = computed(() => {
       return 'site-grid list'
     case 'minimal':
       return 'site-grid minimal'
+    case 'rack':
+      return 'site-grid rack'
+    case 'map':
+      return 'site-grid map'
     default: // normal
       return 'site-grid normal'
   }
 })
+
+// 地铁线路配色 - 每个分组一条线
+const MAP_LINE_COLORS = [
+  '192 70% 55%',   // 青
+  '265 60% 62%',   // 紫
+  '155 55% 46%',   // 绿
+  '40 80% 55%',    // 琥珀
+  '215 65% 60%',   // 蓝
+  '330 60% 62%'    // 粉
+]
+
+// 根据分组序号取线路颜色（作为 CSS 变量绑定到网格容器）
+function mapLineStyle(index: number) {
+  return { '--map-line': MAP_LINE_COLORS[index % MAP_LINE_COLORS.length] }
+}
 
 </script>
 
@@ -161,9 +180,10 @@ const gridClass = computed(() => {
         :key="item.group.key" 
         class="group-section"
         :class="{ 'has-margin': index < groupedSites.length - 1 }"
+        :style="configStore.layout === 'map' ? mapLineStyle(index) : undefined"
       >
         <!-- 分组标题 -->
-        <h3 class="group-title">{{ item.group.name }}</h3>
+        <h3 class="group-title" :class="{ 'map-group-title': configStore.layout === 'map' }">{{ item.group.name }}</h3>
         <!-- 站点网格 -->
         <div :class="gridClass">
           <SiteCard
@@ -186,7 +206,7 @@ const gridClass = computed(() => {
     <!-- 单个分组模式（只选了一个分组） -->
     <template v-else>
       <!-- 站点网格 -->
-      <div :class="gridClass">
+      <div :class="gridClass" :style="configStore.layout === 'map' ? mapLineStyle(0) : undefined">
         <SiteCard
           v-for="site in filteredSites"
           :key="site.key"
@@ -277,11 +297,6 @@ const gridClass = computed(() => {
   color: hsl(210 40% 85%);
 }
 
-/* 素描深色主题分组标题 */
-[data-theme="sketch-dark"] .group-title {
-  color: hsl(40 12% 80%);
-}
-
 /* 网格布局 */
 .site-grid {
   display: grid;
@@ -328,6 +343,67 @@ const gridClass = computed(() => {
   justify-items: center;
 }
 
+/* Rack 布局 - 单列 1U 面板，像标准 19" 机柜 */
+.site-grid.rack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* 大屏幕下机柜布局双列 */
+@media (min-width: 1400px) {
+  .site-grid.rack {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem 0.875rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .site-grid.rack {
+    gap: 0.375rem;
+  }
+}
+
+/* Map 布局 - 地铁线路图 */
+.site-grid.map {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* 地铁线路主干线 */
+.site-grid.map::before {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  left: 1.0625rem;
+  width: 2px;
+  background: hsl(var(--map-line, var(--neon-cyan)) / 0.35);
+  transform: translateX(-50%);
+  border-radius: 1px;
+}
+
+/* 分组标题 - 线路配色 */
+.map-group-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: hsl(var(--map-line, var(--neon-cyan)));
+}
+
+.map-group-title::before {
+  content: '';
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background: hsl(var(--map-line, var(--neon-cyan)));
+  box-shadow: 0 0 10px hsl(var(--map-line, var(--neon-cyan)) / 0.6);
+  flex-shrink: 0;
+}
+
 /* 空状态 */
 .empty-state {
   text-align: center;
@@ -361,14 +437,5 @@ const gridClass = computed(() => {
 
 [data-theme="light"] .empty-text {
   color: rgba(0, 0, 0, 0.45);
-}
-
-/* 素描浅色主题适配 */
-[data-theme="sketch-light"] .empty-icon {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-[data-theme="sketch-light"] .empty-text {
-  color: rgba(100, 110, 120, 0.5);
 }
 </style>

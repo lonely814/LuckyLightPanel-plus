@@ -11,6 +11,7 @@ import type {
   TabSearchKeywords,
   GroupSelection
 } from '@/types'
+import { THEME_IDS } from '@/types'
 
 const STORAGE_KEY = 'lightpanel_config'
 
@@ -50,6 +51,7 @@ const DEFAULT_CONFIG: UserConfig = {
   layout: 'normal',
   dockerLayout: 'list',
   luckyServicesLayout: 'normal',
+  layoutScale: 1,
   showDescription: true,
   showTime: true,
   showSearch: false,
@@ -58,7 +60,14 @@ const DEFAULT_CONFIG: UserConfig = {
   customSearchUrl: '',
   tabGroups: { ...DEFAULT_TAB_GROUPS },
   networkMode: 'hybrid',
-  currentTab: 'sites'
+  currentTab: 'sites',
+
+  // 细节调整默认值（100 = 跟随主题）
+  detailTextContrast: 100,
+  detailRadiusScale: 100,
+  detailGlassBlurScale: 100,
+  detailGlassOpacityScale: 100,
+  detailReduceMotion: false
 }
 
 export const useConfigStore = defineStore('config', () => {
@@ -82,14 +91,6 @@ export const useConfigStore = defineStore('config', () => {
 
   // 计算属性：背景样式
   const backgroundStyle = computed(() => {
-    // 素描主题使用纸张质感纯色背景
-    if (config.value.theme === 'sketch-dark') {
-      return { background: 'hsl(40 12% 8%)' }
-    }
-    if (config.value.theme === 'sketch-light') {
-      return { background: 'hsl(210 10% 92%)' }
-    }
-
     const bg = config.value.background
 
     // 自定义背景
@@ -128,6 +129,7 @@ export const useConfigStore = defineStore('config', () => {
   const layout = computed(() => config.value.layout)
   const dockerLayout = computed(() => config.value.dockerLayout)
   const luckyServicesLayout = computed(() => config.value.luckyServicesLayout)
+  const layoutScale = computed(() => config.value.layoutScale)
   const networkMode = computed(() => config.value.networkMode)
   const currentTab = computed(() => config.value.currentTab)
   
@@ -179,7 +181,7 @@ export const useConfigStore = defineStore('config', () => {
     }
 
     // 验证主题有效性
-    const validThemes = ['light', 'dark', 'sketch-light', 'sketch-dark']
+    const validThemes = THEME_IDS
     if (!validThemes.includes(config.value.theme)) {
       config.value.theme = 'dark'
       saveConfig()
@@ -207,8 +209,10 @@ export const useConfigStore = defineStore('config', () => {
     // 应用配置模板中定义的字段
     const validKeys: (keyof UserConfig)[] = [
       'theme', 'background', 'layout', 'dockerLayout', 'luckyServicesLayout',
-      'networkMode', 'currentTab', 'showDescription', 'showTime',
-      'showSearch', 'showHeader', 'searchEngine', 'customSearchUrl'
+      'layoutScale', 'networkMode', 'currentTab', 'showDescription', 'showTime',
+      'showSearch', 'showHeader', 'searchEngine', 'customSearchUrl',
+      'detailTextContrast', 'detailRadiusScale', 'detailGlassBlurScale',
+      'detailGlassOpacityScale', 'detailReduceMotion'
     ]
 
     let hasChanges = false
@@ -316,6 +320,11 @@ export const useConfigStore = defineStore('config', () => {
   // 设置 Lucky 服务布局
   function setLuckyServicesLayout(layout: LayoutMode) {
     updateConfig('luckyServicesLayout', layout)
+  }
+
+  // 设置布局缩放比例
+  function setLayoutScale(scale: number) {
+    updateConfig('layoutScale', scale)
   }
 
   // 设置网络模式
@@ -458,6 +467,7 @@ export const useConfigStore = defineStore('config', () => {
     layout,
     dockerLayout,
     luckyServicesLayout,
+    layoutScale,
     networkMode,
     currentTab,
     currentGroup,
@@ -480,6 +490,7 @@ export const useConfigStore = defineStore('config', () => {
     setLayout,
     setDockerLayout,
     setLuckyServicesLayout,
+    setLayoutScale,
     setNetworkMode,
     setCurrentTab,
     setCurrentGroup,

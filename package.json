@@ -1,23 +1,19 @@
 {
   "name": "lightpanel-vue",
   "version": "1.0.0",
-  "description": "轻面板 Vue3 重构版 - 基于 Vue 3 + Vite + shadcn-vue + Motion 的现代化导航面板",
+  "description": "轻面板 Vue3 重构版 - 基于 Vue 3 + Vite 的现代化导航面板（LuckyLightPanel 二创）",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "lint": "eslint . --fix",
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@vueuse/core": "^12.8.2",
     "lucide-vue-next": "^0.469.0",
-    "motion-v": "^1.10.2",
     "pinia": "^2.3.1",
-    "radix-vue": "^1.9.17",
-    "vue": "^3.5.27",
-    "vue-router": "^4.6.4"
+    "vue": "^3.5.27"
   },
   "devDependencies": {
     "@types/node": "^22.19.7",

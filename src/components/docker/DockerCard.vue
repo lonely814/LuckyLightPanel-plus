@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { useNavStore } from '@/stores/nav'
 import { useConfigStore } from '@/stores/config'
 import { Cpu, MemoryStick, ArrowDownToLine, ArrowUpFromLine, Activity, Box, Zap } from 'lucide-vue-next'
+import Sparkline from '@/components/common/Sparkline.vue'
 import type { DockerContainer } from '@/types'
 
 const props = defineProps<{
@@ -178,14 +179,56 @@ const cpuValue = computed(() => {
   return parseFloat(cpu.replace('%', '')) || 0
 })
 
+// 历史趋势数据（走势图）
+const cpuHistory = computed(() => navStore.getContainerHistory(props.container.containerName)?.cpu || [])
+const memHistory = computed(() => navStore.getContainerHistory(props.container.containerName)?.memory || [])
+const rxHistory = computed(() => navStore.getContainerHistory(props.container.containerName)?.rx || [])
+const txHistory = computed(() => navStore.getContainerHistory(props.container.containerName)?.tx || [])
+
 // 卡片类名
 const cardClass = computed(() => {
   const classes = ['docker-card', 'group']
   if (layout.value === 'list') classes.push('layout-list')
   else if (layout.value === 'minimal') classes.push('layout-minimal')
   else if (layout.value === 'compact') classes.push('layout-compact')
+  else if (layout.value === 'rack') classes.push('layout-rack')
   else classes.push('layout-normal')
   return classes.join(' ')
+})
+
+// 是否运行中
+const isRunning = computed(() => containerState.value === 'running')
+
+// 机柜布局 LED 状态灯样式
+const rackLedStyle = computed(() => {
+  const active = isRunning.value
+  return {
+    backgroundColor: active ? 'hsl(var(--neon-green))' : 'hsl(var(--text-muted))',
+    boxShadow: active ? '0 0 6px hsl(var(--neon-green) / 0.9)' : 'none'
+  }
+})
+
+// 机柜布局活动灯样式
+const rackActLedStyle = computed(() => {
+  const active = isRunning.value
+  return {
+    backgroundColor: active ? 'hsl(var(--docker-orange))' : 'hsl(var(--text-muted))',
+    boxShadow: active ? '0 0 6px hsl(var(--docker-orange) / 0.9)' : 'none'
+  }
+})
+
+// 机柜布局图标背景样式
+const rackIconBgStyle = computed(() => {
+  if (iconUrl.value) {
+    return {
+      boxShadow: `0 2px 10px -2px hsl(var(--icon-placeholder-bg) / 0.4)`
+    }
+  } else {
+    return {
+      background: `linear-gradient(135deg, ${stateConfig.value.color}, hsl(var(--docker-orange)))`,
+      boxShadow: `0 2px 10px -2px hsl(${stateConfig.value.shadow} / 0.4)`
+    }
+  }
 })
 
 // 图标背景样式（根据是否有自定义图标区分）
@@ -402,6 +445,26 @@ const ariaLabel = computed(() => {
               </div>
             </div>
           </div>
+
+          <!-- 实时走势图 -->
+          <div class="trend-grid">
+            <div class="trend-item">
+              <span class="trend-label">CPU</span>
+              <Sparkline :data="cpuHistory" :color="stateConfig.color" :height="22" />
+            </div>
+            <div class="trend-item">
+              <span class="trend-label">MEM</span>
+              <Sparkline :data="memHistory" color="hsl(var(--neon-purple))" :height="22" />
+            </div>
+            <div class="trend-item">
+              <span class="trend-label">↓ 下行</span>
+              <Sparkline :data="rxHistory" color="hsl(var(--neon-green))" :height="22" />
+            </div>
+            <div class="trend-item">
+              <span class="trend-label">↑ 上行</span>
+              <Sparkline :data="txHistory" color="hsl(var(--neon-blue))" :height="22" />
+            </div>
+          </div>
         </div>
 
         <!-- 非运行状态提示 -->
@@ -556,6 +619,68 @@ const ariaLabel = computed(() => {
         <div v-else class="list-stats-placeholder">
           <span class="offline-label" :style="{ color: stateConfig.color }">OFFLINE</span>
         </div>
+      </div>
+    </template>
+
+    <!-- ============ Rack 布局 - 1U 前面板 ============ -->
+    <template v-else-if="layout === 'rack'">
+      <div class="card-inner-rack">
+        <!-- 前面板顶盖装饰线 -->
+        <div class="rack-top-edge" />
+        <!-- 指示灯组 -->
+        <div class="rack-leds">
+          <span class="rack-led" :style="rackLedStyle" title="电源" />
+          <span class="rack-led rack-led-act" :class="{ blink: isRunning }" :style="rackActLedStyle" title="活动" />
+        </div>
+        <!-- 图标/铭牌 -->
+        <div class="rack-head">
+          <div class="rack-icon" :style="rackIconBgStyle">
+            <div v-if="iconLoading && iconUrl" class="icon-skeleton-sm" />
+            <img
+              v-if="iconUrl"
+              :src="iconUrl"
+              :alt="displayName"
+              class="icon-img"
+              loading="lazy"
+              @load="handleIconLoad"
+              @error="handleIconError"
+            />
+            <Box v-else class="icon-default-sm" />
+          </div>
+          <div class="rack-nameplate">
+            <span class="rack-name">{{ displayName }}</span>
+            <span v-if="container.description" class="rack-desc">{{ container.description }}</span>
+          </div>
+        </div>
+        <!-- 状态读数 -->
+        <div class="rack-status">
+          <span class="rack-status-short" :style="{ color: stateConfig.color }">{{ stateConfig.shortText }}</span>
+          <span v-if="statusDuration" class="rack-duration">{{ statusDuration }}</span>
+        </div>
+        <!-- 统计读数 -->
+        <div v-if="stats && isRunning" class="rack-stats">
+          <div class="rack-stat" title="CPU 使用率">
+            <Cpu class="rack-stat-icon" :style="{ color: stateConfig.color }" />
+            <span class="rack-stat-value">{{ cpuValue.toFixed(1) }}%</span>
+          </div>
+          <div class="rack-stat" title="内存使用">
+            <MemoryStick class="rack-stat-icon mem" />
+            <span class="rack-stat-value">{{ stats.memoryUsage?.split('/')[0] || '-' }}</span>
+          </div>
+          <div class="rack-stat" title="下载速度">
+            <ArrowDownToLine class="rack-stat-icon" />
+            <span class="rack-stat-value">{{ formatSpeedShort(stats.networkRxSpeed || 0) }}</span>
+          </div>
+          <div class="rack-stat" title="上传速度">
+            <ArrowUpFromLine class="rack-stat-icon" />
+            <span class="rack-stat-value">{{ formatSpeedShort(stats.networkTxSpeed || 0) }}</span>
+          </div>
+        </div>
+        <div v-else class="rack-offline">
+          <Zap class="rack-offline-icon" :style="{ color: stateConfig.color }" />
+        </div>
+        <!-- 面板把手 -->
+        <div class="rack-handle" />
       </div>
     </template>
 
@@ -991,6 +1116,29 @@ const ariaLabel = computed(() => {
   white-space: nowrap;
 }
 
+/* 实时走势图 */
+.trend-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem 0.875rem;
+  padding: 0.625rem 0.25rem 0;
+  border-top: 1px solid hsl(var(--glass-border));
+}
+
+.trend-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.trend-label {
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: hsl(var(--text-muted));
+}
+
 /* 停止状态 */
 .stopped-state {
   margin-top: 0.5rem;
@@ -1309,6 +1457,256 @@ const ariaLabel = computed(() => {
   opacity: 0.7;
 }
 
+/* ============ Rack 布局 - 1U 前面板样式 ============ */
+.docker-card.layout-rack {
+  padding: 0;
+  overflow: hidden;
+}
+
+.docker-card.layout-rack:hover {
+  transform: translateX(-6px);
+  box-shadow:
+    var(--site-card-shadow-hover),
+    0 0 20px -6px hsl(var(--docker-orange) / 0.3),
+    0 0 40px -10px hsl(var(--neon-purple) / 0.12);
+}
+
+/* 机柜内前面板 */
+.card-inner-rack {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.625rem 0.75rem;
+  min-height: 3.25rem;
+  background:
+    linear-gradient(90deg, hsl(var(--site-card-inner-glow)) 0%, transparent 30%),
+    linear-gradient(180deg, hsl(var(--site-card-bg-hover)) 0%, hsl(var(--site-card-bg)) 100%);
+}
+
+/* 前面板顶部发光棱线 */
+.rack-top-edge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, hsl(var(--docker-orange) / 0.6), transparent);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* 指示灯组 */
+.rack-leds {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  padding: 0.25rem 0.375rem;
+  border-radius: 0.375rem;
+  background: hsl(var(--glass-bg));
+}
+
+.rack-led {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 50%;
+}
+
+.rack-led-act.blink {
+  animation: rack-led-blink 1.2s ease-in-out infinite;
+}
+
+@keyframes rack-led-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+/* 铭牌区 */
+.rack-head {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.rack-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  filter: brightness(var(--icon-brightness, 1));
+  position: relative;
+  background: hsl(var(--icon-placeholder-bg));
+}
+
+.rack-icon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, var(--icon-overlay-opacity, 0));
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.rack-nameplate {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.rack-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: hsl(var(--text-primary));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: ui-monospace, monospace;
+  letter-spacing: 0.02em;
+  transition: color 300ms;
+}
+
+.docker-card:hover .rack-name {
+  color: hsl(var(--docker-orange));
+}
+
+.rack-desc {
+  font-size: 0.6875rem;
+  color: hsl(var(--text-muted));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: ui-monospace, monospace;
+}
+
+/* 状态读数 */
+.rack-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.rack-status-short {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  font-family: ui-monospace, monospace;
+  letter-spacing: 0.06em;
+  padding: 0.1875rem 0.5rem;
+  border-radius: 0.25rem;
+  background: hsl(var(--glass-bg));
+  white-space: nowrap;
+}
+
+.rack-duration {
+  font-size: 0.625rem;
+  color: hsl(var(--text-muted));
+  font-family: ui-monospace, monospace;
+  white-space: nowrap;
+}
+
+/* 统计读数 */
+.rack-stats {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.rack-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+.rack-stat-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.rack-stat-icon.mem {
+  color: hsl(var(--neon-purple));
+}
+
+.rack-stat-value {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: hsl(var(--text-secondary));
+  font-family: ui-monospace, monospace;
+}
+
+.rack-offline {
+  flex-shrink: 0;
+}
+
+.rack-offline-icon {
+  width: 1rem;
+  height: 1rem;
+  opacity: 0.5;
+}
+
+/* 面板把手 */
+.rack-handle {
+  width: 0.375rem;
+  height: 1.75rem;
+  border-radius: 0.1875rem;
+  flex-shrink: 0;
+  background:
+    linear-gradient(180deg, hsl(var(--glass-border)) 0%, transparent 40%, transparent 60%, hsl(var(--glass-border)) 100%),
+    hsl(var(--glass-bg));
+  border: 1px solid hsl(var(--glass-border));
+}
+
+/* 机柜布局响应式 */
+@media (max-width: 720px) {
+  .card-inner-rack {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .rack-nameplate {
+    flex: 1;
+  }
+
+  .rack-desc {
+    display: none;
+  }
+
+  .rack-status {
+    margin-left: auto;
+  }
+
+  .rack-stats {
+    width: 100%;
+    padding-left: 0.625rem;
+    border-left: none;
+  }
+
+  .rack-handle {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .rack-duration {
+    display: none;
+  }
+
+  .rack-stats {
+    gap: 0.5rem;
+  }
+}
+
 /* ============ Minimal 布局样式 ============ */
 .card-inner-minimal {
   position: relative;
@@ -1514,6 +1912,10 @@ const ariaLabel = computed(() => {
   .icon-skeleton,
   .icon-skeleton-sm,
   .icon-skeleton-md {
+    animation: none;
+  }
+
+  .rack-led-act.blink {
     animation: none;
   }
 }

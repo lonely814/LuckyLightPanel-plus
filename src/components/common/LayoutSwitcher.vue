@@ -10,12 +10,14 @@ const dropdownRef = ref<HTMLElement | null>(null)
 const dropdownMenuRef = ref<HTMLElement | null>(null)
 const alignRight = ref(false)
 
-// 布局选项配置 - 四种布局
+// 布局选项配置 - 六种布局
 const layoutOptions: { value: LayoutMode; label: string; icon: string; desc: string }[] = [
   { value: 'normal', label: '卡片', icon: 'card', desc: '标准布局' },
   { value: 'compact', label: '紧凑', icon: 'compact', desc: '密集排列' },
   { value: 'list', label: '列表', icon: 'list', desc: '横向展示' },
-  { value: 'minimal', label: '极简', icon: 'minimal', desc: '纯图标' }
+  { value: 'minimal', label: '极简', icon: 'minimal', desc: '纯图标' },
+  { value: 'rack', label: '机柜', icon: 'rack', desc: '1U 前面板' },
+  { value: 'map', label: '地铁', icon: 'map', desc: '线路图' }
 ]
 
 // 当前选中的布局
@@ -198,6 +200,38 @@ onUnmounted(() => {
                 <div class="minimal-cell">
                   <div class="minimal-icon"></div>
                   <div class="minimal-dot"></div>
+                </div>
+              </div>
+            </template>
+            <template v-else-if="option.icon === 'rack'">
+              <div class="preview-rack">
+                <div class="preview-rack-unit">
+                  <span class="preview-rack-led"></span>
+                  <span class="preview-rack-led"></span>
+                  <span class="preview-rack-block"></span>
+                  <span class="preview-rack-line"></span>
+                  <span class="preview-rack-chip"></span>
+                </div>
+                <div class="preview-rack-unit">
+                  <span class="preview-rack-led"></span>
+                  <span class="preview-rack-led"></span>
+                  <span class="preview-rack-block"></span>
+                  <span class="preview-rack-line"></span>
+                  <span class="preview-rack-chip"></span>
+                </div>
+              </div>
+            </template>
+            <template v-else-if="option.icon === 'map'">
+              <div class="preview-map">
+                <div class="preview-map-line">
+                  <span class="preview-map-station"></span>
+                  <span class="preview-map-station transfer"></span>
+                  <span class="preview-map-station"></span>
+                </div>
+                <div class="preview-map-labels">
+                  <span class="preview-map-label"></span>
+                  <span class="preview-map-label"></span>
+                  <span class="preview-map-label"></span>
                 </div>
               </div>
             </template>
@@ -593,6 +627,123 @@ onUnmounted(() => {
   display: none;
 }
 
+/* ============ 机柜布局预览 - 1U 面板堆叠 ============ */
+.preview-rack {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  width: 100%;
+  height: 100%;
+}
+
+.preview-rack-unit {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 3px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(6, 182, 212, 0.28) 0%, rgba(6, 182, 212, 0.12) 100%);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+}
+
+.preview-rack-led {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.8);
+  flex-shrink: 0;
+}
+
+.preview-rack-block {
+  width: 5px;
+  height: 5px;
+  border-radius: 1px;
+  background: rgba(6, 182, 212, 0.6);
+  flex-shrink: 0;
+}
+
+.preview-rack-line {
+  flex: 1;
+  height: 2px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.preview-rack-chip {
+  width: 8px;
+  height: 3px;
+  border-radius: 1px;
+  background: rgba(6, 182, 212, 0.5);
+  flex-shrink: 0;
+}
+
+/* ============ 地铁线路图预览 - 竖线 + 站台 ============ */
+.preview-map {
+  display: flex;
+  gap: 3px;
+  width: 100%;
+  height: 100%;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.preview-map-line {
+  position: relative;
+  width: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.preview-map-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background: rgba(6, 182, 212, 0.5);
+}
+
+.preview-map-station {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(6, 182, 212, 0.8);
+  box-shadow: 0 0 3px rgba(6, 182, 212, 0.5);
+  z-index: 1;
+}
+
+.preview-map-station.transfer {
+  background: transparent;
+  border: 1px solid rgba(139, 92, 246, 0.8);
+}
+
+.preview-map-labels {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 2px 0;
+}
+
+.preview-map-label {
+  height: 2px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.preview-map-label:nth-child(2) {
+  width: 80%;
+}
+
+.preview-map-label:nth-child(3) {
+  width: 60%;
+}
+
 /* 布局标签 */
 .layout-label {
   font-size: 11px;
@@ -688,241 +839,6 @@ onUnmounted(() => {
 
 [data-theme="light"] .minimal-icon {
   background: linear-gradient(135deg, rgba(6, 182, 212, 0.6) 0%, rgba(139, 92, 246, 0.4) 100%);
-}
-
-/* ============ 素描浅色主题适配 ============ */
-[data-theme="sketch-light"] .layout-badge {
-  background: rgba(255, 255, 255, 0.5);
-  border-color: rgba(100, 110, 120, 0.2);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 2px 8px -2px rgba(100, 110, 120, 0.1);
-}
-
-[data-theme="sketch-light"] .layout-badge:hover {
-  background: rgba(255, 255, 255, 0.65);
-  border-color: rgba(100, 110, 120, 0.3);
-}
-
-[data-theme="sketch-light"] .layout-dropdown {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(100, 110, 120, 0.15);
-  box-shadow:
-    0 8px 32px rgba(100, 110, 120, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-
-[data-theme="sketch-light"] .layout-option {
-  color: rgba(80, 90, 100, 0.85);
-}
-
-[data-theme="sketch-light"] .layout-option::before {
-  background: linear-gradient(135deg, transparent 0%, rgba(100, 110, 120, 0.05) 100%);
-}
-
-[data-theme="sketch-light"] .layout-option:hover {
-  background: rgba(100, 110, 120, 0.06);
-  border-color: rgba(100, 110, 120, 0.1);
-}
-
-[data-theme="sketch-light"] .layout-option.active {
-  background: linear-gradient(135deg, rgba(100, 110, 120, 0.1) 0%, rgba(120, 130, 140, 0.05) 100%);
-  border-color: rgba(100, 110, 120, 0.3);
-  color: rgba(60, 70, 80, 1);
-  box-shadow:
-    0 0 15px -5px rgba(100, 110, 120, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
-}
-
-[data-theme="sketch-light"] .layout-option.active::after {
-  background: rgba(100, 110, 120, 0.6);
-  box-shadow: 0 0 6px rgba(100, 110, 120, 0.4);
-}
-
-[data-theme="sketch-light"] .layout-option.active .layout-preview {
-  border-color: rgba(100, 110, 120, 0.35);
-  background: linear-gradient(135deg, rgba(100, 110, 120, 0.08) 0%, rgba(120, 130, 140, 0.04) 100%);
-  box-shadow: 0 0 10px -3px rgba(100, 110, 120, 0.2);
-}
-
-[data-theme="sketch-light"] .layout-preview {
-  border-color: rgba(100, 110, 120, 0.18);
-  background: linear-gradient(135deg, rgba(100, 110, 120, 0.06) 0%, rgba(120, 130, 140, 0.03) 100%);
-}
-
-[data-theme="sketch-light"] .layout-preview::before {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 50%);
-}
-
-[data-theme="sketch-light"] .preview-card-icon {
-  background: linear-gradient(135deg, rgba(100, 110, 120, 0.5) 0%, rgba(120, 130, 140, 0.3) 100%);
-  box-shadow: 0 2px 4px rgba(100, 110, 120, 0.2);
-}
-
-[data-theme="sketch-light"] .card-title-bar {
-  background: rgba(100, 110, 120, 0.35);
-}
-
-[data-theme="sketch-light"] .card-desc-bar {
-  background: rgba(100, 110, 120, 0.18);
-}
-
-[data-theme="sketch-light"] .card-status-dot {
-  background: rgba(100, 110, 120, 0.45);
-  box-shadow: none;
-}
-
-[data-theme="sketch-light"] .card-badge {
-  background: rgba(100, 110, 120, 0.28);
-}
-
-[data-theme="sketch-light"] .compact-item {
-  background: rgba(100, 110, 120, 0.04);
-}
-
-[data-theme="sketch-light"] .compact-icon {
-  background: linear-gradient(135deg, rgba(100, 110, 120, 0.45) 0%, rgba(120, 130, 140, 0.25) 100%);
-}
-
-[data-theme="sketch-light"] .compact-line {
-  background: rgba(100, 110, 120, 0.22);
-}
-
-[data-theme="sketch-light"] .list-row {
-  background: rgba(100, 110, 120, 0.04);
-}
-
-[data-theme="sketch-light"] .list-icon {
-  background: linear-gradient(135deg, rgba(100, 110, 120, 0.45) 0%, rgba(120, 130, 140, 0.25) 100%);
-}
-
-[data-theme="sketch-light"] .list-text {
-  background: rgba(100, 110, 120, 0.22);
-}
-
-[data-theme="sketch-light"] .list-badge {
-  background: rgba(100, 110, 120, 0.28);
-}
-
-[data-theme="sketch-light"] .minimal-icon {
-  background: linear-gradient(135deg, rgba(100, 110, 120, 0.4) 0%, rgba(120, 130, 140, 0.22) 100%);
-  box-shadow: 0 1px 3px rgba(100, 110, 120, 0.15);
-}
-
-[data-theme="sketch-light"] .minimal-dot {
-  background: rgba(100, 110, 120, 0.4);
-  box-shadow: none;
-}
-
-/* ============ 素描深色主题适配 ============ */
-[data-theme="sketch-dark"] .layout-dropdown {
-  background: rgba(35, 30, 25, 0.95);
-  border-color: rgba(255, 255, 255, 0.08);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
-}
-
-[data-theme="sketch-dark"] .layout-option {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-[data-theme="sketch-dark"] .layout-option::before {
-  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.03) 100%);
-}
-
-[data-theme="sketch-dark"] .layout-option:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.06);
-}
-
-[data-theme="sketch-dark"] .layout-option.active {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.95);
-  box-shadow: 
-    0 0 15px -5px rgba(255, 255, 255, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
-
-[data-theme="sketch-dark"] .layout-option.active::after {
-  background: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
-}
-
-[data-theme="sketch-dark"] .layout-option.active .layout-preview {
-  border-color: rgba(255, 255, 255, 0.2);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.03) 100%);
-  box-shadow: 0 0 10px -3px rgba(255, 255, 255, 0.15);
-}
-
-[data-theme="sketch-dark"] .layout-preview {
-  border-color: rgba(255, 255, 255, 0.1);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%);
-}
-
-[data-theme="sketch-dark"] .layout-preview::before {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
-}
-
-[data-theme="sketch-dark"] .preview-card-icon {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-[data-theme="sketch-dark"] .card-title-bar {
-  background: rgba(255, 255, 255, 0.25);
-}
-
-[data-theme="sketch-dark"] .card-desc-bar {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-[data-theme="sketch-dark"] .card-status-dot {
-  background: rgba(255, 255, 255, 0.3);
-  box-shadow: none;
-}
-
-[data-theme="sketch-dark"] .card-badge {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-[data-theme="sketch-dark"] .compact-item {
-  background: rgba(255, 255, 255, 0.03);
-}
-
-[data-theme="sketch-dark"] .compact-icon {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
-}
-
-[data-theme="sketch-dark"] .compact-line {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-[data-theme="sketch-dark"] .list-row {
-  background: rgba(255, 255, 255, 0.03);
-}
-
-[data-theme="sketch-dark"] .list-icon {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
-}
-
-[data-theme="sketch-dark"] .list-text {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-[data-theme="sketch-dark"] .list-badge {
-  background: rgba(255, 255, 255, 0.18);
-}
-
-[data-theme="sketch-dark"] .minimal-icon {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.08) 100%);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-}
-
-[data-theme="sketch-dark"] .minimal-dot {
-  background: rgba(255, 255, 255, 0.25);
-  box-shadow: none;
 }
 
 /* 深色主题适配 */

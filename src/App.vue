@@ -2,10 +2,11 @@
 import { onMounted, computed, watch, ref, provide } from 'vue'
 import { useNavStore } from '@/stores/nav'
 import { useConfigStore } from '@/stores/config'
+import { THEMES } from '@/themes/registry'
 import type { TabType } from '@/types'
-import TechBackground from '@/components/common/TechBackground.vue'
 import LoadingScreen from '@/components/common/LoadingScreen.vue'
 import AppHeader from '@/components/layout/AppHeader.vue'
+import GreetingClock from '@/components/layout/GreetingClock.vue'
 import ContentTabs from '@/components/common/ContentTabs.vue'
 import SiteGrid from '@/components/sites/SiteGrid.vue'
 import DockerGrid from '@/components/docker/DockerGrid.vue'
@@ -61,6 +62,11 @@ const availableTabs = computed<TabType[]>(() => {
 })
 const showGlobalEmptyState = computed(() => !isLoading.value && availableTabs.value.length === 0)
 
+// 当前主题的背景组件（从注册表获取）
+const currentThemeBackground = computed(() => {
+  return THEMES.find(t => t.value === configStore.theme)?.backgroundComponent
+})
+
 // 获取第一个可用的标签页
 function getFirstAvailableTab(): TabType | null {
   return availableTabs.value[0] ?? null
@@ -93,6 +99,91 @@ watch(
   () => configStore.effectiveTheme,
   (theme) => {
     document.documentElement.setAttribute('data-theme', theme)
+  },
+  { immediate: true }
+)
+
+// ============ 细节调整（文字对比度 / 圆角 / 玻璃模糊 / 卡片不透明度 / 减弱动效） ============
+
+// 细节调整涉及的 CSS 变量
+const DETAIL_TEXT_VARS = ['--text-primary', '--text-secondary', '--text-muted'] as const
+const DETAIL_BLUR_VARS = ['--glass-blur', '--site-card-blur'] as const
+const DETAIL_OPACITY_VARS = ['--glass-bg', '--glass-bg-hover', '--card-bg', '--site-card-bg', '--site-card-bg-hover'] as const
+const DETAIL_RADIUS_VARS = ['--radius-xs', '--radius-sm', '--radius-md', '--radius-lg', '--radius-xl'] as const
+const ALL_DETAIL_VARS = [...DETAIL_TEXT_VARS, ...DETAIL_BLUR_VARS, ...DETAIL_OPACITY_VARS, ...DETAIL_RADIUS_VARS]
+
+// 当前主题的原始变量快照（用于避免重复计算叠乘）
+let themeDetailBase: Record<string, string> = {}
+
+function snapshotThemeDetails() {
+  const el = document.documentElement
+  // 先清除内联覆盖，读取纯主题值
+  ALL_DETAIL_VARS.forEach(v => el.style.removeProperty(v))
+  const cs = getComputedStyle(el)
+  themeDetailBase = {}
+  ALL_DETAIL_VARS.forEach(v => {
+    themeDetailBase[v] = cs.getPropertyValue(v).trim()
+  })
+}
+
+function applyThemeDetails() {
+  const el = document.documentElement
+  const cfg = configStore.config
+
+  // 文字对比度：按当前明暗方向调整亮度
+  const contrast = cfg.detailTextContrast / 100
+  DETAIL_TEXT_VARS.forEach(v => {
+    const raw = themeDetailBase[v]
+    const m = raw.match(/^([\d.]+)\s+([\d.]+%)\s+([\d.]+%)$/)
+    if (!m) return
+    const hue = m[1]
+    const sat = m[2]
+    const light = parseFloat(m[3])
+    const isLightText = light >= 50
+    const factor = isLightText ? contrast : 1 / contrast
+    const next = Math.min(99, Math.max(1, light * factor))
+    el.style.setProperty(v, `${hue} ${sat} ${next.toFixed(1)}%`)
+  })
+
+  // 玻璃模糊
+  const blur = cfg.detailGlassBlurScale / 100
+  DETAIL_BLUR_VARS.forEach(v => {
+    const base = parseFloat(themeDetailBase[v]) || 20
+    el.style.setProperty(v, `${Math.round(base * blur)}px`)
+  })
+
+  // 卡片/玻璃不透明度
+  const opacity = cfg.detailGlassOpacityScale / 100
+  DETAIL_OPACITY_VARS.forEach(v => {
+    const m = themeDetailBase[v].match(/^(.+?)\s*\/\s*([\d.]+)$/)
+    if (!m) return
+    const alpha = Math.min(1, parseFloat(m[2]) * opacity)
+    el.style.setProperty(v, `${m[1]} / ${alpha.toFixed(3)}`)
+  })
+
+  // 圆角
+  const radius = cfg.detailRadiusScale / 100
+  DETAIL_RADIUS_VARS.forEach(v => {
+    const base = parseFloat(themeDetailBase[v]) || 0
+    el.style.setProperty(v, `${Math.round(base * radius)}px`)
+  })
+
+  // 减弱动效
+  el.classList.toggle('motion-reduced', cfg.detailReduceMotion)
+}
+
+watch(
+  () => [
+    configStore.effectiveTheme,
+    configStore.config.detailTextContrast,
+    configStore.config.detailRadiusScale,
+    configStore.config.detailGlassBlurScale,
+    configStore.config.detailGlassOpacityScale,
+    configStore.config.detailReduceMotion
+  ],
+  () => {
+    snapshotThemeDetails()
+    applyThemeDetails()
   },
   { immediate: true }
 )
@@ -133,6 +224,23 @@ onMounted(async () => {
   // 先加载本地配置（包含默认值）
   configStore.loadConfig()
 
+  const startTime = Date.now()
+
+  // 兜底：无论初始化多久都最多黑屏 3 秒
+  const forceFinish = setTimeout(() => {
+    navStore.isLoading = false
+  }, 3000)
+
+  // 最短展示时间（避免过快闪烁），成功后淡出
+  const finish = () => {
+    clearTimeout(forceFinish)
+    const elapsed = Date.now() - startTime
+    const wait = Math.max(0, 500 - elapsed)
+    setTimeout(() => {
+      navStore.isLoading = false
+    }, wait)
+  }
+
   try {
     // 加载基础配置（nav.json）和服务器配置
     const [, serverConfig] = await Promise.all([
@@ -145,13 +253,8 @@ onMounted(async () => {
       configStore.applyServerConfig(serverConfig)
     }
 
-    // 如果当前是自动或混合模式，调用接口重新识别网络类型
-    const mode = configStore.networkMode
-    if (mode === 'auto' || mode === 'hybrid') {
-      await navStore.fetchNetworkType()
-    }
-
-    // 预加载已启用模块的数据，用于决定顶部页签是否显示
+    // 预加载已启用模块的数据，用于决定顶部页签是否显示；
+    // 网络类型识别（自动/混合模式）与数据预加载并行，不再串行等待
     const preloadTasks: Promise<unknown>[] = []
 
     if (navStore.sitesEnabled) {
@@ -164,12 +267,17 @@ onMounted(async () => {
       preloadTasks.push(navStore.loadLuckyServicesData())
     }
 
+    const mode = configStore.networkMode
+    if (mode === 'auto' || mode === 'hybrid') {
+      preloadTasks.push(navStore.fetchNetworkType())
+    }
+
     await Promise.all(preloadTasks)
 
     // 检查当前标签页是否有效，无效则切换到第一个可用标签页
     ensureValidTab()
   } finally {
-    navStore.isLoading = false
+    finish()
   }
 })
 
@@ -179,32 +287,23 @@ watch(availableTabs, () => {
 </script>
 
 <template>
-  <!-- 素描风格 SVG 滤镜定义 -->
-  <svg width="0" height="0" style="position: absolute;">
-    <defs>
-      <!-- 素描滤镜 - 边缘抖动效果 -->
-      <filter id="sketch-filter" filterUnits="objectBoundingBox" x="-10%" y="-10%" width="120%" height="120%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G" />
-      </filter>
-      <!-- 素描滤镜 - 悬停时轻微加强 -->
-      <filter id="sketch-filter-hover" filterUnits="objectBoundingBox" x="-10%" y="-10%" width="120%" height="120%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" result="noise" />
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G" />
-      </filter>
-    </defs>
-  </svg>
-
-  <!-- 科技感动态背景 -->
-  <TechBackground />
+  <!-- 主题背景 -->
+  <component :is="currentThemeBackground" />
 
   <!-- 加载屏幕 -->
-  <LoadingScreen v-if="isLoading" />
+  <Transition name="screen-fade">
+    <LoadingScreen v-if="isLoading" />
+  </Transition>
 
   <!-- 主内容 -->
-  <div v-else class="app-main">
+  <div v-if="!isLoading" class="app-main">
     <!-- 页头 -->
     <AppHeader v-if="showHeader" />
+
+    <!-- 问候语 + 大时钟 -->
+    <div v-if="configStore.showTime" class="greeting-clock-wrap">
+      <GreetingClock />
+    </div>
 
     <!-- 浮动设置按钮（仅在隐藏页头时显示） -->
     <button 
@@ -219,7 +318,7 @@ watch(availableTabs, () => {
     <SearchBar v-if="configStore.showSearch && currentTab === 'sites' && hasSites" />
 
     <!-- 主区域 -->
-    <main class="main-content" :class="{ 'no-header': !showHeader }">
+    <main class="main-content" :class="{ 'no-header': !showHeader }" :style="{ '--layout-scale': configStore.layoutScale }">
       <!-- 内容标签页 -->
       <ContentTabs class="mb-16" />
 
@@ -264,6 +363,14 @@ watch(availableTabs, () => {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0.75rem 1rem 2rem;
+  zoom: var(--layout-scale, 1);
+}
+
+.greeting-clock-wrap {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
 .main-content.no-header {
@@ -317,6 +424,10 @@ watch(availableTabs, () => {
   .main-content {
     padding: 0.75rem 1.5rem 2.5rem;
   }
+
+  .greeting-clock-wrap {
+    padding: 0 1.5rem;
+  }
   
   .main-content.no-header {
     padding-top: 1.5rem;
@@ -334,6 +445,16 @@ watch(availableTabs, () => {
     padding: 1.5rem 1rem;
     border-radius: 1.25rem;
   }
+}
+
+/* 加载屏淡出过渡 */
+.screen-fade-enter-active,
+.screen-fade-leave-active {
+  transition: opacity 400ms ease;
+}
+.screen-fade-enter-from,
+.screen-fade-leave-to {
+  opacity: 0;
 }
 
 /* 浮动设置按钮 */

@@ -1,0 +1,671 @@
+/* ============================================
+   CRT Terminal Theme - 复古终端主题
+   LightPanel Pro
+   磷光绿 + 等宽字体 + 扫描线 + 光晕闪烁
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+[data-theme="crt-terminal"] {
+  --crt-green: 135 100% 45%;
+  --crt-green-rgb: 0, 255, 65;
+  --crt-dim: 130 60% 35%;
+  --crt-amber: 45 100% 50%;
+  --crt-red: 0 90% 55%;
+  --crt-cyan: 175 100% 45%;
+  --crt-black: 120 30% 4%;
+
+  --primary: 135 100% 45%;
+  --primary-light: 135 100% 55%;
+  --primary-dark: 135 80% 35%;
+  --primary-rgb: 0, 255, 65;
+
+  --accent: 45 100% 50%;
+  --accent-light: 45 100% 60%;
+  --accent-rgb: 255, 210, 0;
+
+  --neon-cyan: 175 100% 45%;
+  --neon-cyan-rgb: 0, 230, 190;
+  --neon-purple: 280 70% 55%;
+  --neon-purple-rgb: 160, 80, 220;
+  --neon-pink: 330 90% 55%;
+  --neon-pink-rgb: 230, 45, 130;
+  --neon-blue: 210 90% 55%;
+  --neon-blue-rgb: 40, 130, 235;
+  --neon-green: 135 100% 45%;
+  --neon-green-rgb: 0, 255, 65;
+
+  --docker-orange: 175 100% 45%;
+  --docker-orange-rgb: 0, 230, 190;
+
+  --icon-brightness: 1.15;
+  --icon-filter: brightness(0) saturate(100%) invert(65%) sepia(100%) saturate(1000%) hue-rotate(80deg) brightness(1.05);
+  --icon-filter-hover: brightness(0) saturate(100%) invert(70%) sepia(100%) saturate(1200%) hue-rotate(75deg) brightness(1.15);
+  --icon-placeholder-bg: 135 100% 45% / 0.08;
+
+  --glass-bg: 120 20% 6% / 0.96;
+  --glass-bg-hover: 120 25% 9% / 0.98;
+  --glass-border: 135 60% 35%;
+  --glass-border-glow: 135 100% 45%;
+  --glass-blur: 0px;
+  --glass-saturation: 100%;
+  --glass-shine: none;
+
+  --card-bg: 120 20% 6% / 0.94;
+  --card-shadow:
+    0 0 0 1px hsl(var(--crt-dim) / 0.6),
+    0 0 22px -8px hsl(var(--crt-green) / 0.35),
+    inset 0 0 24px -16px hsl(var(--crt-green) / 0.5);
+  --card-shadow-hover:
+    0 0 0 1px hsl(var(--crt-green) / 0.8),
+    0 0 32px -6px hsl(var(--crt-green) / 0.5),
+    inset 0 0 28px -14px hsl(var(--crt-green) / 0.6);
+  --card-glow: 0 0 24px -8px hsl(var(--crt-green) / 0.4);
+  --card-glow-hover: 0 0 36px -8px hsl(var(--crt-green) / 0.55);
+
+  --text-primary: 135 90% 78%;
+  --text-secondary: 130 55% 55%;
+  --text-muted: 130 40% 40%;
+  --text-on-primary: 120 30% 4%;
+
+  --border-color: 135 40% 30%;
+  --border-subtle: 135 30% 20%;
+  --bg-page: 120 25% 4%;
+  --bg-elevated: 120 22% 6%;
+
+  --success: 135 100% 45%;
+  --warning: 45 100% 50%;
+  --error: 0 90% 55%;
+
+  --site-card-bg: 120 20% 6% / 0.94;
+  --site-card-bg-hover: 120 25% 9% / 0.97;
+  --site-card-blur: 0px;
+  --site-card-saturation: 100%;
+  --site-card-border: 135 60% 35%;
+  --site-card-border-hover: 135 100% 45%;
+  --site-card-inner-glow: none;
+  --site-card-shadow:
+    0 0 0 1px hsl(var(--crt-dim) / 0.6),
+    inset 0 0 24px -16px hsl(var(--crt-green) / 0.4);
+  --site-card-shadow-hover:
+    0 0 0 1px hsl(var(--crt-green) / 0.8),
+    inset 0 0 28px -14px hsl(var(--crt-green) / 0.5);
+  --site-card-shine-opacity: 0;
+  --site-card-shine-hover: 0;
+}
+
+/* 小圆角 + 终端等宽字体 */
+[data-theme="crt-terminal"] {
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 5px;
+  --radius-xl: 6px;
+  --font-sans: 'Share Tech Mono', ui-monospace, 'SF Mono', Consolas, monospace;
+  --font-mono: 'Share Tech Mono', ui-monospace, 'SF Mono', Consolas, monospace;
+}
+
+/* 全局磷光文字光晕 */
+[data-theme="crt-terminal"] h1,
+[data-theme="crt-terminal"] h2,
+[data-theme="crt-terminal"] h3,
+[data-theme="crt-terminal"] .title-main,
+[data-theme="crt-terminal"] .gc-time-value,
+[data-theme="crt-terminal"] .stat-value,
+[data-theme="crt-terminal"] .network-speed,
+[data-theme="crt-terminal"] .time-value {
+  text-shadow: 0 0 6px hsl(var(--crt-green) / 0.5);
+}
+
+/* 全局滚动条 - CRT 绿 */
+[data-theme="crt-terminal"] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+[data-theme="crt-terminal"] ::-webkit-scrollbar-thumb {
+  background: hsl(var(--crt-dim) / 0.7);
+  border: 1px solid hsl(var(--crt-dim));
+}
+
+[data-theme="crt-terminal"] ::-webkit-scrollbar-track {
+  background: hsl(var(--bg-page));
+}
+
+/* 文本选区 - 磷光绿 */
+[data-theme="crt-terminal"] ::selection {
+  background: hsl(var(--crt-green) / 0.4);
+  color: hsl(var(--text-primary));
+}
+
+/* 背景（配合 CRTBackground.vue） */
+[data-theme="crt-terminal"] .tech-background,
+[data-theme="crt-terminal"] .bg-gradient-aurora {
+  background: hsl(var(--bg-page)) !important;
+}
+
+[data-theme="crt-terminal"] .bg-aurora,
+[data-theme="crt-terminal"] .particle,
+[data-theme="crt-terminal"] .grid-line {
+  display: none !important;
+}
+
+/* 卡片 - 终端面板 */
+[data-theme="crt-terminal"] .glass-card,
+[data-theme="crt-terminal"] .glass-card-neon,
+[data-theme="crt-terminal"] .docker-card,
+[data-theme="crt-terminal"] .service-card,
+[data-theme="crt-terminal"] .cyber-card {
+  border-radius: 0;
+  border: 1px solid hsl(var(--crt-dim) / 0.7) !important;
+  box-shadow: var(--card-shadow) !important;
+}
+
+[data-theme="crt-terminal"] .glass-card::after,
+[data-theme="crt-terminal"] .glass-card-neon::after,
+[data-theme="crt-terminal"] .card-border-glow {
+  display: none !important;
+}
+
+[data-theme="crt-terminal"] .docker-card:not(.layout-minimal):hover,
+[data-theme="crt-terminal"] .service-card:not(.layout-minimal):hover,
+[data-theme="crt-terminal"] .cyber-card:not(.layout-minimal):hover {
+  transform: translateY(-2px) !important;
+  border-color: hsl(var(--crt-green)) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+}
+
+[data-theme="crt-terminal"] .docker-card.layout-minimal,
+[data-theme="crt-terminal"] .service-card.layout-minimal,
+[data-theme="crt-terminal"] .cyber-card.layout-minimal {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent;
+}
+
+[data-theme="crt-terminal"] .icon-box,
+[data-theme="crt-terminal"] .compact-icon,
+[data-theme="crt-terminal"] .minimal-icon {
+  border-radius: 0 !important;
+  border: 1px solid hsl(var(--crt-dim) / 0.8) !important;
+}
+
+/* 页头 - 终端标题栏 */
+[data-theme="crt-terminal"] .app-header {
+  height: var(--header-height, 3.5rem);
+  border-radius: 0;
+}
+
+[data-theme="crt-terminal"] .header-bg {
+  background: hsl(var(--bg-elevated));
+  border: 1px solid hsl(var(--crt-dim) / 0.8);
+  border-top: 2px solid hsl(var(--crt-green));
+  border-bottom: 1px solid hsl(var(--crt-dim));
+  border-radius: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+[data-theme="crt-terminal"] .header-highlight {
+  display: none;
+}
+
+[data-theme="crt-terminal"] .title-main {
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+[data-theme="crt-terminal"] .title-icon {
+  display: none;
+}
+
+[data-theme="crt-terminal"] .title-text::before {
+  content: '$>';
+  color: hsl(var(--crt-green));
+  margin-right: 0.375rem;
+}
+
+[data-theme="crt-terminal"] .title-sub {
+  display: block;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+[data-theme="crt-terminal"] .title-sub::before {
+  content: '~ ';
+  color: hsl(var(--crt-dim));
+}
+
+[data-theme="crt-terminal"] .action-btn {
+  border-radius: 0;
+  border: 1px solid hsl(var(--crt-dim) / 0.8);
+  background: hsl(var(--bg-elevated));
+  box-shadow: inset 0 0 14px -10px hsl(var(--crt-green) / 0.5);
+  transition: all var(--duration-fast) ease;
+}
+
+[data-theme="crt-terminal"] .action-btn:hover {
+  background: hsl(var(--crt-green) / 0.12);
+  border-color: hsl(var(--crt-green));
+  box-shadow: 0 0 16px -6px hsl(var(--crt-green) / 0.6);
+}
+
+[data-theme="crt-terminal"] .btn-icon,
+[data-theme="crt-terminal"] .action-btn:hover .btn-icon {
+  color: hsl(var(--crt-green)) !important;
+}
+
+[data-theme="crt-terminal"] .theme-dropdown {
+  border-radius: 0;
+  background: hsl(var(--bg-elevated));
+  border: 1px solid hsl(var(--crt-dim) / 0.8);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 24px -10px hsl(var(--crt-green) / 0.4);
+  backdrop-filter: none;
+}
+
+[data-theme="crt-terminal"] .theme-option {
+  border-radius: 0;
+  color: hsl(var(--text-secondary));
+}
+
+[data-theme="crt-terminal"] .theme-option:hover {
+  background: hsl(var(--crt-green) / 0.1);
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="crt-terminal"] .theme-option.active {
+  background: hsl(var(--crt-green) / 0.16);
+  color: hsl(var(--crt-green)) !important;
+}
+
+/* 网络徽章 */
+[data-theme="crt-terminal"] .net-badge {
+  border-radius: 0;
+  border: 1px solid hsl(var(--crt-cyan) / 0.7);
+  background: hsl(var(--crt-cyan) / 0.08);
+  box-shadow: inset 0 0 14px -10px hsl(var(--crt-cyan) / 0.6);
+}
+
+[data-theme="crt-terminal"] .net-badge:hover {
+  box-shadow: 0 0 16px -6px hsl(var(--crt-cyan) / 0.6);
+}
+
+[data-theme="crt-terminal"] .net-badge.internal {
+  border-color: hsl(var(--crt-green) / 0.7);
+  background: hsl(var(--crt-green) / 0.08);
+}
+
+[data-theme="crt-terminal"] .net-badge-icon,
+[data-theme="crt-terminal"] .net-badge-label {
+  color: hsl(var(--crt-cyan)) !important;
+}
+
+[data-theme="crt-terminal"] .net-badge.internal .net-badge-icon,
+[data-theme="crt-terminal"] .net-badge.internal .net-badge-label {
+  color: hsl(var(--crt-green)) !important;
+}
+
+/* 问候时钟 - 终端大字 */
+[data-theme="crt-terminal"] .greeting-clock {
+  border-left: 4px solid hsl(var(--crt-green));
+  padding-left: 1rem;
+}
+
+[data-theme="crt-terminal"] .gc-greeting-text {
+  color: hsl(var(--crt-amber));
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 8px hsl(var(--crt-amber) / 0.5);
+}
+
+[data-theme="crt-terminal"] .gc-time-value {
+  color: hsl(var(--crt-green));
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+[data-theme="crt-terminal"] .gc-seconds {
+  color: hsl(var(--crt-green));
+  animation: crt-blink 1s steps(2, start) infinite;
+}
+
+[data-theme="crt-terminal"] .gc-seconds.night {
+  color: hsl(var(--crt-cyan));
+}
+
+[data-theme="crt-terminal"] .gc-date {
+  color: hsl(var(--text-secondary));
+}
+
+/* 内容标签页 - 终端菜单 */
+[data-theme="crt-terminal"] .content-tabs {
+  background: hsl(var(--bg-elevated));
+  border: 1px solid hsl(var(--crt-dim) / 0.8);
+  border-radius: 0;
+  box-shadow: 0 0 24px -12px hsl(var(--crt-green) / 0.4);
+}
+
+[data-theme="crt-terminal"] .content-tab {
+  border-radius: 0;
+  color: hsl(var(--text-secondary));
+  border: 1px solid transparent;
+}
+
+[data-theme="crt-terminal"] .content-tab:hover {
+  background: hsl(var(--crt-green) / 0.08);
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="crt-terminal"] .content-tab.active {
+  background: hsl(var(--crt-green)) !important;
+  color: hsl(var(--crt-black)) !important;
+  border: 1px solid hsl(var(--crt-green)) !important;
+  box-shadow: 0 0 18px -4px hsl(var(--crt-green) / 0.6) !important;
+}
+
+[data-theme="crt-terminal"] .content-tab.tab-docker.active,
+[data-theme="crt-terminal"] .content-tab.tab-luckyServices.active {
+  background: hsl(var(--crt-green)) !important;
+  box-shadow: 0 0 18px -4px hsl(var(--crt-green) / 0.6) !important;
+}
+
+[data-theme="crt-terminal"] .content-tab .tab-icon,
+[data-theme="crt-terminal"] .content-tab.active .tab-icon {
+  color: hsl(var(--crt-black)) !important;
+}
+
+/* 分组徽章 / 布局 / 网络 / 总览徽章 */
+[data-theme="crt-terminal"] .group-badge,
+[data-theme="crt-terminal"] .layout-badge,
+[data-theme="crt-terminal"] .overview-badge,
+[data-theme="crt-terminal"] .network-badge {
+  background: hsl(var(--bg-elevated));
+  border: 1px solid hsl(var(--crt-dim) / 0.8);
+  border-radius: 0;
+  color: hsl(var(--text-primary)) !important;
+  backdrop-filter: none;
+}
+
+[data-theme="crt-terminal"] .group-badge:hover,
+[data-theme="crt-terminal"] .layout-badge:hover,
+[data-theme="crt-terminal"] .overview-badge:hover,
+[data-theme="crt-terminal"] .network-badge:hover {
+  background: hsl(var(--crt-green) / 0.1);
+  border-color: hsl(var(--crt-green));
+  box-shadow: 0 0 16px -6px hsl(var(--crt-green) / 0.6) !important;
+}
+
+[data-theme="crt-terminal"] .group-dropdown,
+[data-theme="crt-terminal"] .layout-dropdown,
+[data-theme="crt-terminal"] .network-dropdown {
+  background: hsl(var(--bg-elevated));
+  border: 1px solid hsl(var(--crt-dim) / 0.8);
+  border-radius: 0;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 24px -10px hsl(var(--crt-green) / 0.4);
+  backdrop-filter: none;
+}
+
+[data-theme="crt-terminal"] .group-option,
+[data-theme="crt-terminal"] .layout-option,
+[data-theme="crt-terminal"] .network-option {
+  color: hsl(var(--text-secondary));
+  border-radius: 0;
+}
+
+[data-theme="crt-terminal"] .group-option:hover,
+[data-theme="crt-terminal"] .layout-option:hover,
+[data-theme="crt-terminal"] .network-option:hover,
+[data-theme="crt-terminal"] .option-main:hover {
+  background: hsl(var(--crt-green) / 0.08);
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="crt-terminal"] .group-option.active,
+[data-theme="crt-terminal"] .layout-option.active,
+[data-theme="crt-terminal"] .network-option.active {
+  background: hsl(var(--crt-green) / 0.16) !important;
+  color: hsl(var(--crt-green)) !important;
+  border: 1px solid hsl(var(--crt-dim) / 0.8);
+}
+
+/* 分组标签页 */
+[data-theme="crt-terminal"] .group-tabs {
+  background: hsl(var(--bg-elevated));
+  border: 1px solid hsl(var(--crt-dim) / 0.8);
+  border-radius: 0;
+  box-shadow: 0 0 20px -12px hsl(var(--crt-green) / 0.4);
+}
+
+[data-theme="crt-terminal"] .group-tab {
+  border-radius: 0;
+  color: hsl(var(--text-secondary));
+}
+
+[data-theme="crt-terminal"] .group-tab:hover {
+  background: hsl(var(--crt-green) / 0.08);
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="crt-terminal"] .group-tab.active,
+[data-theme="crt-terminal"] .group-tab.color-cyan.active,
+[data-theme="crt-terminal"] .group-tab.color-docker.active,
+[data-theme="crt-terminal"] .group-tab.color-green.active {
+  background: hsl(var(--crt-green)) !important;
+  color: hsl(var(--crt-black)) !important;
+  border: 1px solid hsl(var(--crt-green)) !important;
+  box-shadow: 0 0 16px -4px hsl(var(--crt-green) / 0.6) !important;
+}
+
+/* 搜索栏 - 终端输入 */
+[data-theme="crt-terminal"] .search-bar-container .search-glow,
+[data-theme="crt-terminal"] .search-bar-container .search-highlight {
+  display: none;
+}
+
+[data-theme="crt-terminal"] .search-bar-container .glass-search {
+  background: hsl(var(--bg-elevated));
+  border: 1px solid hsl(var(--crt-dim) / 0.8);
+  border-radius: 0;
+  box-shadow: inset 0 0 18px -12px hsl(var(--crt-green) / 0.6);
+  backdrop-filter: none;
+}
+
+[data-theme="crt-terminal"] .search-bar-container .glass-search:hover,
+[data-theme="crt-terminal"] .search-bar-container .glass-search:focus-within {
+  border-color: hsl(var(--crt-green));
+  box-shadow: 0 0 20px -8px hsl(var(--crt-green) / 0.6), inset 0 0 18px -12px hsl(var(--crt-green) / 0.7);
+}
+
+[data-theme="crt-terminal"] .search-bar-container .search-input::placeholder {
+  color: hsl(var(--crt-dim));
+}
+
+[data-theme="crt-terminal"] .search-bar-container .search-btn {
+  background: hsl(var(--crt-green));
+  border-radius: 0;
+}
+
+[data-theme="crt-terminal"] .search-bar-container .search-btn .btn-bg {
+  display: none;
+}
+
+[data-theme="crt-terminal"] .search-bar-container .search-btn:hover {
+  background: hsl(var(--crt-green));
+  box-shadow: 0 0 20px -6px hsl(var(--crt-green) / 0.8) !important;
+}
+
+[data-theme="crt-terminal"] .search-bar-container .engine-selector {
+  border-radius: 0;
+  border-right: 1px solid hsl(var(--crt-dim) / 0.8);
+}
+
+[data-theme="crt-terminal"] .search-bar-container .engine-dropdown {
+  background: hsl(var(--bg-elevated));
+  border: 1px solid hsl(var(--crt-dim) / 0.8);
+  border-radius: 0;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+  backdrop-filter: none;
+}
+
+[data-theme="crt-terminal"] .search-bar-container .engine-option {
+  border-radius: 0;
+}
+
+[data-theme="crt-terminal"] .search-bar-container .engine-option:hover {
+  background: hsl(var(--crt-green) / 0.08);
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="crt-terminal"] .search-bar-container .engine-option.active {
+  background: hsl(var(--crt-green) / 0.16) !important;
+  color: hsl(var(--crt-green)) !important;
+}
+
+/* Docker 总览面板 */
+[data-theme="crt-terminal"] .overview-panel {
+  background: hsl(var(--bg-elevated));
+  border: 1px solid hsl(var(--crt-dim) / 0.8);
+  border-radius: 0;
+  box-shadow: 0 0 28px -12px hsl(var(--crt-green) / 0.4);
+  backdrop-filter: none;
+}
+
+[data-theme="crt-terminal"] .panel-header {
+  background: hsl(var(--crt-green) / 0.08);
+  border-bottom: 1px solid hsl(var(--crt-dim) / 0.8);
+}
+
+[data-theme="crt-terminal"] .header-glow,
+[data-theme="crt-terminal"] .divider-glow,
+[data-theme="crt-terminal"] .footer-line {
+  display: none;
+}
+
+[data-theme="crt-terminal"] .header-icon {
+  background: none !important;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: hsl(var(--crt-green));
+  background-clip: unset;
+}
+
+[data-theme="crt-terminal"] .header-badge {
+  background: hsl(var(--crt-green) / 0.1);
+  color: hsl(var(--crt-green));
+  border: 1px solid hsl(var(--crt-dim) / 0.8);
+  border-radius: 0;
+}
+
+[data-theme="crt-terminal"] .section-icon {
+  background: hsl(var(--crt-green) / 0.16) !important;
+  color: hsl(var(--crt-green)) !important;
+  border-radius: 0;
+  box-shadow: inset 0 0 16px -10px hsl(var(--crt-green) / 0.6) !important;
+}
+
+[data-theme="crt-terminal"] .rank-item {
+  background: hsl(var(--bg-elevated));
+  border: 1px solid hsl(var(--crt-dim) / 0.7);
+  border-radius: 0;
+}
+
+[data-theme="crt-terminal"] .rank-item:hover {
+  background: hsl(var(--crt-green) / 0.07);
+  border-color: hsl(var(--crt-dim));
+}
+
+[data-theme="crt-terminal"] .rank-item.rank-1 {
+  background: hsl(var(--crt-green) / 0.12) !important;
+  border-color: hsl(var(--crt-green) / 0.5);
+}
+
+[data-theme="crt-terminal"] .rank-number {
+  background: hsl(var(--crt-green) / 0.1);
+  border: 1px solid hsl(var(--crt-dim) / 0.8);
+  border-radius: 0;
+  color: hsl(var(--crt-green)) !important;
+}
+
+[data-theme="crt-terminal"] .rank-bar-wrapper {
+  background: hsl(var(--crt-dim) / 0.2);
+}
+
+[data-theme="crt-terminal"] .rank-bar.cpu-bar,
+[data-theme="crt-terminal"] .rank-bar.memory-bar {
+  background: hsl(var(--crt-green)) !important;
+  box-shadow: 0 0 12px -2px hsl(var(--crt-green) / 0.6) !important;
+}
+
+/* 状态徽章 - 方形 */
+[data-theme="crt-terminal"] .status-badge,
+[data-theme="crt-terminal"] .type-badge,
+[data-theme="crt-terminal"] .list-status-badge,
+[data-theme="crt-terminal"] .list-type-badge {
+  border-radius: 0;
+  border: 1px solid currentColor;
+}
+
+/* 设置面板 */
+[data-theme="crt-terminal"] .settings-panel {
+  border-radius: 0;
+  background: hsl(var(--bg-elevated));
+  border-left: 2px solid hsl(var(--crt-dim));
+}
+
+[data-theme="crt-terminal"] .settings-title {
+  border-bottom: 2px solid hsl(var(--crt-dim) / 0.8);
+}
+
+[data-theme="crt-terminal"] .section-title {
+  border-left: 4px solid hsl(var(--crt-green));
+  padding-left: 0.5rem;
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="crt-terminal"] input[type="text"],
+[data-theme="crt-terminal"] select,
+[data-theme="crt-terminal"] .settings-input {
+  border-radius: 0;
+  border: 1px solid hsl(var(--crt-dim) / 0.8);
+  background: hsl(var(--bg-page));
+  color: hsl(var(--text-primary));
+}
+
+/* 通用按钮 - 终端按键 */
+[data-theme="crt-terminal"] button:not(.content-tab):not(.group-tab):not(.group-option):not(.layout-option):not(.network-option):not(.theme-option):not(.engine-option):not(.action-btn) {
+  border-radius: 0;
+  border: 1px solid hsl(var(--crt-dim) / 0.8);
+  background: hsl(var(--bg-elevated));
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="crt-terminal"] .btn-primary,
+[data-theme="crt-terminal"] .btn-primary:hover {
+  background: hsl(var(--crt-green));
+  color: hsl(var(--crt-black));
+  border-color: hsl(var(--crt-green));
+  box-shadow: 0 0 18px -6px hsl(var(--crt-green) / 0.7);
+}
+
+/* 走势图 - 终端加粗 */
+[data-theme="crt-terminal"] .sparkline-line {
+  stroke-width: 2.5;
+}
+
+/* ============================================
+   动效 - CRT 闪烁
+   ============================================ */
+
+@keyframes crt-blink {
+  50% { opacity: 0; }
+}
+
+/* 减少动画偏好 */
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="crt-terminal"] .gc-seconds {
+    animation: none;
+  }
+}
