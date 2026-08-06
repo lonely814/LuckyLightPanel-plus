@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { computed, inject, ref } from 'vue'
+import { computed, inject } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useConfigStore } from '@/stores/config'
 import { useNavStore } from '@/stores/nav'
-import { ArrowUpRight } from 'lucide-vue-next'
 import type { Site } from '@/types'
+import SiteCardDefault from './SiteCardDefault.vue'
+import SiteCardMinimal from './SiteCardMinimal.vue'
+import SiteCardRack from './SiteCardRack.vue'
+import SiteCardMap from './SiteCardMap.vue'
 
 interface LinkItem {
   url: string
@@ -31,7 +34,7 @@ function getEffectiveNetworkType(): 'internal' | 'external' | 'hybrid' {
   const mode = networkMode.value
   const type = networkType.value
   const fetchFailed = networkTypeFetchFailed.value
-  
+
   if (mode === 'internal') return 'internal'
   if (mode === 'external') return 'external'
   if (mode === 'hybrid') return 'hybrid'
@@ -45,7 +48,7 @@ function getEffectiveNetworkType(): 'internal' | 'external' | 'hybrid' {
 function getHybridUrls(): LinkItem[] {
   const urls: LinkItem[] = []
   const { frontendUrls = [], backendUrls = [] } = props.site
-  
+
   // 添加内网链接
   backendUrls.filter(u => u && u.trim()).forEach((url, index) => {
     urls.push({
@@ -54,7 +57,7 @@ function getHybridUrls(): LinkItem[] {
       type: 'internal'
     })
   })
-  
+
   // 添加外网链接
   frontendUrls.filter(u => u && u.trim()).forEach((url, index) => {
     urls.push({
@@ -63,7 +66,7 @@ function getHybridUrls(): LinkItem[] {
       type: 'external'
     })
   })
-  
+
   return urls
 }
 
@@ -72,7 +75,7 @@ function getSingleTypeUrls(type: 'internal' | 'external'): LinkItem[] {
   const { frontendUrls = [], backendUrls = [] } = props.site
   const validFrontend = frontendUrls.filter(u => u && u.trim())
   const validBackend = backendUrls.filter(u => u && u.trim())
-  
+
   if (type === 'external') {
     // 外网模式：优先检查外网链接
     if (validFrontend.length > 0) {
@@ -108,7 +111,7 @@ function getSingleTypeUrls(type: 'internal' | 'external'): LinkItem[] {
       }))
     }
   }
-  
+
   return []
 }
 
@@ -116,9 +119,9 @@ function getSingleTypeUrls(type: 'internal' | 'external'): LinkItem[] {
 function getBestUrl(): string | null {
   const { frontendUrls = [], backendUrls = [] } = props.site
   const effectiveType = getEffectiveNetworkType()
-  
+
   const getValidUrl = (urls: string[]) => urls.find(u => u && u.trim())
-  
+
   if (effectiveType === 'internal') {
     return getValidUrl(backendUrls) || getValidUrl(frontendUrls) || null
   }
@@ -205,9 +208,6 @@ const ariaLabel = computed(() => {
   return parts.join(' - ')
 })
 
-// 用于显示的最佳链接（hover状态等）- 保留函数以供未来使用
-// const bestUrl = computed(() => getBestUrl())
-
 // 图标 URL
 const iconUrl = computed(() => {
   const { iconUrl } = props.site
@@ -220,56 +220,11 @@ const iconUrl = computed(() => {
   return `./backend/iconlibs/${iconUrl}`
 })
 
-// 图标加载状态
-const iconLoading = ref(true)
-const iconError = ref(false)
-
-function handleIconLoad() {
-  iconLoading.value = false
-}
-
-function handleIconError(event: Event) {
-  iconLoading.value = false
-  iconError.value = true
-  ;(event.target as HTMLImageElement).style.display = 'none'
-}
-
 // 是否显示描述
-const showDesc = computed(() => configStore.showDescription && props.site.description)
+const showDesc = computed(() => Boolean(configStore.showDescription && props.site.description))
 
 // 布局模式
 const layout = computed(() => configStore.layout)
-
-// 霓虹渐变色组（用于无图标时的首字母背景）
-const neonGradients = [
-  { from: 'var(--neon-cyan)', to: 'var(--neon-blue)', shadow: 'var(--neon-cyan)' },
-  { from: 'var(--neon-purple)', to: 'var(--neon-blue)', shadow: 'var(--neon-purple)' },
-  { from: 'var(--neon-green)', to: 'var(--neon-cyan)', shadow: 'var(--neon-green)' },
-  { from: 'var(--neon-blue)', to: 'var(--neon-purple)', shadow: 'var(--neon-blue)' },
-  { from: 'var(--neon-cyan)', to: 'var(--neon-green)', shadow: 'var(--neon-cyan)' },
-]
-
-// 无图标时的渐变色（基于名称首字母）
-const fallbackGradient = computed(() => {
-  const index = props.site.name.charCodeAt(0) % neonGradients.length
-  return neonGradients[index]
-})
-
-// 图标背景样式
-const iconBgStyle = computed(() => {
-  if (iconUrl.value) {
-    // 有图标：使用主题适配的中性背景
-    return {
-      boxShadow: `0 4px 20px -4px hsl(var(--icon-placeholder-bg) / 0.5)`
-    }
-  } else {
-    // 无图标：使用彩色渐变背景
-    return {
-      background: `linear-gradient(135deg, hsl(${fallbackGradient.value.from}) 0%, hsl(${fallbackGradient.value.to}) 100%)`,
-      boxShadow: `0 4px 20px -4px hsl(${fallbackGradient.value.shadow} / 0.5)`
-    }
-  }
-})
 
 // 卡片类名
 const cardClass = computed(() => {
@@ -280,56 +235,6 @@ const cardClass = computed(() => {
   else if (layout.value === 'rack') classes.push('layout-rack')
   else if (layout.value === 'map') classes.push('layout-map')
   else classes.push('layout-default')
-  return classes.join(' ')
-})
-
-// 站点是否启用
-const isEnabled = computed(() => props.site.enable !== false)
-
-// 站点链接数量（用于地铁换乘站判定）
-const linkCount = computed(() => {
-  const { frontendUrls = [], backendUrls = [] } = props.site
-  return [...frontendUrls, ...backendUrls].filter(u => u && u.trim()).length
-})
-
-// 是否换乘站（有多个链接）
-const isTransfer = computed(() => linkCount.value > 1)
-
-// 机柜布局 LED 电源灯样式
-const rackLedStyle = computed(() => {
-  const active = isEnabled.value
-  return {
-    backgroundColor: active ? 'hsl(var(--neon-green))' : 'hsl(var(--text-muted))',
-    boxShadow: active ? '0 0 6px hsl(var(--neon-green) / 0.9)' : 'none'
-  }
-})
-
-// 机柜布局活动灯样式
-const rackActLedStyle = computed(() => ({
-  backgroundColor: 'hsl(var(--neon-cyan))',
-  boxShadow: '0 0 6px hsl(var(--neon-cyan) / 0.9)'
-}))
-
-// 机柜布局图标背景样式
-const rackIconBgStyle = computed(() => {
-  if (iconUrl.value) {
-    return {
-      boxShadow: `0 2px 10px -2px hsl(var(--icon-placeholder-bg) / 0.4)`
-    }
-  } else {
-    return {
-      background: `linear-gradient(135deg, hsl(${fallbackGradient.value.from}) 0%, hsl(${fallbackGradient.value.to}) 100%)`,
-      boxShadow: `0 2px 10px -2px hsl(${fallbackGradient.value.shadow} / 0.4)`
-    }
-  }
-})
-
-// 图标类名
-const iconClass = computed(() => {
-  const classes = ['neon-icon']
-  if (layout.value === 'compact') classes.push('size-sm')
-  else if (layout.value === 'large') classes.push('size-lg')
-  else classes.push('size-md')
   return classes.join(' ')
 })
 </script>
@@ -346,167 +251,43 @@ const iconClass = computed(() => {
     <!-- 边框发光线 -->
     <div class="card-border-glow" />
 
-    <!-- ========== Minimal 布局：纯图标模式 ========== -->
-    <template v-if="layout === 'minimal'">
-      <div class="minimal-inner">
-        <!-- 图标 -->
-        <div class="minimal-icon" :style="iconBgStyle">
-          <div v-if="iconLoading && iconUrl" class="icon-skeleton" />
-          <img
-            v-if="iconUrl"
-            :src="iconUrl"
-            :alt="site.name"
-            class="icon-img"
-            loading="lazy"
-            @load="handleIconLoad"
-            @error="handleIconError"
-          />
-          <span v-else class="icon-text">
-            {{ site.name.charAt(0).toUpperCase() }}
-          </span>
-        </div>
-        <!-- Hover 时显示的名称 -->
-        <div class="minimal-name">
-          <span>{{ site.name }}</span>
-        </div>
-      </div>
-    </template>
+    <!-- 默认布局（normal / compact / large / list） -->
+    <SiteCardDefault
+      v-if="layout !== 'minimal' && layout !== 'rack' && layout !== 'map'"
+      :site="site"
+      :icon-url="iconUrl"
+      :show-desc="showDesc"
+    />
 
-    <!-- ========== Map 布局：地铁线路站台 ========== -->
-    <template v-else-if="layout === 'map'">
-      <div class="card-inner-map">
-        <!-- 站台圆点（坐在地铁线上） -->
-        <span
-          class="map-station"
-          :class="{ transfer: isTransfer }"
-          :title="isTransfer ? '换乘站：多个链接' : '站点'"
-        />
-        <!-- 站点图标 -->
-        <div class="map-icon">
-          <div v-if="iconLoading && iconUrl" class="icon-skeleton" />
-          <img
-            v-if="iconUrl"
-            :src="iconUrl"
-            :alt="site.name"
-            class="icon-img"
-            loading="lazy"
-            @load="handleIconLoad"
-            @error="handleIconError"
-          />
-          <span v-else class="icon-text">
-            {{ site.name.charAt(0).toUpperCase() }}
-          </span>
-        </div>
-        <!-- 站名 -->
-        <div class="map-label">
-          <span class="map-name">{{ site.name }}</span>
-          <span v-if="showDesc" class="map-desc">{{ site.description }}</span>
-        </div>
-        <!-- 外链指示 -->
-        <ArrowUpRight class="map-arrow" />
-      </div>
-    </template>
+    <!-- Minimal 布局：纯图标模式 -->
+    <SiteCardMinimal
+      v-else-if="layout === 'minimal'"
+      :site="site"
+      :icon-url="iconUrl"
+    />
 
-    <!-- ========== Rack 布局：1U 前面板 ========== -->
-    <template v-else-if="layout === 'rack'">
-      <div class="card-inner-rack">
-        <!-- 前面板顶盖装饰线 -->
-        <div class="rack-top-edge" />
-        <!-- 指示灯组 -->
-        <div class="rack-leds">
-          <span class="rack-led" :style="rackLedStyle" title="启用状态" />
-          <span class="rack-led rack-led-act blink" :style="rackActLedStyle" title="在线" />
-        </div>
-        <!-- 图标/铭牌 -->
-        <div class="rack-head">
-          <div class="rack-icon" :style="rackIconBgStyle">
-            <div v-if="iconLoading && iconUrl" class="icon-skeleton" />
-            <img
-              v-if="iconUrl"
-              :src="iconUrl"
-              :alt="site.name"
-              class="icon-img"
-              loading="lazy"
-              @load="handleIconLoad"
-              @error="handleIconError"
-            />
-            <span v-else class="icon-text">
-              {{ site.name.charAt(0).toUpperCase() }}
-            </span>
-          </div>
-          <div class="rack-nameplate">
-            <span class="rack-name">{{ site.name }}</span>
-            <span v-if="showDesc" class="rack-desc">{{ site.description }}</span>
-          </div>
-        </div>
-        <!-- 外链指示 -->
-        <div class="rack-open">
-          <ArrowUpRight class="rack-open-icon" />
-        </div>
-        <!-- 面板把手 -->
-        <div class="rack-handle" />
-      </div>
-    </template>
+    <!-- Rack 布局：1U 前面板 -->
+    <SiteCardRack
+      v-else-if="layout === 'rack'"
+      :site="site"
+      :icon-url="iconUrl"
+      :show-desc="showDesc"
+    />
 
-    <!-- ========== 其他布局 ========== -->
-    <template v-else>
-      <!-- 内容容器 -->
-      <div class="card-inner" :class="{ 'layout-list': layout === 'list', 'layout-compact': layout === 'compact' }">
-        <!-- 图标 -->
-        <div
-          :class="iconClass"
-          :style="iconBgStyle"
-        >
-          <!-- 加载骨架屏 -->
-          <div v-if="iconLoading && iconUrl" class="icon-skeleton" />
-          <img
-            v-if="iconUrl"
-            :src="iconUrl"
-            :alt="site.name"
-            class="icon-img"
-            loading="lazy"
-            @load="handleIconLoad"
-            @error="handleIconError"
-          />
-          <span v-else class="icon-text" :class="{ 'text-lg': layout === 'large' }">
-            {{ site.name.charAt(0).toUpperCase() }}
-          </span>
-        </div>
-
-        <!-- 内容 -->
-        <div class="card-content" :class="{ 'has-mt': layout !== 'list' && layout !== 'compact' }">
-          <div class="title-row">
-            <h3 class="card-title" :class="[`title-${layout}`]">
-              {{ site.name }}
-            </h3>
-            <!-- 外链指示图标 -->
-            <ArrowUpRight
-              v-if="layout !== 'compact'"
-              class="external-icon"
-            />
-          </div>
-
-          <p
-            v-if="showDesc && layout !== 'compact'"
-            class="card-desc"
-          >
-            {{ site.description }}
-          </p>
-        </div>
-
-        <!-- 外链图标 (List 模式) -->
-        <div v-if="layout === 'list'" class="list-external-btn">
-          <ArrowUpRight class="list-external-icon" />
-        </div>
-      </div>
-    </template>
+    <!-- Map 布局：地铁线路站台 -->
+    <SiteCardMap
+      v-else
+      :site="site"
+      :icon-url="iconUrl"
+      :show-desc="showDesc"
+    />
   </div>
 </template>
 
 <style scoped>
 /* ============================================
-   站点卡片 - 专业磨砂设计
-   适配暗黑磨砂和光亮磨砂两种模式
+   站点卡片外壳 - 公共部分
+   各布局内部样式见对应子组件（SiteCard* / SiteIcon）
    ============================================ */
 
 /* 卡片基础容器 */
@@ -550,7 +331,7 @@ const iconClass = computed(() => {
 }
 
 .cyber-card.layout-default {
-  padding: 0.875rem;
+  padding: 1rem 0.875rem 0.875rem;
 }
 
 /* ========== Compact 布局：超紧凑横向条 ========== */
@@ -563,7 +344,7 @@ const iconClass = computed(() => {
   transform: translateY(-2px);
 }
 
-/* ========== Minimal 布局：纯图标模式 ========== */
+/* ========== Minimal 布局：纯图标模式（外壳透明化） ========== */
 .cyber-card.layout-minimal {
   padding: 0;
   background: transparent;
@@ -584,78 +365,6 @@ const iconClass = computed(() => {
   box-shadow: none;
 }
 
-/* Minimal 内部容器 */
-.minimal-inner {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* Minimal 图标 - 更大更突出 */
-.minimal-icon {
-  width: 3rem;
-  height: 3rem;
-  border-radius: 0.875rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  position: relative;
-  transition:
-    transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 300ms ease;
-  background: hsl(var(--icon-placeholder-bg));
-}
-
-.minimal-icon .icon-text {
-  color: white;
-  font-weight: 700;
-  font-size: 1.125rem;
-}
-
-/* Minimal hover 效果 */
-.cyber-card.layout-minimal:hover .minimal-icon {
-  transform: scale(1.15) translateY(-4px);
-  box-shadow:
-    0 12px 24px -6px hsl(var(--neon-cyan) / 0.4),
-    0 0 20px -4px hsl(var(--neon-cyan) / 0.3);
-}
-
-/* Minimal 名称 - hover 时从下方浮现 */
-.minimal-name {
-  position: absolute;
-  bottom: -2rem;
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  background: hsl(var(--glass-bg));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid hsl(var(--glass-border));
-  border-radius: 6px;
-  padding: 4px 10px;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 200ms ease;
-  z-index: 100;
-  pointer-events: none;
-}
-
-.minimal-name span {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: hsl(var(--text-primary));
-}
-
-.cyber-card.layout-minimal:hover .minimal-name {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
-}
-
 /* ========== List 布局 ========== */
 .cyber-card.layout-list {
   padding: 0.875rem 1rem;
@@ -673,6 +382,44 @@ const iconClass = computed(() => {
   border-left-color: hsl(var(--neon-cyan));
 }
 
+/* ========== Rack 布局：1U 前面板（外壳） ========== */
+.cyber-card.layout-rack {
+  padding: 0;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+.cyber-card.layout-rack:hover {
+  transform: translateX(-6px);
+  box-shadow:
+    var(--site-card-shadow-hover),
+    0 0 20px -6px hsl(var(--neon-cyan) / 0.3),
+    0 0 40px -10px hsl(var(--neon-purple) / 0.15);
+}
+
+/* ========== Map 布局：地铁线路站台（外壳透明化） ========== */
+.cyber-card.layout-map {
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-radius: 0;
+}
+
+.cyber-card.layout-map::before,
+.cyber-card.layout-map .card-border-glow {
+  display: none;
+}
+
+.cyber-card.layout-map:hover {
+  transform: none;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+}
+
 /* ========== 通用 hover 效果（非 Minimal） ========== */
 .cyber-card:not(.layout-minimal):hover {
   transform: translateY(-4px) scale(1.01);
@@ -686,6 +433,20 @@ const iconClass = computed(() => {
 }
 
 .cyber-card:not(.layout-minimal):hover::before {
+  opacity: var(--site-card-shine-hover);
+}
+
+/* ========== Launcher 3D 抬升（normal / large） ==========
+   默认主题生效；特色主题以各自的 !important hover 规则为准 */
+.cyber-card.layout-default:hover {
+  transform: translateY(-6px) rotateX(6deg) scale(1.02);
+  box-shadow:
+    var(--site-card-shadow-hover),
+    0 24px 48px -12px rgba(0, 0, 0, 0.35),
+    0 0 20px -6px hsl(var(--neon-cyan) / 0.3);
+}
+
+.cyber-card.layout-default:hover::before {
   opacity: var(--site-card-shine-hover);
 }
 
@@ -715,579 +476,6 @@ const iconClass = computed(() => {
   opacity: 1;
 }
 
-/* 内容容器 */
-.card-inner {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.card-inner.layout-list {
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  width: 100%;
-}
-
-.card-inner.layout-compact {
-  gap: 0.375rem;
-}
-
-/* 霓虹图标 */
-.neon-icon {
-  flex-shrink: 0;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  /* 弹性缓动 - 图标跳动感 */
-  transition:
-    transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 300ms ease;
-  filter: brightness(var(--icon-brightness, 1));
-  /* 使用主题适配的背景色 */
-  background: hsl(var(--icon-placeholder-bg));
-}
-
-/* 深色模式下的图标蒙版 */
-.neon-icon::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, var(--icon-overlay-opacity, 0));
-  border-radius: inherit;
-  pointer-events: none;
-}
-
-.neon-icon.size-sm {
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: 0.5rem;
-}
-
-.neon-icon.size-md {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 0.625rem;
-}
-
-.neon-icon.size-lg {
-  width: 3.25rem;
-  height: 3.25rem;
-  border-radius: 0.75rem;
-}
-
-.cyber-card:hover .neon-icon {
-  transform: scale(1.1) rotate(-2deg);
-  box-shadow:
-    0 6px 20px -4px hsl(var(--neon-cyan) / 0.35),
-    0 0 15px -3px hsl(var(--neon-cyan) / 0.25);
-}
-
-/* Compact 模式图标 hover */
-.cyber-card.layout-compact:hover .neon-icon {
-  transform: scale(1.08);
-}
-
-.icon-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* 图标加载骨架屏 */
-.icon-skeleton {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.05) 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    rgba(255, 255, 255, 0.05) 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: inherit;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-.icon-text {
-  color: white;
-  font-weight: 700;
-}
-
-.icon-text.text-lg {
-  font-size: 1.25rem;
-}
-
-/* 卡片内容 */
-.card-content {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-}
-
-.card-content.has-mt {
-  margin-top: 0;
-}
-
-.title-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.card-title {
-  font-weight: 600;
-  color: hsl(var(--text-primary));
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  transition: color 300ms ease, text-shadow 300ms ease;
-  line-height: 1.3;
-}
-
-.cyber-card:hover .card-title {
-  color: hsl(var(--neon-cyan));
-  text-shadow: 0 0 12px hsl(var(--neon-cyan) / 0.4);
-}
-
-.title-compact {
-  font-size: 0.75rem;
-}
-
-.title-normal,
-.title-list {
-  font-size: 0.9375rem;
-}
-
-.title-large {
-  font-size: 1rem;
-}
-
-/* 外链图标 */
-.external-icon {
-  width: 1rem;
-  height: 1rem;
-  color: hsl(var(--text-muted));
-  opacity: 0;
-  transform: translateX(-0.5rem);
-  transition: all 300ms;
-  flex-shrink: 0;
-}
-
-.cyber-card:hover .external-icon {
-  opacity: 1;
-  transform: translateX(0);
-  color: hsl(var(--neon-cyan));
-}
-
-/* 描述 */
-.card-desc {
-  margin-top: 0.25rem;
-  font-size: 0.75rem;
-  color: hsl(var(--text-secondary));
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  line-height: 1.4;
-}
-
-/* List 模式外链按钮 */
-.list-external-btn {
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: 0.375rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: hsl(var(--glass-bg));
-  border: 1px solid hsl(var(--glass-border));
-  flex-shrink: 0;
-  transition: all 300ms;
-}
-
-.cyber-card:hover .list-external-btn {
-  border-color: hsl(var(--neon-cyan) / 0.4);
-  background: hsl(var(--neon-cyan) / 0.1);
-}
-
-.list-external-icon {
-  width: 1rem;
-  height: 1rem;
-  color: hsl(var(--text-muted));
-  transition: color 300ms;
-}
-
-.cyber-card:hover .list-external-icon {
-  color: hsl(var(--neon-cyan));
-}
-
-/* ========== Rack 布局 - 1U 前面板样式 ========== */
-.cyber-card.layout-rack {
-  padding: 0;
-  overflow: hidden;
-  border-radius: var(--radius-md);
-}
-
-.cyber-card.layout-rack:hover {
-  transform: translateX(-6px);
-  box-shadow:
-    var(--site-card-shadow-hover),
-    0 0 20px -6px hsl(var(--neon-cyan) / 0.3),
-    0 0 40px -10px hsl(var(--neon-purple) / 0.15);
-}
-
-/* 机柜内前面板 */
-.card-inner-rack {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  padding: 0.625rem 0.75rem;
-  min-height: 3.25rem;
-  background:
-    linear-gradient(90deg, hsl(var(--site-card-inner-glow)) 0%, transparent 30%),
-    linear-gradient(180deg, hsl(var(--site-card-bg-hover)) 0%, hsl(var(--site-card-bg)) 100%);
-}
-
-/* 前面板顶部发光棱线 */
-.rack-top-edge {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, hsl(var(--neon-cyan) / 0.6), transparent);
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-/* 指示灯组 */
-.rack-leds {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-  flex-shrink: 0;
-  padding: 0.25rem 0.375rem;
-  border-radius: 0.375rem;
-  background: hsl(var(--glass-bg));
-}
-
-.rack-led {
-  width: 0.375rem;
-  height: 0.375rem;
-  border-radius: 50%;
-}
-
-.rack-led-act.blink {
-  animation: rack-led-blink 1.2s ease-in-out infinite;
-}
-
-@keyframes rack-led-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.25; }
-}
-
-/* 铭牌区 */
-.rack-head {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  flex: 1;
-  min-width: 0;
-}
-
-.rack-icon {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  flex-shrink: 0;
-  filter: brightness(var(--icon-brightness, 1));
-  position: relative;
-  background: hsl(var(--icon-placeholder-bg));
-}
-
-.rack-icon::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, var(--icon-overlay-opacity, 0));
-  border-radius: inherit;
-  pointer-events: none;
-}
-
-.rack-icon .icon-text {
-  font-size: 0.875rem;
-}
-
-.rack-nameplate {
-  display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
-  min-width: 0;
-}
-
-.rack-name {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: hsl(var(--text-primary));
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-family: ui-monospace, monospace;
-  letter-spacing: 0.02em;
-  transition: color 300ms;
-}
-
-.cyber-card:hover .rack-name {
-  color: hsl(var(--neon-cyan));
-}
-
-.rack-desc {
-  font-size: 0.6875rem;
-  color: hsl(var(--text-muted));
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-family: ui-monospace, monospace;
-}
-
-/* 外链指示 */
-.rack-open {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.rack-open-icon {
-  width: 1rem;
-  height: 1rem;
-  color: hsl(var(--text-muted));
-  opacity: 0.6;
-  transform: translateX(-0.25rem) translateY(0.25rem);
-  transition: all 300ms;
-}
-
-.cyber-card:hover .rack-open-icon {
-  opacity: 1;
-  transform: translateX(0) translateY(0);
-  color: hsl(var(--neon-cyan));
-}
-
-/* 面板把手 */
-.rack-handle {
-  width: 0.375rem;
-  height: 1.75rem;
-  border-radius: 0.1875rem;
-  flex-shrink: 0;
-  background:
-    linear-gradient(180deg, hsl(var(--glass-border)) 0%, transparent 40%, transparent 60%, hsl(var(--glass-border)) 100%),
-    hsl(var(--glass-bg));
-  border: 1px solid hsl(var(--glass-border));
-}
-
-/* 机柜布局响应式 */
-@media (max-width: 720px) {
-  .card-inner-rack {
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .rack-nameplate {
-    flex: 1;
-  }
-
-  .rack-desc {
-    display: none;
-  }
-
-  .rack-open {
-    margin-left: auto;
-  }
-
-  .rack-handle {
-    display: none;
-  }
-}
-
-@media (max-width: 480px) {
-  .card-inner-rack {
-    gap: 0.375rem;
-  }
-}
-
-/* ========== Map 布局 - 地铁线路站台样式 ========== */
-.cyber-card.layout-map {
-  padding: 0;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border-radius: 0;
-}
-
-.cyber-card.layout-map::before,
-.cyber-card.layout-map .card-border-glow {
-  display: none;
-}
-
-.cyber-card.layout-map:hover {
-  transform: none;
-  background: transparent;
-  box-shadow: none;
-  border: none;
-}
-
-/* 站台行 */
-.card-inner-map {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  padding: 0.375rem 0.875rem 0.375rem 2.75rem;
-  min-height: 2.75rem;
-}
-
-/* 站台圆点 - 坐在地铁线上 */
-.map-station {
-  position: absolute;
-  left: 1.0625rem;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 0.875rem;
-  height: 0.875rem;
-  border-radius: 50%;
-  background: hsl(var(--map-line, var(--neon-cyan)));
-  box-shadow:
-    0 0 0 3px hsl(var(--map-line, var(--neon-cyan)) / 0.15),
-    0 0 12px hsl(var(--map-line, var(--neon-cyan)) / 0.5);
-  transition:
-    transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 300ms ease;
-  z-index: 2;
-}
-
-/* 换乘站 - 空心双环 */
-.map-station.transfer {
-  background: transparent;
-  border: 2px solid hsl(var(--map-line, var(--neon-cyan)));
-  box-shadow:
-    inset 0 0 0 2px hsl(var(--map-line, var(--neon-cyan)) / 0.2),
-    0 0 12px hsl(var(--map-line, var(--neon-cyan)) / 0.5);
-}
-
-.cyber-card:hover .map-station {
-  transform: translate(-50%, -50%) scale(1.35);
-  box-shadow:
-    0 0 0 5px hsl(var(--map-line, var(--neon-cyan)) / 0.2),
-    0 0 18px hsl(var(--map-line, var(--neon-cyan)) / 0.8);
-}
-
-/* 站点图标 */
-.map-icon {
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 0.375rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  flex-shrink: 0;
-  filter: brightness(var(--icon-brightness, 1));
-  position: relative;
-  background: hsl(var(--icon-placeholder-bg));
-  z-index: 2;
-}
-
-.map-icon::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, var(--icon-overlay-opacity, 0));
-  border-radius: inherit;
-  pointer-events: none;
-}
-
-.map-icon .icon-text {
-  font-size: 0.75rem;
-}
-
-/* 站名 */
-.map-label {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
-  z-index: 2;
-}
-
-.map-name {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: hsl(var(--text-primary));
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-family: ui-monospace, monospace;
-  letter-spacing: 0.02em;
-  transition: color 300ms, text-shadow 300ms;
-}
-
-.cyber-card:hover .map-name {
-  color: hsl(var(--neon-cyan));
-  text-shadow: 0 0 12px hsl(var(--neon-cyan) / 0.4);
-}
-
-.map-desc {
-  font-size: 0.6875rem;
-  color: hsl(var(--text-muted));
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-family: ui-monospace, monospace;
-}
-
-/* 外链箭头 */
-.map-arrow {
-  width: 1rem;
-  height: 1rem;
-  color: hsl(var(--text-muted));
-  opacity: 0;
-  transform: translateX(-0.25rem) translateY(0.25rem);
-  transition: all 300ms;
-  flex-shrink: 0;
-  z-index: 2;
-}
-
-.cyber-card:hover .map-arrow {
-  opacity: 1;
-  transform: translateX(0) translateY(0);
-  color: hsl(var(--neon-cyan));
-}
-
 /* 可访问性 - 焦点状态 */
 .cyber-card:focus {
   outline: none;
@@ -1303,14 +491,6 @@ const iconClass = computed(() => {
   outline-offset: 2px;
 }
 
-/* Minimal 模式焦点状态 */
-.cyber-card.layout-minimal:focus .minimal-icon,
-.cyber-card.layout-minimal:focus-visible .minimal-icon {
-  box-shadow:
-    0 0 0 3px hsl(var(--neon-cyan) / 0.3),
-    0 8px 20px -4px hsl(var(--neon-cyan) / 0.4);
-}
-
 /* 减少动画偏好 */
 @media (prefers-reduced-motion: reduce) {
   .cyber-card {
@@ -1324,33 +504,5 @@ const iconClass = computed(() => {
   .cyber-card:focus {
     box-shadow: var(--site-card-shadow-hover);
   }
-
-  .cyber-card.layout-minimal:hover .minimal-icon {
-    transform: none;
-  }
-
-  .cyber-card.layout-minimal:hover .minimal-name {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .rack-led-act.blink {
-    animation: none;
-  }
-
-  .cyber-card:hover .map-station {
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-/* ========== 浅色主题适配 ========== */
-[data-theme="light"] .minimal-name {
-  background: hsl(220 15% 98% / 0.95);
-  border-color: hsl(220 15% 85%);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-[data-theme="light"] .minimal-name span {
-  color: hsl(220 45% 15%);
 }
 </style>

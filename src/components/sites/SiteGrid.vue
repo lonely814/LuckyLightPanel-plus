@@ -303,9 +303,11 @@ function mapLineStyle(index: number) {
   gap: clamp(0.75rem, 2vw, 1rem);
 }
 
-/* Normal 布局 - 使用 auto-fill 实现更流畅的响应式 */
+/* Normal 布局 - Launcher 大图标竖排网格 */
 .site-grid.normal {
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  /* 3D 抬升透视 */
+  perspective: 1200px;
 }
 
 /* Compact 布局 - 超紧凑横向条 */
@@ -316,8 +318,10 @@ function mapLineStyle(index: number) {
 
 /* Large 布局（保留向后兼容）*/
 .site-grid.large {
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1rem;
+  /* 3D 抬升透视 */
+  perspective: 1200px;
 }
 
 /* List 布局 */
