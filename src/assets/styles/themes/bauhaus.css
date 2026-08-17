@@ -155,22 +155,12 @@
    页头 - 包豪斯横幅
    ============================================ */
 
-[data-theme="bauhaus"] .app-header {
-  height: var(--header-height, 3.5rem);
-  border-radius: 0;
-}
-
 [data-theme="bauhaus"] .header-bg {
   background: hsl(var(--bauhaus-yellow));
   border: 2px solid hsl(var(--bauhaus-black));
   border-radius: 0;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-}
-
-/* 顶部高光线：包豪斯三色条纹 */
-[data-theme="bauhaus"] .header-highlight {
-  display: none;
 }
 
 /* 页头加三色顶边 */
@@ -294,10 +284,6 @@
 
 [data-theme="bauhaus"] .gc-greeting-text {
   color: hsl(var(--text-primary));
-}
-
-[data-theme="bauhaus"] .gc-date {
-  color: hsl(var(--text-secondary));
 }
 
 /* ============================================
@@ -427,11 +413,6 @@
   box-shadow: 4px 4px 0 hsl(var(--bauhaus-black));
 }
 
-[data-theme="bauhaus"] .group-tab {
-  border-radius: 0;
-  color: hsl(var(--text-secondary));
-}
-
 [data-theme="bauhaus"] .group-tab:hover {
   background: hsl(var(--bauhaus-paper));
 }
@@ -476,10 +457,6 @@
   box-shadow: 3px 3px 0 hsl(var(--bauhaus-black));
 }
 
-[data-theme="bauhaus"] .search-bar-container .search-btn .btn-bg {
-  display: none;
-}
-
 [data-theme="bauhaus"] .search-bar-container .search-btn:hover {
   background: hsl(var(--bauhaus-red));
   transform: translate(-1px, -1px);
@@ -497,10 +474,6 @@
   border-radius: 0;
   box-shadow: 5px 5px 0 hsl(var(--bauhaus-black));
   backdrop-filter: none;
-}
-
-[data-theme="bauhaus"] .search-bar-container .engine-option {
-  border-radius: 0;
 }
 
 [data-theme="bauhaus"] .search-bar-container .engine-option:hover {
@@ -534,13 +507,6 @@
 [data-theme="bauhaus"] .divider-glow,
 [data-theme="bauhaus"] .footer-line {
   display: none;
-}
-
-[data-theme="bauhaus"] .header-icon {
-  background: none !important;
-  -webkit-background-clip: unset;
-  -webkit-text-fill-color: hsl(var(--text-primary));
-  background-clip: unset;
 }
 
 [data-theme="bauhaus"] .header-badge {
@@ -705,18 +671,6 @@
 [data-theme="bauhaus"] .btn-primary:active {
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0 hsl(var(--bauhaus-black));
-}
-
-/* ============================================
-   走势图 - 包豪斯加粗线条
-   ============================================ */
-
-[data-theme="bauhaus"] .sparkline-line {
-  stroke-width: 2.5;
-}
-
-[data-theme="bauhaus"] .stat-trend {
-  margin-top: 0.5rem;
 }
 
 /* ============================================

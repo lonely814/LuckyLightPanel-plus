@@ -126,18 +126,9 @@
    ============================================ */
 
 /* 滚动条 */
-[data-theme="console"] ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
 [data-theme="console"] ::-webkit-scrollbar-thumb {
   background: hsl(0 0% 0% / 0.5);
   border: 1px solid hsl(0 0% 0% / 0.6);
-}
-
-[data-theme="console"] ::-webkit-scrollbar-track {
-  background: hsl(var(--bg-page));
 }
 
 [data-theme="console"] ::selection {
@@ -209,10 +200,6 @@
    页头 - 加工铝控制条
    ============================================ */
 
-[data-theme="console"] .app-header {
-  height: var(--header-height, 3.5rem);
-}
-
 [data-theme="console"] .header-bg {
   background: linear-gradient(180deg, hsl(220 13% 15%) 0%, hsl(220 14% 11%) 100%);
   border: 1px solid hsl(0 0% 0% / 0.55);
@@ -221,10 +208,6 @@
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.06), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
-}
-
-[data-theme="console"] .header-highlight {
-  display: none;
 }
 
 [data-theme="console"] .title-main {
@@ -288,11 +271,6 @@
   border: 1px solid hsl(0 0% 0% / 0.55);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 hsl(0 0% 100% / 0.06);
   backdrop-filter: none;
-}
-
-[data-theme="console"] .theme-option {
-  border-radius: var(--radius-xs);
-  color: hsl(var(--text-secondary));
 }
 
 [data-theme="console"] .theme-option:hover {
@@ -389,12 +367,6 @@
   box-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.4);
 }
 
-[data-theme="console"] .content-tab {
-  border-radius: var(--radius-xs);
-  color: hsl(var(--text-secondary));
-  border: 1px solid transparent;
-}
-
 [data-theme="console"] .content-tab:hover {
   background: hsl(var(--cs-amber) / 0.07);
   color: hsl(var(--text-primary));
@@ -411,10 +383,6 @@
 [data-theme="console"] .content-tab.tab-luckyServices.active {
   background: hsl(var(--cs-amber)) !important;
   box-shadow: 0 0 14px -4px hsl(var(--cs-amber) / 0.7) !important;
-}
-
-[data-theme="console"] .content-tab.active .tab-icon {
-  color: hsl(var(--text-on-primary)) !important;
 }
 
 /* ============================================
@@ -483,11 +451,6 @@
   box-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.4);
 }
 
-[data-theme="console"] .group-tab {
-  border-radius: var(--radius-xs);
-  color: hsl(var(--text-secondary));
-}
-
 [data-theme="console"] .group-tab:hover {
   background: hsl(var(--cs-amber) / 0.07);
   color: hsl(var(--text-primary));
@@ -526,18 +489,10 @@
   box-shadow: inset 0 2px 4px hsl(0 0% 0% / 0.45), 0 0 16px -8px hsl(var(--cs-amber) / 0.5);
 }
 
-[data-theme="console"] .search-bar-container .search-input::placeholder {
-  color: hsl(var(--text-muted));
-}
-
 [data-theme="console"] .search-bar-container .search-btn {
   background: hsl(var(--cs-amber));
   border-radius: var(--radius-xs);
   color: hsl(var(--text-on-primary));
-}
-
-[data-theme="console"] .search-bar-container .search-btn .btn-bg {
-  display: none;
 }
 
 [data-theme="console"] .search-bar-container .search-btn:hover {
@@ -556,10 +511,6 @@
   border-radius: var(--radius-xs);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
   backdrop-filter: none;
-}
-
-[data-theme="console"] .search-bar-container .engine-option {
-  border-radius: var(--radius-xs);
 }
 
 [data-theme="console"] .search-bar-container .engine-option:hover {
@@ -730,9 +681,4 @@
   color: hsl(var(--text-on-primary));
   border-color: hsl(var(--cs-amber));
   box-shadow: 0 0 14px -6px hsl(var(--cs-amber) / 0.7);
-}
-
-/* 走势图 */
-[data-theme="console"] .stat-trend {
-  margin-top: 0.5rem;
 }

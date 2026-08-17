@@ -16,10 +16,16 @@ const configStore = useConfigStore()
 // 布局模式（父组件仅在非 minimal / rack / map 布局下渲染本组件）
 const layout = computed(() => configStore.layout)
 
+// 矩形模式（左侧图标 + 右侧详情）
+const isRect = computed(() => configStore.siteCardShape === 'rect')
+
+// 竖排 Launcher（normal / large 且非矩形模式）
+const isLauncher = computed(() => layout.value !== 'compact' && layout.value !== 'list' && !isRect.value)
+
 // 图标尺寸
 const iconSize = computed<'sm' | 'md' | 'lg'>(() => {
   const l = layout.value
-  if (l === 'list' || l === 'compact') return 'sm'
+  if (l === 'list' || l === 'compact' || isRect.value) return 'md'
   if (l === 'large') return 'lg'
   return 'md'
 })
@@ -28,7 +34,7 @@ const iconSize = computed<'sm' | 'md' | 'lg'>(() => {
 <template>
   <!-- ========== Launcher 竖排（normal / large）：大图标托盘 + 下方名称 ========== -->
   <div
-    v-if="layout !== 'compact' && layout !== 'list'"
+    v-if="isLauncher"
     class="launcher-inner"
   >
     <!-- 大图标托盘 -->
@@ -48,7 +54,7 @@ const iconSize = computed<'sm' | 'md' | 'lg'>(() => {
   <div
     v-else
     class="card-inner"
-    :class="{ 'layout-list': layout === 'list', 'layout-compact': layout === 'compact' }"
+    :class="{ 'layout-list': layout === 'list', 'layout-compact': layout === 'compact', 'card-rect': isRect }"
   >
     <!-- 图标 -->
     <SiteIcon :icon-url="iconUrl" :name="site.name" :size="iconSize" />
@@ -169,6 +175,16 @@ const iconSize = computed<'sm' | 'md' | 'lg'>(() => {
 
 .card-inner.layout-compact {
   gap: 0.375rem;
+}
+
+/* 矩形模式（左侧图标 + 右侧详情） */
+.card-inner.card-rect {
+  gap: 0.875rem;
+  text-align: left;
+}
+
+.card-inner.card-rect .card-title {
+  font-weight: 600;
 }
 
 /* 图标 hover 效果 */

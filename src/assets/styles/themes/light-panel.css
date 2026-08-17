@@ -152,18 +152,9 @@
 }
 
 /* 滚动条 - 琥珀 */
-[data-theme="light-panel"] ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
 [data-theme="light-panel"] ::-webkit-scrollbar-thumb {
   background: hsl(var(--lp-unlit) / 0.8);
   border: 1px solid hsl(var(--lp-unlit));
-}
-
-[data-theme="light-panel"] ::-webkit-scrollbar-track {
-  background: hsl(var(--bg-page));
 }
 
 /* 文本选区 - 琥珀 */
@@ -229,10 +220,6 @@
 /* ============================================
    页头 - 灯牌横条
    ============================================ */
-
-[data-theme="light-panel"] .app-header {
-  height: var(--header-height, 3.5rem);
-}
 
 [data-theme="light-panel"] .header-bg {
   background: hsl(var(--bg-elevated));
@@ -318,11 +305,6 @@
   border: 1px solid hsl(var(--lp-unlit) / 0.9);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 24px -10px hsl(var(--lp-amber) / 0.35);
   backdrop-filter: none;
-}
-
-[data-theme="light-panel"] .theme-option {
-  border-radius: var(--radius-xs);
-  color: hsl(var(--text-secondary));
 }
 
 [data-theme="light-panel"] .theme-option:hover {
@@ -478,10 +460,6 @@
   box-shadow: 0 0 18px -4px hsl(var(--lp-amber) / 0.7) !important;
 }
 
-[data-theme="light-panel"] .content-tab.active .tab-icon {
-  color: hsl(var(--text-on-primary)) !important;
-}
-
 /* ============================================
    分组徽章 / 布局 / 网络 / 总览徽章
    ============================================ */
@@ -590,18 +568,10 @@
   box-shadow: 0 0 20px -8px hsl(var(--lp-amber) / 0.55), inset 0 0 18px -12px hsl(var(--lp-amber) / 0.6);
 }
 
-[data-theme="light-panel"] .search-bar-container .search-input::placeholder {
-  color: hsl(var(--text-muted));
-}
-
 [data-theme="light-panel"] .search-bar-container .search-btn {
   background: hsl(var(--lp-amber));
   border-radius: var(--radius-sm);
   color: hsl(var(--text-on-primary));
-}
-
-[data-theme="light-panel"] .search-bar-container .search-btn .btn-bg {
-  display: none;
 }
 
 [data-theme="light-panel"] .search-bar-container .search-btn:hover {
@@ -620,10 +590,6 @@
   border-radius: var(--radius-sm);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
   backdrop-filter: none;
-}
-
-[data-theme="light-panel"] .search-bar-container .engine-option {
-  border-radius: var(--radius-xs);
 }
 
 [data-theme="light-panel"] .search-bar-container .engine-option:hover {

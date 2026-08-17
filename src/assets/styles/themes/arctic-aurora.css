@@ -1,0 +1,772 @@
+/* ============================================
+   Arctic Aurora Theme - 冰川极光主题
+   LightPanel Pro
+   冷白冰原 + 极光绸带 + 冰晶磨砂
+   灯光语汇：极光青=点亮，极光绿=运行，极光紫=装饰，冰蓝=信息
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+[data-theme="arctic-aurora"] {
+  /* 冰川专用色 - 冰原语义 */
+  --aa-ice-base: 198 45% 88%;
+  --aa-ice-base-rgb: 204, 224, 235;
+  --aa-ice-glow: 195 55% 82%;
+  --aa-ice-ink: 205 30% 30%;
+  --aa-ice-ink-rgb: 60, 96, 118;
+  --aa-frost: 200 40% 97%;
+  --aa-frost-rgb: 240, 247, 250;
+
+  --aa-aurora-cyan: 192 85% 45%;
+  --aa-aurora-cyan-rgb: 20, 165, 190;
+  --aa-aurora-green: 168 75% 40%;
+  --aa-aurora-green-rgb: 34, 170, 122;
+  --aa-aurora-purple: 255 65% 55%;
+  --aa-aurora-purple-rgb: 150, 90, 220;
+  --aa-aurora-blue: 210 70% 50%;
+  --aa-aurora-blue-rgb: 40, 115, 200;
+
+  /* 主色 - 冰蓝 */
+  --primary: 210 70% 50%;
+  --primary-light: 205 75% 58%;
+  --primary-dark: 215 65% 40%;
+  --primary-rgb: 40, 115, 200;
+
+  --accent: 168 75% 40%;
+  --accent-light: 168 72% 48%;
+  --accent-rgb: 34, 170, 122;
+
+  /* 霓虹色系 - 极光系 */
+  --neon-cyan: 192 85% 45%;
+  --neon-cyan-rgb: 20, 165, 190;
+  --neon-purple: 255 65% 55%;
+  --neon-purple-rgb: 150, 90, 220;
+  --neon-pink: 320 65% 55%;
+  --neon-pink-rgb: 200, 90, 165;
+  --neon-blue: 210 70% 50%;
+  --neon-blue-rgb: 40, 115, 200;
+  --neon-green: 168 75% 40%;
+  --neon-green-rgb: 34, 170, 122;
+
+  /* Docker 主题色 - 冰橙 */
+  --docker-orange: 25 75% 52%;
+  --docker-orange-rgb: 210, 130, 60;
+
+  /* 状态色 - 冰雪语义 */
+  --success: 168 70% 36%;
+  --success-rgb: 34, 160, 112;
+  --error: 350 65% 52%;
+  --error-rgb: 200, 60, 90;
+  --warning: 30 80% 50%;
+  --warning-rgb: 220, 140, 40;
+
+  /* 图标 - 冰蓝染色 */
+  --icon-brightness: 1;
+  --icon-filter: brightness(0) saturate(100%) invert(38%) sepia(38%) saturate(650%) hue-rotate(168deg);
+  --icon-filter-hover: brightness(0) saturate(100%) invert(30%) sepia(40%) saturate(600%) hue-rotate(170deg);
+  --icon-placeholder-bg: 205 30% 40% / 0.14;
+
+  /* 玻璃变量 - 通透磨砂冰 */
+  --glass-bg: 200 35% 97% / 0.55;
+  --glass-bg-hover: 200 40% 98% / 0.7;
+  --glass-border: 205 25% 60% / 0.4;
+  --glass-border-glow: 192 75% 50% / 0.35;
+  --glass-blur: 26px;
+  --glass-saturation: 130%;
+  --glass-shine: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 50%);
+
+  /* 卡片 - 磨砂冰晶 */
+  --card-bg: 200 35% 98% / 0.62;
+  --card-shadow:
+    0 1px 2px rgba(60, 90, 110, 0.06),
+    0 8px 26px rgba(60, 90, 110, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --card-shadow-hover:
+    0 2px 4px rgba(60, 90, 110, 0.08),
+    0 18px 44px rgba(60, 90, 110, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  --card-glow: 0 0 30px -12px rgba(var(--primary-rgb), 0.3);
+  --card-glow-hover: 0 0 46px -10px rgba(var(--primary-rgb), 0.38);
+
+  /* 文字 - 冰原墨蓝 */
+  --text-primary: 210 25% 18%;
+  --text-secondary: 208 18% 34%;
+  --text-muted: 207 14% 48%;
+  --text-on-primary: 200 40% 98%;
+  --text-glow: 0 0 10px hsl(var(--aa-aurora-cyan) / 0.25);
+
+  --border-color: 205 20% 72%;
+  --border-subtle: 202 22% 80%;
+  --bg-page: 198 45% 88%;
+  --bg-elevated: 200 35% 96%;
+
+  /* 站点卡片 - 通透磨砂冰 */
+  --site-card-bg: 200 35% 99% / 0.5;
+  --site-card-bg-hover: 200 40% 100% / 0.72;
+  --site-card-blur: 22px;
+  --site-card-saturation: 130%;
+  --site-card-border: 205 25% 70% / 0.55;
+  --site-card-border-hover: 192 75% 48% / 0.5;
+  --site-card-inner-glow: 0 0% 100% / 0.8;
+  --site-card-shadow:
+    0 1px 2px rgba(60, 90, 110, 0.05),
+    0 8px 24px rgba(60, 90, 110, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --site-card-shadow-hover:
+    0 2px 4px rgba(60, 90, 110, 0.07),
+    0 18px 40px rgba(60, 90, 110, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  --site-card-shine-opacity: 0.14;
+  --site-card-shine-hover: 0.28;
+}
+
+/* 圆角 - 冰晶微圆 + 极地字体 */
+[data-theme="arctic-aurora"] {
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 26px;
+  --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Consolas, monospace;
+}
+
+/* 背景 - 极光绸带（AuroraBackground.vue 提供） */
+[data-theme="arctic-aurora"] .tech-background,
+[data-theme="arctic-aurora"] .bg-gradient-aurora {
+  background-color: hsl(var(--bg-page)) !important;
+  background-image: radial-gradient(ellipse at 50% -10%, hsl(var(--aa-ice-glow) / 0.5) 0%, transparent 60%);
+}
+
+[data-theme="arctic-aurora"] .bg-aurora,
+[data-theme="arctic-aurora"] .particle,
+[data-theme="arctic-aurora"] .grid-line {
+  display: none !important;
+}
+
+/* 全局冰光文字 */
+[data-theme="arctic-aurora"] h1,
+[data-theme="arctic-aurora"] h2,
+[data-theme="arctic-aurora"] h3,
+[data-theme="arctic-aurora"] .title-main,
+[data-theme="arctic-aurora"] .gc-time-value,
+[data-theme="arctic-aurora"] .stat-value,
+[data-theme="arctic-aurora"] .network-speed,
+[data-theme="arctic-aurora"] .time-value {
+  text-shadow: 0 0 8px hsl(var(--aa-aurora-cyan) / 0.22);
+}
+
+/* 滚动条 - 冰蓝 */
+[data-theme="arctic-aurora"] ::-webkit-scrollbar-thumb {
+  background: hsl(var(--aa-ice-ink) / 0.3);
+  border: 1px solid hsl(var(--aa-ice-ink) / 0.15);
+}
+
+/* 文本选区 - 极光青 */
+[data-theme="arctic-aurora"] ::selection {
+  background: hsl(var(--aa-aurora-cyan) / 0.3);
+  color: hsl(var(--text-primary));
+}
+
+/* ============================================
+   卡片 - 磨砂冰晶
+   ============================================ */
+
+[data-theme="arctic-aurora"] .glass-card,
+[data-theme="arctic-aurora"] .glass-card-neon,
+[data-theme="arctic-aurora"] .cyber-card,
+[data-theme="arctic-aurora"] .docker-card,
+[data-theme="arctic-aurora"] .service-card {
+  border: 1px solid hsl(var(--site-card-border)) !important;
+  box-shadow: var(--card-shadow) !important;
+}
+
+[data-theme="arctic-aurora"] .glass-card::after,
+[data-theme="arctic-aurora"] .glass-card-neon::after,
+[data-theme="arctic-aurora"] .card-border-glow {
+  display: none !important;
+}
+
+[data-theme="arctic-aurora"] .glass-card::before,
+[data-theme="arctic-aurora"] .glass-card-neon::before,
+[data-theme="arctic-aurora"] .cyber-card::before,
+[data-theme="arctic-aurora"] .docker-card::before,
+[data-theme="arctic-aurora"] .service-card::before {
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 45%
+  ) !important;
+  opacity: 1 !important;
+}
+
+[data-theme="arctic-aurora"] .cyber-card:not(.layout-minimal):hover,
+[data-theme="arctic-aurora"] .docker-card:not(.layout-minimal):hover,
+[data-theme="arctic-aurora"] .service-card:not(.layout-minimal):hover {
+  transform: translateY(-2px) !important;
+  border-color: hsl(var(--site-card-border-hover)) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+}
+
+[data-theme="arctic-aurora"] .cyber-card.layout-minimal,
+[data-theme="arctic-aurora"] .docker-card.layout-minimal,
+[data-theme="arctic-aurora"] .service-card.layout-minimal {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent;
+}
+
+[data-theme="arctic-aurora"] .icon-box,
+[data-theme="arctic-aurora"] .compact-icon,
+[data-theme="arctic-aurora"] .minimal-icon {
+  border-radius: var(--radius-md) !important;
+  border: 1px solid hsl(var(--aa-ice-ink) / 0.25) !important;
+  background-color: hsl(var(--aa-frost) / 0.7) !important;
+}
+
+/* ============================================
+   页头 - 冰横条
+   ============================================ */
+
+[data-theme="arctic-aurora"] .header-bg {
+  background: hsl(var(--aa-frost) / 0.6);
+  border: 1px solid hsl(var(--aa-ice-ink) / 0.18);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: 0 8px 30px -14px rgba(60, 90, 110, 0.35);
+}
+
+[data-theme="arctic-aurora"] .header-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    hsl(var(--aa-aurora-green) / 0.08) 0%,
+    hsl(var(--aa-aurora-cyan) / 0.14) 50%,
+    hsl(var(--aa-aurora-purple) / 0.1) 100%
+  );
+  border-radius: inherit;
+}
+
+[data-theme="arctic-aurora"] .header-highlight {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(var(--aa-aurora-cyan) / 0.3) 25%,
+    hsl(var(--aa-aurora-green) / 0.4) 50%,
+    hsl(var(--aa-aurora-cyan) / 0.3) 75%,
+    transparent 100%
+  );
+}
+
+[data-theme="arctic-aurora"] .title-main {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+[data-theme="arctic-aurora"] .title-text {
+  color: hsl(var(--aa-ice-ink));
+}
+
+[data-theme="arctic-aurora"] .title-icon {
+  color: hsl(var(--aa-aurora-cyan));
+}
+
+[data-theme="arctic-aurora"] .title-sub {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+[data-theme="arctic-aurora"] .title-sub::before {
+  content: '❄ ';
+  color: hsl(var(--aa-aurora-cyan));
+}
+
+/* 页头按钮 - 冰键 */
+[data-theme="arctic-aurora"] .action-btn {
+  border-radius: var(--radius-sm);
+  border: 1px solid hsl(var(--aa-ice-ink) / 0.2);
+  background: hsl(var(--aa-frost) / 0.55);
+  transition: all var(--duration-fast) ease;
+}
+
+[data-theme="arctic-aurora"] .action-btn:hover {
+  background: hsl(var(--aa-aurora-cyan) / 0.1);
+  border-color: hsl(var(--aa-aurora-cyan) / 0.5);
+  box-shadow: 0 0 16px -6px hsl(var(--aa-aurora-cyan) / 0.5);
+}
+
+[data-theme="arctic-aurora"] .action-btn:hover .btn-icon {
+  color: hsl(var(--aa-aurora-cyan)) !important;
+}
+
+[data-theme="arctic-aurora"] .theme-dropdown {
+  border-radius: var(--radius-sm);
+  background: hsl(var(--aa-frost) / 0.95);
+  border: 1px solid hsl(var(--aa-ice-ink) / 0.2);
+  box-shadow: 0 12px 32px rgba(60, 90, 110, 0.25), 0 0 24px -10px hsl(var(--aa-aurora-cyan) / 0.25);
+}
+
+[data-theme="arctic-aurora"] .theme-option:hover {
+  background: hsl(var(--aa-aurora-cyan) / 0.08);
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="arctic-aurora"] .theme-option.active {
+  background: hsl(var(--aa-aurora-cyan) / 0.14);
+  color: hsl(var(--aa-aurora-cyan)) !important;
+}
+
+/* 网络徽章 - 极光信标 */
+[data-theme="arctic-aurora"] .net-badge {
+  border-radius: var(--radius-sm);
+  border: 1px solid hsl(var(--aa-aurora-cyan) / 0.4);
+  background: hsl(var(--aa-frost) / 0.6);
+}
+
+[data-theme="arctic-aurora"] .net-badge:hover {
+  box-shadow: 0 0 16px -6px hsl(var(--aa-aurora-cyan) / 0.6);
+}
+
+[data-theme="arctic-aurora"] .net-badge.internal {
+  border-color: hsl(var(--aa-aurora-green) / 0.55);
+  background: hsl(var(--aa-aurora-green) / 0.08);
+}
+
+[data-theme="arctic-aurora"] .net-badge-icon,
+[data-theme="arctic-aurora"] .net-badge-label {
+  color: hsl(var(--aa-aurora-cyan)) !important;
+}
+
+[data-theme="arctic-aurora"] .net-badge.internal .net-badge-icon,
+[data-theme="arctic-aurora"] .net-badge.internal .net-badge-label {
+  color: hsl(var(--aa-aurora-green)) !important;
+}
+
+/* ============================================
+   问候时钟 - 冰晶数字钟
+   ============================================ */
+
+[data-theme="arctic-aurora"] .greeting-clock {
+  position: relative;
+  overflow: hidden;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid hsl(var(--aa-ice-ink) / 0.18);
+  background: hsl(var(--aa-frost) / 0.55);
+  box-shadow:
+    0 8px 30px -16px rgba(60, 90, 110, 0.35),
+    inset 0 0 40px -20px hsl(var(--aa-aurora-cyan) / 0.25);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+[data-theme="arctic-aurora"] .greeting-clock::after {
+  content: '✦';
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  color: hsl(var(--aa-aurora-green));
+  font-size: 0.75rem;
+  text-shadow: 0 0 8px hsl(var(--aa-aurora-green) / 0.8);
+  animation: aa-pilot 2.4s ease-in-out infinite;
+}
+
+[data-theme="arctic-aurora"] .gc-greeting-text {
+  color: hsl(var(--aa-aurora-cyan));
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 8px hsl(var(--aa-aurora-cyan) / 0.35);
+}
+
+[data-theme="arctic-aurora"] .gc-greeting-sep {
+  color: hsl(var(--aa-aurora-purple));
+}
+
+[data-theme="arctic-aurora"] .gc-date {
+  color: hsl(var(--text-secondary));
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.06em;
+}
+
+/* 大钟 - 冰蓝读数 */
+[data-theme="arctic-aurora"] .gc-time-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  color: hsl(var(--aa-ice-ink));
+  letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+  text-shadow:
+    0 0 6px hsl(var(--aa-aurora-cyan) / 0.45),
+    0 0 18px hsl(var(--aa-aurora-cyan) / 0.2);
+}
+
+[data-theme="arctic-aurora"] .gc-seconds {
+  color: hsl(var(--aa-aurora-cyan));
+  animation: aa-blink 1s steps(2, start) infinite;
+}
+
+[data-theme="arctic-aurora"] .gc-seconds.night {
+  color: hsl(var(--aa-aurora-purple));
+}
+
+/* ============================================
+   内容标签页 - 极光标签
+   ============================================ */
+
+[data-theme="arctic-aurora"] .content-tabs {
+  background: hsl(var(--aa-frost) / 0.6);
+  border: 1px solid hsl(var(--aa-ice-ink) / 0.18);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 24px -12px hsl(var(--aa-aurora-cyan) / 0.3);
+}
+
+[data-theme="arctic-aurora"] .content-tab {
+  border-radius: var(--radius-sm);
+  color: hsl(var(--text-secondary));
+  border: 1px solid transparent;
+}
+
+[data-theme="arctic-aurora"] .content-tab:hover {
+  background: hsl(var(--aa-aurora-cyan) / 0.07);
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="arctic-aurora"] .content-tab.active {
+  background: hsl(var(--aa-aurora-cyan)) !important;
+  color: hsl(var(--text-on-primary)) !important;
+  border: 1px solid hsl(var(--aa-aurora-cyan)) !important;
+  box-shadow: 0 0 18px -4px hsl(var(--aa-aurora-cyan) / 0.7) !important;
+}
+
+[data-theme="arctic-aurora"] .content-tab.tab-docker.active,
+[data-theme="arctic-aurora"] .content-tab.tab-luckyServices.active {
+  background: hsl(var(--aa-aurora-cyan)) !important;
+  box-shadow: 0 0 18px -4px hsl(var(--aa-aurora-cyan) / 0.7) !important;
+}
+
+/* ============================================
+   分组徽章 / 布局 / 网络 / 总览徽章
+   ============================================ */
+
+[data-theme="arctic-aurora"] .group-badge,
+[data-theme="arctic-aurora"] .layout-badge,
+[data-theme="arctic-aurora"] .overview-badge,
+[data-theme="arctic-aurora"] .network-badge {
+  background: hsl(var(--aa-frost) / 0.6);
+  border: 1px solid hsl(var(--aa-ice-ink) / 0.2);
+  border-radius: var(--radius-sm);
+  color: hsl(var(--text-primary)) !important;
+  backdrop-filter: blur(var(--glass-blur));
+}
+
+[data-theme="arctic-aurora"] .group-badge:hover,
+[data-theme="arctic-aurora"] .layout-badge:hover,
+[data-theme="arctic-aurora"] .overview-badge:hover,
+[data-theme="arctic-aurora"] .network-badge:hover {
+  background: hsl(var(--aa-aurora-cyan) / 0.08);
+  border-color: hsl(var(--aa-aurora-cyan) / 0.5);
+  box-shadow: 0 0 16px -6px hsl(var(--aa-aurora-cyan) / 0.5) !important;
+}
+
+[data-theme="arctic-aurora"] .group-dropdown,
+[data-theme="arctic-aurora"] .layout-dropdown,
+[data-theme="arctic-aurora"] .network-dropdown {
+  background: hsl(var(--aa-frost) / 0.95);
+  border: 1px solid hsl(var(--aa-ice-ink) / 0.2);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 12px 32px rgba(60, 90, 110, 0.25), 0 0 24px -10px hsl(var(--aa-aurora-cyan) / 0.25);
+  backdrop-filter: blur(var(--glass-blur));
+}
+
+[data-theme="arctic-aurora"] .group-option,
+[data-theme="arctic-aurora"] .layout-option,
+[data-theme="arctic-aurora"] .network-option {
+  color: hsl(var(--text-secondary));
+  border-radius: var(--radius-xs);
+}
+
+[data-theme="arctic-aurora"] .group-option:hover,
+[data-theme="arctic-aurora"] .layout-option:hover,
+[data-theme="arctic-aurora"] .network-option:hover,
+[data-theme="arctic-aurora"] .option-main:hover {
+  background: hsl(var(--aa-aurora-cyan) / 0.07);
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="arctic-aurora"] .group-option.active,
+[data-theme="arctic-aurora"] .layout-option.active,
+[data-theme="arctic-aurora"] .network-option.active {
+  background: hsl(var(--aa-aurora-cyan) / 0.14) !important;
+  color: hsl(var(--aa-aurora-cyan)) !important;
+  border: 1px solid hsl(var(--aa-aurora-cyan) / 0.35);
+}
+
+/* 分组标签页 */
+[data-theme="arctic-aurora"] .group-tabs {
+  background: hsl(var(--aa-frost) / 0.6);
+  border: 1px solid hsl(var(--aa-ice-ink) / 0.18);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 20px -12px hsl(var(--aa-aurora-cyan) / 0.25);
+}
+
+[data-theme="arctic-aurora"] .group-tab {
+  border-radius: var(--radius-sm);
+  color: hsl(var(--text-secondary));
+}
+
+[data-theme="arctic-aurora"] .group-tab:hover {
+  background: hsl(var(--aa-aurora-cyan) / 0.07);
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="arctic-aurora"] .group-tab.active,
+[data-theme="arctic-aurora"] .group-tab.color-cyan.active,
+[data-theme="arctic-aurora"] .group-tab.color-docker.active,
+[data-theme="arctic-aurora"] .group-tab.color-green.active {
+  background: hsl(var(--aa-aurora-cyan)) !important;
+  color: hsl(var(--text-on-primary)) !important;
+  border: 1px solid hsl(var(--aa-aurora-cyan)) !important;
+  box-shadow: 0 0 16px -4px hsl(var(--aa-aurora-cyan) / 0.6) !important;
+}
+
+/* ============================================
+   搜索栏 - 冰面输入
+   ============================================ */
+
+[data-theme="arctic-aurora"] .search-bar-container .search-glow,
+[data-theme="arctic-aurora"] .search-bar-container .search-highlight {
+  display: none;
+}
+
+[data-theme="arctic-aurora"] .search-bar-container .glass-search {
+  background: hsl(var(--aa-frost) / 0.6);
+  border: 1px solid hsl(var(--aa-ice-ink) / 0.2);
+  border-radius: var(--radius-md);
+  box-shadow: inset 0 0 18px -12px hsl(var(--aa-aurora-cyan) / 0.5);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+[data-theme="arctic-aurora"] .search-bar-container .glass-search:hover,
+[data-theme="arctic-aurora"] .search-bar-container .glass-search:focus-within {
+  border-color: hsl(var(--aa-aurora-cyan) / 0.6);
+  box-shadow: 0 0 20px -8px hsl(var(--aa-aurora-cyan) / 0.45), inset 0 0 18px -12px hsl(var(--aa-aurora-cyan) / 0.5);
+}
+
+[data-theme="arctic-aurora"] .search-bar-container .search-btn {
+  background: hsl(var(--aa-aurora-cyan));
+  border-radius: var(--radius-sm);
+  color: hsl(var(--text-on-primary));
+}
+
+[data-theme="arctic-aurora"] .search-bar-container .search-btn:hover {
+  background: hsl(var(--aa-aurora-cyan));
+  box-shadow: 0 0 20px -6px hsl(var(--aa-aurora-cyan) / 0.7) !important;
+}
+
+[data-theme="arctic-aurora"] .search-bar-container .engine-selector {
+  border-radius: var(--radius-sm);
+  border-right: 1px solid hsl(var(--aa-ice-ink) / 0.2);
+}
+
+[data-theme="arctic-aurora"] .search-bar-container .engine-dropdown {
+  background: hsl(var(--aa-frost) / 0.95);
+  border: 1px solid hsl(var(--aa-ice-ink) / 0.2);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 12px 32px rgba(60, 90, 110, 0.25);
+  backdrop-filter: blur(var(--glass-blur));
+}
+
+[data-theme="arctic-aurora"] .search-bar-container .engine-option:hover {
+  background: hsl(var(--aa-aurora-cyan) / 0.07);
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="arctic-aurora"] .search-bar-container .engine-option.active {
+  background: hsl(var(--aa-aurora-cyan) / 0.14) !important;
+  color: hsl(var(--aa-aurora-cyan)) !important;
+}
+
+/* ============================================
+   Docker 总览面板 - 冰川面板
+   ============================================ */
+
+[data-theme="arctic-aurora"] .overview-panel {
+  background: hsl(var(--aa-frost) / 0.6);
+  border: 1px solid hsl(var(--aa-ice-ink) / 0.18);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 28px -12px hsl(var(--aa-aurora-cyan) / 0.3);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+[data-theme="arctic-aurora"] .panel-header {
+  background: hsl(var(--aa-aurora-cyan) / 0.06);
+  border-bottom: 1px solid hsl(var(--aa-ice-ink) / 0.18);
+}
+
+[data-theme="arctic-aurora"] .header-glow,
+[data-theme="arctic-aurora"] .divider-glow,
+[data-theme="arctic-aurora"] .footer-line {
+  display: none;
+}
+
+[data-theme="arctic-aurora"] .header-icon {
+  background: none !important;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: hsl(var(--aa-aurora-cyan));
+  background-clip: unset;
+}
+
+[data-theme="arctic-aurora"] .header-badge {
+  background: hsl(var(--aa-aurora-cyan) / 0.1);
+  color: hsl(var(--aa-aurora-cyan));
+  border: 1px solid hsl(var(--aa-ice-ink) / 0.25);
+  border-radius: var(--radius-xs);
+}
+
+[data-theme="arctic-aurora"] .section-icon {
+  background: hsl(var(--aa-aurora-cyan) / 0.14) !important;
+  color: hsl(var(--aa-aurora-cyan)) !important;
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 0 16px -10px hsl(var(--aa-aurora-cyan) / 0.5) !important;
+}
+
+[data-theme="arctic-aurora"] .rank-item {
+  background: hsl(var(--aa-frost) / 0.5);
+  border: 1px solid hsl(var(--aa-ice-ink) / 0.16);
+  border-radius: var(--radius-sm);
+}
+
+[data-theme="arctic-aurora"] .rank-item:hover {
+  background: hsl(var(--aa-aurora-cyan) / 0.06);
+  border-color: hsl(var(--aa-aurora-cyan) / 0.4);
+}
+
+[data-theme="arctic-aurora"] .rank-item.rank-1 {
+  background: hsl(var(--aa-aurora-cyan) / 0.1) !important;
+  border-color: hsl(var(--aa-aurora-cyan) / 0.45);
+}
+
+[data-theme="arctic-aurora"] .rank-number {
+  background: hsl(var(--aa-aurora-cyan) / 0.1);
+  border: 1px solid hsl(var(--aa-ice-ink) / 0.2);
+  border-radius: var(--radius-xs);
+  color: hsl(var(--aa-aurora-cyan)) !important;
+}
+
+[data-theme="arctic-aurora"] .rank-bar-wrapper {
+  background: hsl(var(--aa-ice-ink) / 0.15);
+}
+
+[data-theme="arctic-aurora"] .rank-bar.cpu-bar,
+[data-theme="arctic-aurora"] .rank-bar.memory-bar {
+  background: hsl(var(--aa-aurora-cyan)) !important;
+  box-shadow: 0 0 12px -2px hsl(var(--aa-aurora-cyan) / 0.5) !important;
+}
+
+/* 状态徽章 - 冰边字 */
+[data-theme="arctic-aurora"] .status-badge,
+[data-theme="arctic-aurora"] .type-badge,
+[data-theme="arctic-aurora"] .list-status-badge,
+[data-theme="arctic-aurora"] .list-type-badge {
+  border-radius: var(--radius-xs);
+  border: 1px solid currentColor;
+}
+
+/* 状态指示灯 - 极光点 */
+[data-theme="arctic-aurora"] .status-indicator.status-running {
+  background: hsl(var(--aa-aurora-green));
+  box-shadow: 0 0 8px hsl(var(--aa-aurora-green) / 0.85), 0 0 2px hsl(var(--aa-aurora-green));
+}
+
+[data-theme="arctic-aurora"] .status-indicator.status-stopped {
+  background: hsl(var(--error));
+  box-shadow: 0 0 8px hsl(var(--error) / 0.65);
+}
+
+[data-theme="arctic-aurora"] .status-indicator.status-paused {
+  background: hsl(var(--warning));
+  box-shadow: 0 0 8px hsl(var(--warning) / 0.65);
+}
+
+/* 走势图 - 极光线条 */
+[data-theme="arctic-aurora"] .sparkline-line {
+  stroke: hsl(var(--aa-aurora-cyan));
+  stroke-width: 1.8;
+}
+
+/* ============================================
+   设置面板
+   ============================================ */
+
+[data-theme="arctic-aurora"] .settings-panel {
+  border-radius: var(--radius-lg);
+  background: hsl(var(--aa-frost) / 0.9);
+  border-left: 2px solid hsl(var(--aa-aurora-cyan) / 0.5);
+}
+
+[data-theme="arctic-aurora"] .settings-title {
+  border-bottom: 2px solid hsl(var(--aa-ice-ink) / 0.2);
+}
+
+[data-theme="arctic-aurora"] .section-title {
+  border-left: 4px solid hsl(var(--aa-aurora-cyan));
+  padding-left: 0.5rem;
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="arctic-aurora"] input[type="text"],
+[data-theme="arctic-aurora"] select,
+[data-theme="arctic-aurora"] .settings-input {
+  border-radius: var(--radius-sm);
+  border: 1px solid hsl(var(--aa-ice-ink) / 0.2);
+  background: hsl(var(--aa-frost));
+  color: hsl(var(--text-primary));
+}
+
+/* 通用按钮 */
+[data-theme="arctic-aurora"] button:not(.content-tab):not(.group-tab):not(.group-option):not(.layout-option):not(.network-option):not(.theme-option):not(.engine-option):not(.action-btn) {
+  border-radius: var(--radius-sm);
+  border: 1px solid hsl(var(--aa-ice-ink) / 0.2);
+  background: hsl(var(--aa-frost));
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="arctic-aurora"] .btn-primary,
+[data-theme="arctic-aurora"] .btn-primary:hover {
+  background: hsl(var(--aa-aurora-cyan));
+  color: hsl(var(--text-on-primary));
+  border-color: hsl(var(--aa-aurora-cyan));
+  box-shadow: 0 0 18px -6px hsl(var(--aa-aurora-cyan) / 0.6);
+}
+
+/* ============================================
+   动效 - 极光呼吸 / 指示灯
+   ============================================ */
+
+@keyframes aa-blink {
+  50% { opacity: 0; }
+}
+
+@keyframes aa-pilot {
+  0%, 100% { opacity: 1; transform: rotate(0deg); }
+  50% { opacity: 0.35; transform: rotate(180deg); }
+}
+
+/* 减少动画偏好 */
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="arctic-aurora"] .gc-seconds,
+  [data-theme="arctic-aurora"] .greeting-clock::after {
+    animation: none;
+  }
+}

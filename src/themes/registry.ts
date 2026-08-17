@@ -3,7 +3,7 @@
    ============================================ */
 
 import type { Component } from 'vue'
-import { Sun, Moon, Triangle, Terminal, Lightbulb, SlidersHorizontal, Receipt } from 'lucide-vue-next'
+import { Sun, Moon, Triangle, Terminal, Lightbulb, SlidersHorizontal, Receipt, CloudSnow } from 'lucide-vue-next'
 import { THEME_IDS } from '@/types'
 import type { ThemeMode } from '@/types'
 import TechBackground from '@/components/common/TechBackground.vue'
@@ -12,6 +12,7 @@ import CRTBackground from '@/components/common/CRTBackground.vue'
 import DotMatrixBackground from '@/components/common/DotMatrixBackground.vue'
 import ConsoleBackground from '@/components/common/ConsoleBackground.vue'
 import ReceiptBackground from '@/components/common/ReceiptBackground.vue'
+import AuroraBackground from '@/components/common/AuroraBackground.vue'
 
 /** 主题选项元数据 */
 export interface ThemeOption {
@@ -65,6 +66,12 @@ const THEME_META: Record<ThemeMode, Omit<ThemeOption, 'value'>> = {
     icon: Receipt,
     color: 'var(--r-stamp)',
     backgroundComponent: ReceiptBackground
+  },
+  'arctic-aurora': {
+    label: '冰川极光',
+    icon: CloudSnow,
+    color: 'var(--aa-aurora-cyan)',
+    backgroundComponent: AuroraBackground
   }
 }
 

@@ -175,10 +175,10 @@ export interface NetworkTypeResponse {
 // ============ 用户配置类型 ============
 
 /** 主题模式 */
-export type ThemeMode = 'light' | 'dark' | 'bauhaus' | 'crt-terminal' | 'light-panel' | 'console' | 'receipt'
+export type ThemeMode = 'light' | 'dark' | 'bauhaus' | 'crt-terminal' | 'light-panel' | 'console' | 'receipt' | 'arctic-aurora'
 
 /** 所有主题 ID（单一来源，主题注册表与配置校验共用） */
-export const THEME_IDS: ThemeMode[] = ['light', 'dark', 'bauhaus', 'crt-terminal', 'light-panel', 'console', 'receipt']
+export const THEME_IDS: ThemeMode[] = ['light', 'dark', 'bauhaus', 'crt-terminal', 'light-panel', 'console', 'receipt', 'arctic-aurora']
 
 /** 布局模式 */
 export type LayoutMode = 'compact' | 'normal' | 'large' | 'list' | 'minimal' | 'rack' | 'map'
@@ -220,6 +220,8 @@ export interface UserConfig {
   dockerLayout: LayoutMode
   luckyServicesLayout: LayoutMode
   layoutScale: number
+  siteCardSize: number
+  siteCardShape: 'square' | 'rect'
   showDescription: boolean
   showTime: boolean
   showSearch: boolean

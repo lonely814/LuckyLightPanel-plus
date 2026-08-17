@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
@@ -29,5 +30,9 @@ export default defineConfig({
     assetsDir: 'assets',
     // 生产环境使用 esbuild 压缩
     minify: 'esbuild'
+  },
+  test: {
+    globals: true,
+    environment: 'node'
   }
 })

@@ -129,10 +129,6 @@
   border: 1px solid hsl(var(--r-ink) / 0.1);
 }
 
-[data-theme="receipt"] ::-webkit-scrollbar-track {
-  background: hsl(var(--bg-page));
-}
-
 [data-theme="receipt"] ::selection {
   background: hsl(var(--r-ink) / 0.15);
   color: hsl(var(--text-primary));
@@ -202,10 +198,6 @@
    页头 - 票头
    ============================================ */
 
-[data-theme="receipt"] .app-header {
-  height: var(--header-height, 3.5rem);
-}
-
 [data-theme="receipt"] .header-bg {
   background: hsl(var(--bg-elevated));
   border: 1px solid hsl(var(--r-ink) / 0.22);
@@ -225,10 +217,6 @@
   border-bottom: 1px dashed hsl(var(--r-ink) / 0.35);
 }
 
-[data-theme="receipt"] .header-highlight {
-  display: none;
-}
-
 [data-theme="receipt"] .title-main {
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -238,10 +226,6 @@
 
 [data-theme="receipt"] .title-text {
   color: hsl(var(--text-primary));
-}
-
-[data-theme="receipt"] .title-icon {
-  display: none;
 }
 
 [data-theme="receipt"] .title-text::before {
@@ -288,11 +272,6 @@
   border: 1px solid hsl(var(--r-ink) / 0.3);
   box-shadow: 0 12px 32px hsl(var(--r-ink) / 0.14);
   backdrop-filter: none;
-}
-
-[data-theme="receipt"] .theme-option {
-  border-radius: var(--radius-xs);
-  color: hsl(var(--text-secondary));
 }
 
 [data-theme="receipt"] .theme-option:hover {
@@ -399,12 +378,6 @@
   border-radius: var(--radius-sm);
 }
 
-[data-theme="receipt"] .content-tab {
-  border-radius: var(--radius-xs);
-  color: hsl(var(--text-secondary));
-  border: 1px solid transparent;
-}
-
 [data-theme="receipt"] .content-tab:hover {
   background: hsl(var(--r-ink) / 0.04);
   color: hsl(var(--text-primary));
@@ -419,10 +392,6 @@
 [data-theme="receipt"] .content-tab.tab-docker.active,
 [data-theme="receipt"] .content-tab.tab-luckyServices.active {
   background: hsl(var(--text-primary)) !important;
-}
-
-[data-theme="receipt"] .content-tab.active .tab-icon {
-  color: hsl(var(--text-on-primary)) !important;
 }
 
 /* ============================================
@@ -488,11 +457,6 @@
   border-radius: var(--radius-sm);
 }
 
-[data-theme="receipt"] .group-tab {
-  border-radius: var(--radius-xs);
-  color: hsl(var(--text-secondary));
-}
-
 [data-theme="receipt"] .group-tab:hover {
   background: hsl(var(--r-ink) / 0.04);
   color: hsl(var(--text-primary));
@@ -540,10 +504,6 @@
   color: hsl(var(--text-on-primary));
 }
 
-[data-theme="receipt"] .search-bar-container .search-btn .btn-bg {
-  display: none;
-}
-
 [data-theme="receipt"] .search-bar-container .search-btn:hover {
   background: hsl(var(--text-primary));
   box-shadow: 0 2px 0 hsl(var(--r-ink) / 0.15);
@@ -560,10 +520,6 @@
   border-radius: var(--radius-xs);
   box-shadow: 0 12px 32px hsl(var(--r-ink) / 0.14);
   backdrop-filter: none;
-}
-
-[data-theme="receipt"] .search-bar-container .engine-option {
-  border-radius: var(--radius-xs);
 }
 
 [data-theme="receipt"] .search-bar-container .engine-option:hover {
@@ -601,13 +557,6 @@
 
 [data-theme="receipt"] .divider-line {
   border-color: hsl(var(--r-ink) / 0.2);
-}
-
-[data-theme="receipt"] .header-icon {
-  background: none !important;
-  -webkit-background-clip: unset;
-  -webkit-text-fill-color: hsl(var(--text-primary));
-  background-clip: unset;
 }
 
 [data-theme="receipt"] .header-badge {

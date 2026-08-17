@@ -52,6 +52,8 @@ const DEFAULT_CONFIG: UserConfig = {
   dockerLayout: 'list',
   luckyServicesLayout: 'normal',
   layoutScale: 1,
+  siteCardSize: 100,
+  siteCardShape: 'square',
   showDescription: true,
   showTime: true,
   showSearch: false,
@@ -130,6 +132,8 @@ export const useConfigStore = defineStore('config', () => {
   const dockerLayout = computed(() => config.value.dockerLayout)
   const luckyServicesLayout = computed(() => config.value.luckyServicesLayout)
   const layoutScale = computed(() => config.value.layoutScale)
+  const siteCardSize = computed(() => config.value.siteCardSize)
+  const siteCardShape = computed(() => config.value.siteCardShape)
   const networkMode = computed(() => config.value.networkMode)
   const currentTab = computed(() => config.value.currentTab)
   
@@ -209,7 +213,7 @@ export const useConfigStore = defineStore('config', () => {
     // 应用配置模板中定义的字段
     const validKeys: (keyof UserConfig)[] = [
       'theme', 'background', 'layout', 'dockerLayout', 'luckyServicesLayout',
-      'layoutScale', 'networkMode', 'currentTab', 'showDescription', 'showTime',
+      'layoutScale', 'siteCardSize', 'siteCardShape', 'networkMode', 'currentTab', 'showDescription', 'showTime',
       'showSearch', 'showHeader', 'searchEngine', 'customSearchUrl',
       'detailTextContrast', 'detailRadiusScale', 'detailGlassBlurScale',
       'detailGlassOpacityScale', 'detailReduceMotion'
@@ -325,6 +329,16 @@ export const useConfigStore = defineStore('config', () => {
   // 设置布局缩放比例
   function setLayoutScale(scale: number) {
     updateConfig('layoutScale', scale)
+  }
+
+  // 设置站点卡片尺寸（百分比）
+  function setSiteCardSize(size: number) {
+    updateConfig('siteCardSize', size)
+  }
+
+  // 设置站点卡片形状
+  function setSiteCardShape(shape: 'square' | 'rect') {
+    updateConfig('siteCardShape', shape)
   }
 
   // 设置网络模式
@@ -468,6 +482,8 @@ export const useConfigStore = defineStore('config', () => {
     dockerLayout,
     luckyServicesLayout,
     layoutScale,
+    siteCardSize,
+    siteCardShape,
     networkMode,
     currentTab,
     currentGroup,
@@ -491,6 +507,8 @@ export const useConfigStore = defineStore('config', () => {
     setDockerLayout,
     setLuckyServicesLayout,
     setLayoutScale,
+    setSiteCardSize,
+    setSiteCardShape,
     setNetworkMode,
     setCurrentTab,
     setCurrentGroup,

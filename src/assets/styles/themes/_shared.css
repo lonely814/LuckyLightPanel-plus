@@ -1,0 +1,142 @@
+/* ============================================
+   Shared Theme Blocks - 多主题共享的字面重复块
+   各特色主题中完全一致的选择器+声明合并于此,
+   避免在 5 个主题文件里重复维护。
+   主题文件内已删除对应重复块。
+   ============================================ */
+
+/* 搜索按钮装饰层隐藏 */
+[data-theme="bauhaus"] .search-bar-container .search-btn .btn-bg,
+[data-theme="crt-terminal"] .search-bar-container .search-btn .btn-bg,
+[data-theme="light-panel"] .search-bar-container .search-btn .btn-bg,
+[data-theme="console"] .search-bar-container .search-btn .btn-bg,
+[data-theme="receipt"] .search-bar-container .search-btn .btn-bg {
+  display: none;
+}
+
+/* 页头高光线隐藏 */
+[data-theme="bauhaus"] .header-highlight,
+[data-theme="crt-terminal"] .header-highlight,
+[data-theme="console"] .header-highlight,
+[data-theme="receipt"] .header-highlight {
+  display: none;
+}
+
+/* 站点卡片标题 */
+[data-theme="console"] .title-icon,
+[data-theme="receipt"] .title-icon {
+  display: none;
+}
+
+/* 滚动条轨道 */
+[data-theme="crt-terminal"] ::-webkit-scrollbar-track,
+[data-theme="light-panel"] ::-webkit-scrollbar-track,
+[data-theme="console"] ::-webkit-scrollbar-track,
+[data-theme="receipt"] ::-webkit-scrollbar-track {
+  background: hsl(var(--bg-page));
+}
+
+/* 滚动条尺寸 - 8px */
+[data-theme="crt-terminal"] ::-webkit-scrollbar,
+[data-theme="light-panel"] ::-webkit-scrollbar,
+[data-theme="console"] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* 页头高度 */
+[data-theme="light-panel"] .app-header,
+[data-theme="console"] .app-header,
+[data-theme="receipt"] .app-header {
+  height: var(--header-height, 3.5rem);
+}
+
+/* 页头高度（方形主题加归零圆角） */
+[data-theme="bauhaus"] .app-header,
+[data-theme="crt-terminal"] .app-header {
+  height: var(--header-height, 3.5rem);
+  border-radius: 0;
+}
+
+/* 主题选项 - 小圆角 */
+[data-theme="light-panel"] .theme-option,
+[data-theme="console"] .theme-option,
+[data-theme="receipt"] .theme-option {
+  border-radius: var(--radius-xs);
+  color: hsl(var(--text-secondary));
+}
+
+/* 搜索引擎选项 - 小圆角 */
+[data-theme="light-panel"] .search-bar-container .engine-option,
+[data-theme="console"] .search-bar-container .engine-option,
+[data-theme="receipt"] .search-bar-container .engine-option {
+  border-radius: var(--radius-xs);
+}
+
+/* 搜索引擎选项 - 方形主题归零圆角 */
+[data-theme="bauhaus"] .search-bar-container .engine-option,
+[data-theme="crt-terminal"] .search-bar-container .engine-option {
+  border-radius: 0;
+}
+
+/* 分组标签 - 小圆角 */
+[data-theme="console"] .group-tab,
+[data-theme="receipt"] .group-tab {
+  border-radius: var(--radius-xs);
+  color: hsl(var(--text-secondary));
+}
+
+/* 分组标签 - 方形主题归零圆角 */
+[data-theme="bauhaus"] .group-tab,
+[data-theme="crt-terminal"] .group-tab {
+  border-radius: 0;
+  color: hsl(var(--text-secondary));
+}
+
+/* 内容标签 - 小圆角 */
+[data-theme="console"] .content-tab,
+[data-theme="receipt"] .content-tab {
+  border-radius: var(--radius-xs);
+  color: hsl(var(--text-secondary));
+  border: 1px solid transparent;
+}
+
+/* 激活标签图标 */
+[data-theme="light-panel"] .content-tab.active .tab-icon,
+[data-theme="console"] .content-tab.active .tab-icon,
+[data-theme="receipt"] .content-tab.active .tab-icon {
+  color: hsl(var(--text-on-primary)) !important;
+}
+
+/* 日期文字 */
+[data-theme="bauhaus"] .gc-date,
+[data-theme="crt-terminal"] .gc-date {
+  color: hsl(var(--text-secondary));
+}
+
+/* 走势图线条加粗 */
+[data-theme="bauhaus"] .sparkline-line,
+[data-theme="crt-terminal"] .sparkline-line {
+  stroke-width: 2.5;
+}
+
+/* 走势图间距 */
+[data-theme="bauhaus"] .stat-trend,
+[data-theme="console"] .stat-trend {
+  margin-top: 0.5rem;
+}
+
+/* 搜索占位符 */
+[data-theme="light-panel"] .search-bar-container .search-input::placeholder,
+[data-theme="console"] .search-bar-container .search-input::placeholder {
+  color: hsl(var(--text-muted));
+}
+
+/* 头部图标去渐变 */
+[data-theme="bauhaus"] .header-icon,
+[data-theme="receipt"] .header-icon {
+  background: none !important;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: hsl(var(--text-primary));
+  background-clip: unset;
+}

@@ -25,6 +25,10 @@
 @import './themes/console.css';
 /* 运维小票主题 */
 @import './themes/receipt.css';
+/* 冰川极光主题 */
+@import './themes/arctic-aurora.css';
+/* 多主题共享块（各主题字面重复的简单规则） */
+@import './themes/_shared.css';
 
 /* 
  * 扩展主题示例：

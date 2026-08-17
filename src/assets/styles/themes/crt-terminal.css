@@ -118,18 +118,9 @@
 }
 
 /* 全局滚动条 - CRT 绿 */
-[data-theme="crt-terminal"] ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
 [data-theme="crt-terminal"] ::-webkit-scrollbar-thumb {
   background: hsl(var(--crt-dim) / 0.7);
   border: 1px solid hsl(var(--crt-dim));
-}
-
-[data-theme="crt-terminal"] ::-webkit-scrollbar-track {
-  background: hsl(var(--bg-page));
 }
 
 /* 文本选区 - 磷光绿 */
@@ -191,11 +182,6 @@
 }
 
 /* 页头 - 终端标题栏 */
-[data-theme="crt-terminal"] .app-header {
-  height: var(--header-height, 3.5rem);
-  border-radius: 0;
-}
-
 [data-theme="crt-terminal"] .header-bg {
   background: hsl(var(--bg-elevated));
   border: 1px solid hsl(var(--crt-dim) / 0.8);
@@ -206,19 +192,11 @@
   -webkit-backdrop-filter: none;
 }
 
-[data-theme="crt-terminal"] .header-highlight {
-  display: none;
-}
-
 [data-theme="crt-terminal"] .title-main {
   font-size: 1.05rem;
   font-weight: 400;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-}
-
-[data-theme="crt-terminal"] .title-icon {
-  display: none;
 }
 
 [data-theme="crt-terminal"] .title-text::before {
@@ -337,10 +315,6 @@
   color: hsl(var(--crt-cyan));
 }
 
-[data-theme="crt-terminal"] .gc-date {
-  color: hsl(var(--text-secondary));
-}
-
 /* 内容标签页 - 终端菜单 */
 [data-theme="crt-terminal"] .content-tabs {
   background: hsl(var(--bg-elevated));
@@ -440,11 +414,6 @@
   box-shadow: 0 0 20px -12px hsl(var(--crt-green) / 0.4);
 }
 
-[data-theme="crt-terminal"] .group-tab {
-  border-radius: 0;
-  color: hsl(var(--text-secondary));
-}
-
 [data-theme="crt-terminal"] .group-tab:hover {
   background: hsl(var(--crt-green) / 0.08);
   color: hsl(var(--text-primary));
@@ -489,10 +458,6 @@
   border-radius: 0;
 }
 
-[data-theme="crt-terminal"] .search-bar-container .search-btn .btn-bg {
-  display: none;
-}
-
 [data-theme="crt-terminal"] .search-bar-container .search-btn:hover {
   background: hsl(var(--crt-green));
   box-shadow: 0 0 20px -6px hsl(var(--crt-green) / 0.8) !important;
@@ -509,10 +474,6 @@
   border-radius: 0;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
   backdrop-filter: none;
-}
-
-[data-theme="crt-terminal"] .search-bar-container .engine-option {
-  border-radius: 0;
 }
 
 [data-theme="crt-terminal"] .search-bar-container .engine-option:hover {
@@ -648,11 +609,6 @@
   color: hsl(var(--crt-black));
   border-color: hsl(var(--crt-green));
   box-shadow: 0 0 18px -6px hsl(var(--crt-green) / 0.7);
-}
-
-/* 走势图 - 终端加粗 */
-[data-theme="crt-terminal"] .sparkline-line {
-  stroke-width: 2.5;
 }
 
 /* ============================================

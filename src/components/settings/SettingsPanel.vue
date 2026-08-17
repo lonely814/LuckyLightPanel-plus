@@ -52,6 +52,21 @@ function onLayoutScaleInput(e: Event) {
 
 const layoutScalePercent = computed(() => Math.round(configStore.layoutScale * 100))
 
+// ============ 站点卡片 ============
+
+// 站点卡片尺寸滑块
+function onSiteCardSizeInput(e: Event) {
+  const target = e.target as HTMLInputElement
+  configStore.setSiteCardSize(Number(target.value))
+}
+
+const siteCardSizeValue = computed(() => Math.round(configStore.siteCardSize))
+
+// 切换方形 / 矩形模式
+function setSiteCardShape(shape: 'square' | 'rect') {
+  configStore.setSiteCardShape(shape)
+}
+
 // ============ 细节调整 ============
 
 type DetailField =
@@ -268,6 +283,47 @@ function resetDetails() {
             <p class="toggle-hint">
               缩放内容区大小，100% 为默认；过大时可放大卡片便于阅读
             </p>
+
+            <!-- 站点卡片尺寸 -->
+            <label class="toggle-item scale-item">
+              <span class="toggle-label">站点卡片尺寸</span>
+              <div class="scale-control">
+                <input
+                  type="range"
+                  class="scale-slider"
+                  min="70"
+                  max="150"
+                  step="5"
+                  :value="configStore.siteCardSize"
+                  :title="`站点卡片尺寸：${siteCardSizeValue}%`"
+                  @input="onSiteCardSizeInput"
+                />
+                <span class="scale-value">{{ siteCardSizeValue }}%</span>
+              </div>
+            </label>
+
+            <!-- 方形 / 矩形切换 -->
+            <label class="toggle-item scale-item">
+              <span class="toggle-label">卡片形状</span>
+              <div class="shape-toggle">
+                <button
+                  class="shape-btn"
+                  :class="{ active: configStore.siteCardShape === 'square' }"
+                  @click="setSiteCardShape('square')"
+                >
+                  <span class="shape-icon square-shape" />
+                  方形
+                </button>
+                <button
+                  class="shape-btn"
+                  :class="{ active: configStore.siteCardShape === 'rect' }"
+                  @click="setSiteCardShape('rect')"
+                >
+                  <span class="shape-icon rect-shape" />
+                  矩形
+                </button>
+              </div>
+            </label>
           </div>
         </section>
 
@@ -804,6 +860,54 @@ function resetDetails() {
   font-weight: 600;
   color: hsl(var(--neon-cyan));
   font-variant-numeric: tabular-nums;
+}
+
+/* 站点卡片形状切换 */
+.shape-toggle {
+  display: flex;
+  gap: 0.375rem;
+}
+
+.shape-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 0.5rem;
+  border: 1px solid hsl(var(--glass-border));
+  background: hsl(var(--glass-bg));
+  font-size: 0.75rem;
+  color: hsl(var(--text-secondary));
+  cursor: pointer;
+  transition: all 200ms;
+}
+
+.shape-btn:hover {
+  border-color: hsl(var(--neon-cyan) / 0.3);
+}
+
+.shape-btn.active {
+  border-color: hsl(var(--neon-cyan) / 0.5);
+  background: hsl(var(--neon-cyan) / 0.1);
+  color: hsl(var(--neon-cyan));
+}
+
+.shape-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  border: 1.5px solid currentColor;
+  border-radius: 0.25rem;
+  flex-shrink: 0;
+}
+
+.shape-btn.active .shape-icon {
+  box-shadow: 0 0 6px hsl(var(--neon-cyan) / 0.5);
+}
+
+.shape-btn .shape-icon.rect-shape {
+  width: 1.125rem;
+  height: 0.75rem;
+  border-radius: 0.25rem;
 }
 
 /* 搜索引擎网格 */

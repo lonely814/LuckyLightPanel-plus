@@ -3,13 +3,20 @@ import { computed, inject } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useConfigStore } from '@/stores/config'
 import { useNavStore } from '@/stores/nav'
-import type { Site } from '@/types'
+import type { Site, LinkItem } from '@/types'
+import {
+  getEffectiveNetworkType,
+  getHybridUrls,
+  getSingleTypeUrls,
+  getBestUrl,
+  toSiteLinks
+} from '@/utils/siteLinks'
 import SiteCardDefault from './SiteCardDefault.vue'
 import SiteCardMinimal from './SiteCardMinimal.vue'
 import SiteCardRack from './SiteCardRack.vue'
 import SiteCardMap from './SiteCardMap.vue'
 
-interface LinkItem {
+interface LinkItemProp {
   url: string
   label: string
   type: 'internal' | 'external'
@@ -27,126 +34,27 @@ const { networkMode } = storeToRefs(configStore)
 const { networkType, networkTypeFetchFailed } = storeToRefs(navStore)
 
 // 注入链接下拉菜单
-const linkDropdown = inject<{ show: (site: Site, urls: LinkItem[], target: HTMLElement) => void }>('linkDropdown')
+const linkDropdown = inject<{ show: (site: Site, urls: LinkItemProp[], target: HTMLElement) => void }>('linkDropdown')
 
-// 获取有效的网络类型（根据网络模式）
-function getEffectiveNetworkType(): 'internal' | 'external' | 'hybrid' {
-  const mode = networkMode.value
-  const type = networkType.value
-  const fetchFailed = networkTypeFetchFailed.value
-
-  if (mode === 'internal') return 'internal'
-  if (mode === 'external') return 'external'
-  if (mode === 'hybrid') return 'hybrid'
-  // auto 模式：查询失败时降级为混合模式
-  if (mode === 'auto' && fetchFailed) return 'hybrid'
-  // auto 模式：查询成功时根据服务器返回的网络类型
-  return type
-}
-
-// 获取混合模式下的所有可用链接
-function getHybridUrls(): LinkItem[] {
-  const urls: LinkItem[] = []
-  const { frontendUrls = [], backendUrls = [] } = props.site
-
-  // 添加内网链接
-  backendUrls.filter(u => u && u.trim()).forEach((url, index) => {
-    urls.push({
-      url,
-      label: backendUrls.filter(u => u && u.trim()).length > 1 ? `内网链接 ${index + 1}` : '内网链接',
-      type: 'internal'
-    })
-  })
-
-  // 添加外网链接
-  frontendUrls.filter(u => u && u.trim()).forEach((url, index) => {
-    urls.push({
-      url,
-      label: frontendUrls.filter(u => u && u.trim()).length > 1 ? `外网链接 ${index + 1}` : '外网链接',
-      type: 'external'
-    })
-  })
-
-  return urls
-}
-
-// 获取单一网络类型的链接列表
-function getSingleTypeUrls(type: 'internal' | 'external'): LinkItem[] {
-  const { frontendUrls = [], backendUrls = [] } = props.site
-  const validFrontend = frontendUrls.filter(u => u && u.trim())
-  const validBackend = backendUrls.filter(u => u && u.trim())
-
-  if (type === 'external') {
-    // 外网模式：优先检查外网链接
-    if (validFrontend.length > 0) {
-      return validFrontend.map((url, index) => ({
-        url,
-        label: validFrontend.length > 1 ? `外网链接 ${index + 1}` : '外网链接',
-        type: 'external' as const
-      }))
-    }
-    // 没有外网链接但有多个内网链接
-    if (validBackend.length > 1) {
-      return validBackend.map((url, index) => ({
-        url,
-        label: `内网链接 ${index + 1}`,
-        type: 'internal' as const
-      }))
-    }
-  } else {
-    // 内网模式：优先检查内网链接
-    if (validBackend.length > 0) {
-      return validBackend.map((url, index) => ({
-        url,
-        label: validBackend.length > 1 ? `内网链接 ${index + 1}` : '内网链接',
-        type: 'internal' as const
-      }))
-    }
-    // 没有内网链接但有多个外网链接
-    if (validFrontend.length > 1) {
-      return validFrontend.map((url, index) => ({
-        url,
-        label: `外网链接 ${index + 1}`,
-        type: 'external' as const
-      }))
-    }
-  }
-
-  return []
-}
-
-// 获取最佳单一链接（用于直接打开）
-function getBestUrl(): string | null {
-  const { frontendUrls = [], backendUrls = [] } = props.site
-  const effectiveType = getEffectiveNetworkType()
-
-  const getValidUrl = (urls: string[]) => urls.find(u => u && u.trim())
-
-  if (effectiveType === 'internal') {
-    return getValidUrl(backendUrls) || getValidUrl(frontendUrls) || null
-  }
-  if (effectiveType === 'hybrid') {
-    // 混合模式优先内网
-    return getValidUrl(backendUrls) || getValidUrl(frontendUrls) || null
-  }
-  // 外网模式
-  return getValidUrl(frontendUrls) || getValidUrl(backendUrls) || null
-}
+// 当前生效的网络类型（根据网络模式）
+const effectiveNetworkType = computed(() =>
+  getEffectiveNetworkType(networkMode.value, networkType.value, networkTypeFetchFailed.value)
+)
 
 // 点击卡片处理
 function handleClick(event: MouseEvent) {
   event.preventDefault()
 
-  const effectiveType = getEffectiveNetworkType()
-  const { frontendUrls = [], backendUrls = [] } = props.site
-  const validFrontend = frontendUrls.filter(u => u && u.trim())
-  const validBackend = backendUrls.filter(u => u && u.trim())
+  const effectiveType = effectiveNetworkType.value
+  const links = toSiteLinks(props.site)
+  const validFrontend = links.frontendUrls
+  const validBackend = links.backendUrls
 
   // 混合模式（包括自动模式查询失败的降级情况）：只要有多个链接就弹出下拉菜单让用户选择
   if (effectiveType === 'hybrid') {
-    const urls = getHybridUrls()
+    const urls = getHybridUrls(props.site)
     if (urls.length > 1 && linkDropdown) {
-      linkDropdown.show(props.site, urls, event.currentTarget as HTMLElement)
+      linkDropdown.show(props.site, urls as LinkItem[], event.currentTarget as HTMLElement)
       return
     }
   }
@@ -155,14 +63,14 @@ function handleClick(event: MouseEvent) {
   if (effectiveType === 'external') {
     // 有多个外网链接：显示外网链接下拉菜单
     if (validFrontend.length > 1 && linkDropdown) {
-      const urls = getSingleTypeUrls('external')
-      linkDropdown.show(props.site, urls, event.currentTarget as HTMLElement)
+      const urls = getSingleTypeUrls(props.site, 'external')
+      linkDropdown.show(props.site, urls as LinkItem[], event.currentTarget as HTMLElement)
       return
     }
     // 没有外网链接但有多个内网链接：显示内网链接下拉菜单（降级处理）
     if (validFrontend.length === 0 && validBackend.length > 1 && linkDropdown) {
-      const urls = getSingleTypeUrls('internal')
-      linkDropdown.show(props.site, urls, event.currentTarget as HTMLElement)
+      const urls = getSingleTypeUrls(props.site, 'internal')
+      linkDropdown.show(props.site, urls as LinkItem[], event.currentTarget as HTMLElement)
       return
     }
   }
@@ -171,20 +79,20 @@ function handleClick(event: MouseEvent) {
   if (effectiveType === 'internal') {
     // 有多个内网链接：显示内网链接下拉菜单
     if (validBackend.length > 1 && linkDropdown) {
-      const urls = getSingleTypeUrls('internal')
-      linkDropdown.show(props.site, urls, event.currentTarget as HTMLElement)
+      const urls = getSingleTypeUrls(props.site, 'internal')
+      linkDropdown.show(props.site, urls as LinkItem[], event.currentTarget as HTMLElement)
       return
     }
     // 没有内网链接但有多个外网链接：显示外网链接下拉菜单（降级处理）
     if (validBackend.length === 0 && validFrontend.length > 1 && linkDropdown) {
-      const urls = getSingleTypeUrls('external')
-      linkDropdown.show(props.site, urls, event.currentTarget as HTMLElement)
+      const urls = getSingleTypeUrls(props.site, 'external')
+      linkDropdown.show(props.site, urls as LinkItem[], event.currentTarget as HTMLElement)
       return
     }
   }
 
   // 其他情况直接打开链接
-  const url = getBestUrl()
+  const url = getBestUrl(props.site, effectiveType)
   if (url) {
     const target = props.site.target || '_blank'
     window.open(url, target)

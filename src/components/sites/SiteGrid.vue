@@ -134,6 +134,23 @@ const gridClass = computed(() => {
   }
 })
 
+// 站点卡片最小列宽（根据卡片尺寸与形状动态计算）
+const siteCardMin = computed(() => {
+  const layout = configStore.layout
+  const shape = configStore.siteCardShape
+  const scale = configStore.siteCardSize / 100
+  // 各布局基础最小宽度
+  let base = 160
+  if (layout === 'large') base = 220
+  else if (layout === 'minimal') base = 56
+  // 矩形模式（左侧图标 + 右侧详情）需要更宽
+  if (shape === 'rect' && (layout === 'normal' || layout === 'large')) base = 260
+  return `${Math.round(base * scale)}px`
+})
+
+// 网格容器内联样式
+const gridStyle = computed(() => ({ '--site-card-min': siteCardMin.value }))
+
 // 地铁线路配色 - 每个分组一条线
 const MAP_LINE_COLORS = [
   '192 70% 55%',   // 青
@@ -180,7 +197,7 @@ function mapLineStyle(index: number) {
         :key="item.group.key" 
         class="group-section"
         :class="{ 'has-margin': index < groupedSites.length - 1 }"
-        :style="configStore.layout === 'map' ? mapLineStyle(index) : undefined"
+        :style="configStore.layout === 'map' ? mapLineStyle(index) : gridStyle"
       >
         <!-- 分组标题 -->
         <h3 class="group-title" :class="{ 'map-group-title': configStore.layout === 'map' }">{{ item.group.name }}</h3>
@@ -206,7 +223,7 @@ function mapLineStyle(index: number) {
     <!-- 单个分组模式（只选了一个分组） -->
     <template v-else>
       <!-- 站点网格 -->
-      <div :class="gridClass" :style="configStore.layout === 'map' ? mapLineStyle(0) : undefined">
+      <div :class="gridClass" :style="configStore.layout === 'map' ? mapLineStyle(0) : gridStyle">
         <SiteCard
           v-for="site in filteredSites"
           :key="site.key"
@@ -305,20 +322,20 @@ function mapLineStyle(index: number) {
 
 /* Normal 布局 - Launcher 大图标竖排网格 */
 .site-grid.normal {
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--site-card-min, 160px), 1fr));
   /* 3D 抬升透视 */
   perspective: 1200px;
 }
 
 /* Compact 布局 - 超紧凑横向条 */
 .site-grid.compact {
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--site-card-min, 160px), 1fr));
   gap: clamp(0.375rem, 1.5vw, 0.5rem);
 }
 
 /* Large 布局（保留向后兼容）*/
 .site-grid.large {
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--site-card-min, 220px), 1fr));
   gap: 1rem;
   /* 3D 抬升透视 */
   perspective: 1200px;
@@ -342,7 +359,7 @@ function mapLineStyle(index: number) {
 
 /* Minimal 布局 - 纯图标网格，类似 Dock/Launcher */
 .site-grid.minimal {
-  grid-template-columns: repeat(auto-fill, minmax(3.5rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--site-card-min, 3.5rem), 1fr));
   gap: 1.25rem;
   justify-items: center;
 }
