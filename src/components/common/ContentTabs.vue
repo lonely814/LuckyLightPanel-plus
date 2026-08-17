@@ -38,33 +38,27 @@ function switchTab(tab: TabType) {
   configStore.setCurrentTab(tab)
 }
 
-// 监听标签页和初始化加载状态，加载数据并控制轮询
+// 监听标签页和初始化加载状态，切换时按需拉取静态数据
+//（统计轮询统一由 App.vue 按当前 tab 控制，避免依赖本组件挂载，单 tab 场景也可用）
 watch([currentTab, () => navStore.isLoading], async ([newTab, isLoading], [oldTab, wasLoading]) => {
   if (isLoading) {
     return
   }
 
-  // 停止所有轮询
-  navStore.stopDockerStatsPolling()
-  navStore.stopLuckyServicesStatsPolling()
+  const shouldRefresh = wasLoading === true || oldTab !== newTab
 
-  const shouldRefreshCurrentTab = wasLoading === true || oldTab !== newTab
-
-  // 按需加载数据
   if (newTab === 'sites' && navStore.sitesEnabled) {
-    if (shouldRefreshCurrentTab || !navStore.sitesData) {
+    if (shouldRefresh || !navStore.sitesData) {
       await navStore.loadSitesData()
     }
   } else if (newTab === 'docker' && navStore.dockerEnabled) {
-    if (shouldRefreshCurrentTab || !navStore.dockerData) {
+    if (shouldRefresh || !navStore.dockerData) {
       await navStore.loadDockerData()
     }
-    navStore.startDockerStatsPolling()
   } else if (newTab === 'luckyServices' && navStore.luckyServicesEnabled) {
-    if (shouldRefreshCurrentTab || !navStore.luckyServicesData) {
+    if (shouldRefresh || !navStore.luckyServicesData) {
       await navStore.loadLuckyServicesData()
     }
-    navStore.startLuckyServicesStatsPolling()
   }
 }, { immediate: true })
 </script>

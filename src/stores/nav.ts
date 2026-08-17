@@ -186,27 +186,6 @@ export const useNavStore = defineStore('nav', () => {
     return data
   }
 
-  // 加载所有数据（兼容旧调用）
-  async function loadAllData() {
-    isLoading.value = true
-    loadError.value = null
-
-    try {
-      // 先加载基础配置
-      await loadNavConfig()
-      // 同时加载所有数据源
-      await Promise.all([
-        loadSitesData(),
-        loadDockerData(),
-        loadLuckyServicesData()
-      ])
-    } catch (e) {
-      loadError.value = String(e)
-    } finally {
-      isLoading.value = false
-    }
-  }
-
   // 获取网络类型（用于自动/混合模式）
   async function fetchNetworkType() {
     try {
@@ -261,22 +240,32 @@ export const useNavStore = defineStore('nav', () => {
     return null
   }
 
-  // 加载 Docker 统计
+  // 加载 Docker 统计（防重入：上一轮未完成时跳过本次）
+  let dockerStatsInFlight = false
   async function loadDockerStats() {
-    const data = await fetchJson<DockerStatsResponse>(API.dockerStats)
-    if (data?.ret === 0 && data.stats) {
-      const newStats = new Map<string, DockerStat>()
-      data.stats.forEach(stat => {
-        newStats.set(stat.containerName, stat)
-        // 累积历史数据用于走势图
-        const entry = dockerHistory.value.get(stat.containerName) || { cpu: [], memory: [], rx: [], tx: [] }
-        entry.cpu = pushHistory(entry.cpu, parseFloat(stat.cpuPercent) || 0)
-        entry.memory = pushHistory(entry.memory, parseFloat(stat.memoryPercent) || 0)
-        entry.rx = pushHistory(entry.rx, stat.networkRxSpeed || 0)
-        entry.tx = pushHistory(entry.tx, stat.networkTxSpeed || 0)
-        dockerHistory.value.set(stat.containerName, entry)
-      })
-      dockerStats.value = newStats
+    if (dockerStatsInFlight) return
+    dockerStatsInFlight = true
+    try {
+      const data = await fetchJson<DockerStatsResponse>(API.dockerStats)
+      if (data?.ret === 0 && data.stats) {
+        const newStats = new Map<string, DockerStat>()
+        data.stats.forEach(stat => {
+          // 兼容 key / containerName 两种键（同名容器或旧格式均能命中）
+          const id = stat.key || stat.containerName
+          newStats.set(stat.containerName, stat)
+          if (id !== stat.containerName) newStats.set(id, stat)
+          // 累积历史数据用于走势图
+          const entry = dockerHistory.value.get(stat.containerName) || { cpu: [], memory: [], rx: [], tx: [] }
+          entry.cpu = pushHistory(entry.cpu, parseFloat(stat.cpuPercent) || 0)
+          entry.memory = pushHistory(entry.memory, parseFloat(stat.memoryPercent) || 0)
+          entry.rx = pushHistory(entry.rx, stat.networkRxSpeed || 0)
+          entry.tx = pushHistory(entry.tx, stat.networkTxSpeed || 0)
+          dockerHistory.value.set(stat.containerName, entry)
+        })
+        dockerStats.value = newStats
+      }
+    } finally {
+      dockerStatsInFlight = false
     }
   }
 
@@ -295,20 +284,27 @@ export const useNavStore = defineStore('nav', () => {
     }
   }
 
-  // 加载 Lucky 服务统计
+  // 加载 Lucky 服务统计（防重入：上一轮未完成时跳过本次）
+  let luckyServicesStatsInFlight = false
   async function loadLuckyServicesStats() {
-    const data = await fetchJson<LuckyServicesStatsResponse>(API.luckyServicesStats)
-    if (data?.ret === 0 && data.stats) {
-      const newStats = new Map<string, LuckyServiceStat>()
-      data.stats.forEach(stat => {
-        newStats.set(stat.key, stat)
-        // 累积历史数据用于走势图
-        const entry = luckyServicesHistory.value.get(stat.key) || { inSpeed: [], outSpeed: [] }
-        entry.inSpeed = pushHistory(entry.inSpeed, stat.inSpeed || 0)
-        entry.outSpeed = pushHistory(entry.outSpeed, stat.outSpeed || 0)
-        luckyServicesHistory.value.set(stat.key, entry)
-      })
-      luckyServicesStats.value = newStats
+    if (luckyServicesStatsInFlight) return
+    luckyServicesStatsInFlight = true
+    try {
+      const data = await fetchJson<LuckyServicesStatsResponse>(API.luckyServicesStats)
+      if (data?.ret === 0 && data.stats) {
+        const newStats = new Map<string, LuckyServiceStat>()
+        data.stats.forEach(stat => {
+          newStats.set(stat.key, stat)
+          // 累积历史数据用于走势图
+          const entry = luckyServicesHistory.value.get(stat.key) || { inSpeed: [], outSpeed: [] }
+          entry.inSpeed = pushHistory(entry.inSpeed, stat.inSpeed || 0)
+          entry.outSpeed = pushHistory(entry.outSpeed, stat.outSpeed || 0)
+          luckyServicesHistory.value.set(stat.key, entry)
+        })
+        luckyServicesStats.value = newStats
+      }
+    } finally {
+      luckyServicesStatsInFlight = false
     }
   }
 
@@ -387,7 +383,6 @@ export const useNavStore = defineStore('nav', () => {
     luckyServicesEnabled,
 
     // 方法
-    loadAllData,
     loadNavConfig,
     loadSitesData,
     loadDockerData,

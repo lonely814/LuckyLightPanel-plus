@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, computed, watch, ref, provide } from 'vue'
+import { onMounted, computed, watch, ref, provide, onUnmounted } from 'vue'
 import { useNavStore } from '@/stores/nav'
 import { useConfigStore } from '@/stores/config'
 import { THEMES } from '@/themes/registry'
@@ -283,6 +283,33 @@ onMounted(async () => {
 
 watch(availableTabs, () => {
   ensureValidTab()
+})
+
+// ============ 统计轮询控制（按当前标签页 + 页面可见性） ============
+// 不依赖 ContentTabs 挂载：只有单个 tab（组件不渲染）时轮询也能启动
+function syncPolling() {
+  navStore.stopDockerStatsPolling()
+  navStore.stopLuckyServicesStatsPolling()
+  if (document.hidden) return
+  if (currentTab.value === 'docker' && hasDocker.value) {
+    navStore.startDockerStatsPolling()
+  } else if (currentTab.value === 'luckyServices' && hasLuckyServices.value) {
+    navStore.startLuckyServicesStatsPolling()
+  }
+}
+
+watch([currentTab, isLoading], syncPolling, { immediate: true })
+
+// 页面隐藏时暂停轮询，恢复时按当前 tab 重启
+function handleVisibilityChange() {
+  syncPolling()
+}
+
+document.addEventListener('visibilitychange', handleVisibilityChange)
+onUnmounted(() => {
+  document.removeEventListener('visibilitychange', handleVisibilityChange)
+  navStore.stopDockerStatsPolling()
+  navStore.stopLuckyServicesStatsPolling()
 })
 </script>
 
