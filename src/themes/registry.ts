@@ -3,7 +3,7 @@
    ============================================ */
 
 import type { Component } from 'vue'
-import { Sun, Moon, Triangle, Terminal, Lightbulb, SlidersHorizontal, Receipt, CloudSnow } from 'lucide-vue-next'
+import { Sun, Moon, Ruler, Triangle, Terminal, Lightbulb, SlidersHorizontal, Receipt, CloudSnow } from 'lucide-vue-next'
 import { THEME_IDS } from '@/types'
 import type { ThemeMode } from '@/types'
 import TechBackground from '@/components/common/TechBackground.vue'
@@ -13,6 +13,7 @@ import DotMatrixBackground from '@/components/common/DotMatrixBackground.vue'
 import ConsoleBackground from '@/components/common/ConsoleBackground.vue'
 import ReceiptBackground from '@/components/common/ReceiptBackground.vue'
 import AuroraBackground from '@/components/common/AuroraBackground.vue'
+import BlueprintBackground from '@/components/common/BlueprintBackground.vue'
 
 /** 主题选项元数据 */
 export interface ThemeOption {
@@ -37,6 +38,12 @@ const THEME_META: Record<ThemeMode, Omit<ThemeOption, 'value'>> = {
     color: 'var(--neon-purple)',
     backgroundComponent: TechBackground
   },
+  blueprint: {
+    label: '工程蓝图',
+    icon: Ruler,
+    color: 'var(--accent)',
+    backgroundComponent: BlueprintBackground
+  },
   bauhaus: {
     label: '包豪斯',
     icon: Triangle,
@@ -56,7 +63,7 @@ const THEME_META: Record<ThemeMode, Omit<ThemeOption, 'value'>> = {
     backgroundComponent: DotMatrixBackground
   },
   console: {
-    label: '调光控制台',
+    label: '调光台',
     icon: SlidersHorizontal,
     color: 'var(--cs-backlit)',
     backgroundComponent: ConsoleBackground

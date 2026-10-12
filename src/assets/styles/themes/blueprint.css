@@ -1,0 +1,126 @@
+/* ============================================
+   Blueprint Theme - 工程蓝图（浅色）
+   氰版晒图纸：白线网格 + 制图标注 + 直角
+   注：所有颜色为 hsl 三元组，透明度为 "H S L / a"，细节调整机制依赖此格式
+   ============================================ */
+
+[data-theme="blueprint"] {
+  /* 强调色 - 标注橙（制图红笔） */
+  --neon-cyan: 210 65% 42%;
+  --neon-cyan-rgb: 62, 122, 166;
+  --neon-purple: 224 45% 48%;
+  --neon-purple-rgb: 84, 100, 168;
+  --neon-pink: 342 55% 48%;
+  --neon-pink-rgb: 180, 78, 106;
+  --neon-blue: 212 70% 44%;
+  --neon-blue-rgb: 44, 106, 172;
+  --neon-green: 168 45% 36%;
+  --neon-green-rgb: 52, 136, 116;
+
+  /* 主色 - 图纸蓝 */
+  --primary: 212 65% 42%;
+  --primary-light: 205 70% 50%;
+  --primary-dark: 218 70% 34%;
+  --primary-rgb: 62, 116, 172;
+
+  --accent: 28 88% 50%;
+  --accent-light: 32 90% 56%;
+  --accent-rgb: 226, 130, 32;
+
+  /* Docker */
+  --docker-orange: 24 80% 50%;
+  --docker-orange-rgb: 220, 118, 40;
+  --docker-blue: 212 70% 44%;
+  --docker-blue-rgb: 44, 106, 172;
+
+  /* 状态色 */
+  --success: 168 50% 36%;
+  --error: 352 68% 50%;
+  --warning: 38 88% 48%;
+
+  --icon-placeholder-bg: 212 40% 50% / 0.12;
+
+  /* 玻璃 - 纸面白，低饱和 */
+  --glass-bg: 210 45% 100% / 0.72;
+  --glass-bg-hover: 210 45% 100% / 0.85;
+  --glass-blur: 12px;
+  --glass-saturation: 115%;
+  --glass-border: 212 35% 62% / 0.55;
+  --glass-border-glow: 212 70% 50% / 0.35;
+  --glass-shine: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 55%);
+
+  /* 卡片 - 直角、细边、无重阴影 */
+  --card-bg: 210 50% 100% / 0.78;
+  --card-shadow:
+    0 1px 0 hsl(212 35% 62% / 0.18),
+    0 4px 14px rgba(30, 60, 110, 0.07);
+  --card-shadow-hover:
+    0 2px 0 hsl(212 45% 52% / 0.22),
+    0 10px 26px rgba(30, 60, 110, 0.12);
+  --card-glow: 0 0 0 1px hsl(var(--primary) / 0.12);
+  --card-glow-hover: 0 0 0 1px hsl(var(--primary) / 0.22);
+
+  /* 文字 - 墨蓝 */
+  --text-primary: 215 45% 16%;
+  --text-secondary: 214 32% 30%;
+  --text-muted: 214 24% 42%;
+  --text-on-primary: 0 0% 100%;
+
+  /* 边框背景 */
+  --border-color: 212 30% 66%;
+  --border-subtle: 212 24% 78%;
+  --bg-page: 208 42% 88%;
+  --bg-elevated: 206 46% 95%;
+
+  /* 站点卡片 */
+  --site-card-bg: 210 50% 100% / 0.66;
+  --site-card-bg-hover: 210 50% 100% / 0.86;
+  --site-card-blur: 10px;
+  --site-card-saturation: 112%;
+  --site-card-border: 212 35% 60% / 0.6;
+  --site-card-border-hover: 212 70% 48% / 0.75;
+  --site-card-inner-glow: 0 0% 100% / 0.8;
+  --site-card-shadow:
+    0 1px 0 hsl(212 35% 62% / 0.2),
+    0 4px 14px rgba(30, 60, 110, 0.08);
+  --site-card-shadow-hover:
+    0 2px 0 hsl(212 45% 52% / 0.24),
+    0 12px 28px rgba(30, 60, 110, 0.13);
+  --site-card-shine-opacity: 0.1;
+  --site-card-shine-hover: 0.18;
+
+  /* 制图直角：覆盖圆角系统，读作工程图 */
+  --radius-xs: 0px;
+  --radius-sm: 1px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+  --radius-xl: 3px;
+}
+
+/* ---------- 制图标注：卡片虚线外框 + 等宽标签 ---------- */
+
+[data-theme="blueprint"] .cyber-card,
+[data-theme="blueprint"] .site-card,
+[data-theme="blueprint"] .docker-card,
+[data-theme="blueprint"] .service-card {
+  outline: 1px dashed hsl(var(--primary) / 0.28);
+  outline-offset: 3px;
+}
+
+[data-theme="blueprint"] .group-title,
+[data-theme="blueprint"] .card-title,
+[data-theme="blueprint"] .list-name {
+  font-family: 'JetBrains Mono', 'Cascadia Code', Consolas, 'Courier New', monospace;
+  letter-spacing: 0.02em;
+}
+
+/* 分组标题：加前缀标记线，像图纸分区标注（地铁布局已有 ::before，排除） */
+[data-theme="blueprint"] .group-title:not(.map-group-title)::before {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 0.9em;
+  margin-right: 0.5em;
+  vertical-align: -0.1em;
+  background: hsl(var(--accent));
+}
