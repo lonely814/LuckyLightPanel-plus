@@ -324,11 +324,11 @@ onUnmounted(() => {
 
   <!-- 主内容 -->
   <div v-if="!isLoading" class="app-main">
-    <!-- 页头 -->
+    <!-- 页头（时间已内联在页头右侧） -->
     <AppHeader v-if="showHeader" />
 
-    <!-- 问候语 + 大时钟 -->
-    <div v-if="configStore.showTime" class="greeting-clock-wrap">
+    <!-- 无页头时：时钟独立成行 -->
+    <div v-if="showHeader === false && configStore.showTime" class="greeting-clock-wrap">
       <GreetingClock />
     </div>
 

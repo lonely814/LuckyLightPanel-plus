@@ -2,9 +2,11 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useConfigStore } from '@/stores/config'
 import { useNavStore } from '@/stores/nav'
-import { Settings, Zap, ChevronDown, Check, Wifi, Globe } from 'lucide-vue-next'
+import { Settings, Zap, ChevronDown, Wifi, Globe, X } from 'lucide-vue-next'
 import { THEMES } from '@/themes/registry'
 import type { ThemeMode } from '@/types'
+import ThemePreview from '@/components/common/ThemePreview.vue'
+import GreetingClock from './GreetingClock.vue'
 
 const configStore = useConfigStore()
 const navStore = useNavStore()
@@ -13,8 +15,8 @@ const title = computed(() => navStore.panelTitle)
 const subtitle = computed(() => navStore.panelSubtitle)
 const logo = computed(() => navStore.panelLogo)
 
-// 主题下拉菜单状态
-const themeDropdownOpen = ref(false)
+// 主题面板开关（宫格 + 预览）
+const themePanelOpen = ref(false)
 
 // 主题选项列表（来自注册表）
 const themeOptions = THEMES
@@ -31,23 +33,25 @@ const currentThemeLabel = computed(() => {
   return option?.label || '主题'
 })
 
-// 切换下拉菜单
-function toggleThemeDropdown() {
-  themeDropdownOpen.value = !themeDropdownOpen.value
+// 打开主题面板
+function openThemePanel() {
+  themePanelOpen.value = true
+}
+
+// 关闭主题面板
+function closeThemePanel() {
+  themePanelOpen.value = false
 }
 
 // 选择主题
 function selectTheme(theme: ThemeMode) {
   configStore.setTheme(theme)
-  themeDropdownOpen.value = false
+  themePanelOpen.value = false
 }
 
-// 点击外部关闭下拉菜单
-function closeThemeDropdown(event: MouseEvent) {
-  const target = event.target as HTMLElement
-  if (!target.closest('.theme-dropdown-wrapper')) {
-    themeDropdownOpen.value = false
-  }
+// Esc 关闭
+function onKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape') closeThemePanel()
 }
 
 // 网络状态徽章
@@ -59,12 +63,11 @@ const networkTip = computed(() => {
 })
 
 onMounted(() => {
-  // 监听全局点击关闭下拉菜单
-  document.addEventListener('click', closeThemeDropdown)
+  document.addEventListener('keydown', onKeydown)
 })
 
 onUnmounted(() => {
-  document.removeEventListener('click', closeThemeDropdown)
+  document.removeEventListener('keydown', onKeydown)
 })
 
 // 拼接后的 Logo URL
@@ -138,8 +141,11 @@ function openSettings() {
         </div>
       </div>
 
-      <!-- 右侧：网络状态 + 操作按钮 -->
+      <!-- 右侧：时间 + 网络状态 + 操作按钮 -->
       <div class="header-right">
+        <!-- 问候语 + 时钟（内联精简版） -->
+        <GreetingClock v-if="configStore.showTime" compact class="header-clock" />
+
         <!-- 网络状态徽章 -->
         <div v-if="!navStore.networkTypeFetchFailed" class="net-badge" :class="{ internal: isInternal }" :title="networkTip">
           <div class="net-badge-inner">
@@ -152,42 +158,18 @@ function openSettings() {
         <!-- 分隔线 -->
         <div class="actions-divider" />
         
-        <!-- 主题下拉选择器 -->
-        <div class="theme-dropdown-wrapper">
-          <button 
-            class="action-btn theme-btn" 
-            :class="{ active: themeDropdownOpen }"
-            @click.stop="toggleThemeDropdown" 
-            :title="`主题: ${currentThemeLabel}`"
-          >
-            <div class="btn-inner">
-              <component :is="currentThemeIcon" class="btn-icon" />
-              <ChevronDown class="dropdown-arrow" :class="{ open: themeDropdownOpen }" />
-            </div>
-          </button>
-          
-          <!-- 下拉菜单 -->
-          <Transition
-            enter-active-class="dropdown-enter"
-            enter-from-class="dropdown-enter-from"
-            leave-active-class="dropdown-leave"
-            leave-to-class="dropdown-leave-to"
-          >
-            <div v-if="themeDropdownOpen" class="theme-dropdown">
-              <button
-                v-for="option in themeOptions"
-                :key="option.value"
-                class="theme-option"
-                :class="{ active: configStore.theme === option.value }"
-                @click="selectTheme(option.value)"
-              >
-                <component :is="option.icon" class="option-icon" />
-                <span class="option-label">{{ option.label }}</span>
-                <Check v-if="configStore.theme === option.value" class="option-check" />
-              </button>
-            </div>
-          </Transition>
-        </div>
+        <!-- 主题按钮：点击弹出主题面板 -->
+        <button
+          class="action-btn theme-btn"
+          :class="{ active: themePanelOpen }"
+          @click.stop="openThemePanel"
+          :title="`主题: ${currentThemeLabel}`"
+        >
+          <div class="btn-inner">
+            <component :is="currentThemeIcon" class="btn-icon" />
+            <ChevronDown class="dropdown-arrow" :class="{ open: themePanelOpen }" />
+          </div>
+        </button>
 
         <!-- 设置按钮 -->
         <button class="action-btn settings-btn" @click="openSettings" title="设置">
@@ -198,6 +180,38 @@ function openSettings() {
       </div>
     </div>
   </header>
+
+  <!-- 主题面板（二级弹层，宫格 + 实时预览） -->
+  <Teleport to="body">
+    <Transition
+      enter-active-class="tm-enter"
+      enter-from-class="tm-enter-from"
+      leave-active-class="tm-leave"
+      leave-to-class="tm-leave-to"
+    >
+      <div v-if="themePanelOpen" class="theme-modal-overlay" @click.self="closeThemePanel">
+        <div class="theme-modal cyber-panel" role="dialog" aria-label="选择主题">
+          <div class="panel-header">
+            <h3 class="panel-title">选择主题</h3>
+            <button class="panel-close" @click="closeThemePanel" aria-label="关闭">
+              <X class="close-icon" />
+            </button>
+          </div>
+          <div class="theme-modal-body">
+            <button
+              v-for="option in themeOptions"
+              :key="option.value"
+              class="theme-grid-item"
+              :class="{ active: configStore.theme === option.value }"
+              @click="selectTheme(option.value)"
+            >
+              <ThemePreview :theme="option.value" :label="option.label" :active="configStore.theme === option.value" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
+  </Teleport>
 </template>
 
 <style scoped>
@@ -498,6 +512,11 @@ function openSettings() {
   gap: 0.375rem;
 }
 
+/* 页头内联时钟：与网络徽章/按钮保持间距 */
+.header-clock {
+  margin-right: 0.25rem;
+}
+
 .action-btn {
   position: relative;
   width: 2.25rem;
@@ -543,12 +562,8 @@ function openSettings() {
 }
 
 /* ============================================
-   主题下拉选择器
+   主题面板（二级弹层，宫格 + 预览）
    ============================================ */
-
-.theme-dropdown-wrapper {
-  position: relative;
-}
 
 .theme-btn {
   width: auto;
@@ -576,84 +591,122 @@ function openSettings() {
   transform: rotate(180deg);
 }
 
-.theme-dropdown {
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  right: 0;
-  min-width: 120px;
-  padding: 0.375rem;
-  border-radius: 0.875rem;
-  background: hsl(var(--bg-elevated) / 0.92);
-  backdrop-filter: blur(24px) saturate(1.5);
-  -webkit-backdrop-filter: blur(24px) saturate(1.5);
-  border: 1px solid hsl(var(--glass-border));
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.1),
-    0 16px 40px rgba(0, 0, 0, 0.25);
+.theme-modal-overlay {
+  position: fixed;
+  inset: 0;
   z-index: 200;
-}
-
-.theme-option {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  width: 100%;
-  padding: 0.5rem 0.625rem;
-  border-radius: 0.5rem;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  color: hsl(var(--text-secondary));
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.35);
 }
 
-.theme-option:hover {
+.theme-modal {
+  position: relative;
+  width: min(680px, 100%);
+  max-height: min(80vh, 640px);
+  display: flex;
+  flex-direction: column;
+  border-radius: 1.25rem;
+  overflow: hidden;
+}
+
+.theme-modal .panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid hsl(var(--glass-border));
+  flex-shrink: 0;
+}
+
+.theme-modal .panel-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: hsl(var(--text-primary));
+}
+
+.theme-modal .panel-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: hsl(var(--text-muted));
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.theme-modal .panel-close:hover {
   background: hsl(var(--glass-bg-hover));
   color: hsl(var(--text-primary));
 }
 
-.theme-option.active {
-  background: hsl(var(--neon-cyan) / 0.1);
-  color: hsl(var(--neon-cyan));
-}
-
-.option-icon {
+.close-icon {
   width: 1rem;
   height: 1rem;
-  flex-shrink: 0;
 }
 
-.option-label {
-  flex: 1;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  text-align: left;
+.theme-modal-body {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  padding: 1.25rem;
+  overflow-y: auto;
 }
 
-.option-check {
-  width: 0.875rem;
-  height: 0.875rem;
-  color: hsl(var(--neon-cyan));
-  flex-shrink: 0;
+.theme-grid-item {
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid hsl(var(--glass-border));
+  background: hsl(var(--glass-bg));
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-/* 下拉菜单动画 */
-.dropdown-enter {
-  transition: all 0.2s ease-out;
+.theme-grid-item:hover {
+  background: hsl(var(--glass-bg-hover));
+  border-color: hsl(var(--primary) / 0.4);
 }
 
-.dropdown-enter-from {
+.theme-grid-item.active {
+  border-color: hsl(var(--primary) / 0.6);
+  background: hsl(var(--primary) / 0.1);
+}
+
+/* 弹层动画 */
+.tm-enter {
+  transition: opacity 0.2s ease-out;
+}
+
+.tm-enter-from {
   opacity: 0;
-  transform: translateY(-8px) scale(0.95);
 }
 
-.dropdown-leave {
-  transition: all 0.15s ease-in;
+.tm-leave {
+  transition: opacity 0.15s ease-in;
 }
 
-.dropdown-leave-to {
+.tm-leave-to {
   opacity: 0;
-  transform: translateY(-8px) scale(0.95);
+}
+
+@media (max-width: 520px) {
+  .theme-modal-body {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tm-enter,
+  .tm-leave {
+    transition: none;
+  }
 }
 
 /* ============================================

@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 
+defineProps<{
+  /** compact：单行内联，供页头使用；默认：竖排大字块 */
+  compact?: boolean
+}>()
+
 const now = ref(new Date())
 let timer: ReturnType<typeof setInterval>
 
@@ -53,7 +58,7 @@ const isNight = computed(() => {
 </script>
 
 <template>
-  <div class="greeting-clock">
+  <div class="greeting-clock" :class="{ compact }">
     <div class="gc-greeting">
       <span class="gc-greeting-text">{{ greeting }}</span>
       <span class="gc-greeting-sep">·</span>
@@ -127,9 +132,53 @@ const isNight = computed(() => {
   color: hsl(var(--neon-purple) / 0.85);
 }
 
+/* 页头内联版：单行右对齐，尺寸收小 */
+.greeting-clock.compact {
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.625rem;
+  padding: 0;
+}
+
+.compact .gc-greeting {
+  gap: 0.375rem;
+  font-size: 0.75rem;
+}
+
+.compact .gc-time {
+  gap: 0.1875rem;
+}
+
+.compact .gc-time-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.compact .gc-seconds {
+  font-size: 0.75rem;
+}
+
 @media (min-width: 640px) {
   .gc-time-value {
     font-size: 2rem;
+  }
+
+  .compact .gc-time-value {
+    font-size: 1.375rem;
+  }
+}
+
+/* 窄屏隐藏日期与问候语，只留时间，避免页头拥挤 */
+@media (max-width: 768px) {
+  .compact .gc-greeting {
+    display: none;
+  }
+}
+
+/* 手机上页头过挤：整个时钟隐藏 */
+@media (max-width: 560px) {
+  .greeting-clock.compact {
+    display: none;
   }
 }
 </style>
