@@ -9,7 +9,8 @@ import {
   getHybridUrls,
   getSingleTypeUrls,
   getBestUrl,
-  toSiteLinks
+  toSiteLinks,
+  resolveSiteIcon
 } from '@/utils/siteLinks'
 import SiteCardDefault from './SiteCardDefault.vue'
 import SiteCardMinimal from './SiteCardMinimal.vue'
@@ -116,17 +117,10 @@ const ariaLabel = computed(() => {
   return parts.join(' - ')
 })
 
-// 图标 URL
-const iconUrl = computed(() => {
-  const { iconUrl } = props.site
-  if (!iconUrl) return null
-
-  if (iconUrl.startsWith('http://') || iconUrl.startsWith('https://')) {
-    return iconUrl
-  }
-
-  return `./backend/iconlibs/${iconUrl}`
-})
+// 图标 URL：手动配置优先，未配置时兜底推导站点 favicon
+const iconUrl = computed(() =>
+  resolveSiteIcon(props.site.iconUrl, toSiteLinks(props.site), effectiveNetworkType.value)
+)
 
 // 是否显示描述
 const showDesc = computed(() => Boolean(configStore.showDescription && props.site.description))

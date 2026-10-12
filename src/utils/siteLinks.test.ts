@@ -4,7 +4,8 @@ import {
   getHybridUrls,
   getSingleTypeUrls,
   getBestUrl,
-  toSiteLinks
+  toSiteLinks,
+  resolveSiteIcon
 } from './siteLinks'
 import type { Site } from '@/types'
 
@@ -143,5 +144,37 @@ describe('toSiteLinks', () => {
 
   it('无链接字段时输出空数组', () => {
     expect(toSiteLinks(site())).toEqual({ frontendUrls: [], backendUrls: [] })
+  })
+})
+describe('resolveSiteIcon', () => {
+  const s = site({ backendUrls: ['http://192.168.1.10:8080/app'], frontendUrls: ['https://nas.example.com'] })
+
+  it('手动完整 http 地址原样返回', () => {
+    expect(resolveSiteIcon('https://cdn.x/icon.png', s, 'internal')).toBe('https://cdn.x/icon.png')
+  })
+
+  it('手动相对路径拼 Lucky 图标库', () => {
+    expect(resolveSiteIcon('default_http/HD-icons/a.png', s, 'internal'))
+      .toBe('./backend/iconlibs/default_http/HD-icons/a.png')
+  })
+
+  it('未配置时按生效链接 origin 推导 favicon（内网模式取内网）', () => {
+    expect(resolveSiteIcon('', s, 'internal')).toBe('http://192.168.1.10:8080/favicon.ico')
+  })
+
+  it('未配置时外网模式取外网 origin', () => {
+    expect(resolveSiteIcon(undefined, s, 'external')).toBe('https://nas.example.com/favicon.ico')
+  })
+
+  it('无任何链接时返回 null（回落首字母）', () => {
+    expect(resolveSiteIcon('', site(), 'internal')).toBeNull()
+  })
+
+  it('脏链接不抛异常，返回 null', () => {
+    expect(resolveSiteIcon('', site({ backendUrls: ['not a url'] }), 'internal')).toBeNull()
+  })
+
+  it('混合模式优先内网 origin', () => {
+    expect(resolveSiteIcon('', s, 'hybrid')).toBe('http://192.168.1.10:8080/favicon.ico')
   })
 })

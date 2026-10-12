@@ -37,9 +37,10 @@
 - 修复 ESLint（eslint 9 flat config，`npm run lint` 可用）
 - 移除 4 个无引用的依赖：`radix-vue`、`motion-v`、`vue-router`、`@vueuse/core`
 - 删除孤儿组件 `GroupTabs` 与残留的 `sketch-dark/sketch-light` 主题
-- **新增 vitest 单测**（`npm run test`）：站点链接选择纯函数 17 个用例
+- **新增 vitest 单测**（`npm run test`）：站点链接选择 + 图标推导 + 分组存活校验纯函数，共 32 个用例
 - **卡片组件重构**：三大卡片（site / docker / service）按布局拆分为子组件 + `composables/`，单文件体积大幅下降
 - **图标占位回退**：`common/CardIcon.vue` 图标加载失败时回退到首字母占位，不再空白
+- **站点图标自动推导**：未配 `iconUrl` 时按生效链接的 origin 推导 `/favicon.ico`，失败仍回落首字母；手动配置优先（`utils/siteLinks.ts` 的 `resolveSiteIcon`）
 
 ## 功能总览
 

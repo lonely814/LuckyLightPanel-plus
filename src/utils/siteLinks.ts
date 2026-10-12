@@ -128,3 +128,31 @@ export function toSiteLinks(site: Site): ResolvedSiteLinks {
     backendUrls: validUrls(site.backendUrls)
   }
 }
+
+/**
+ * 解析站点图标显示地址。
+ * 优先级：手动配置(iconUrl) > 兜底推导(站点 origin + /favicon.ico)
+ * iconUrl 支持三种形式：完整 http(s) 地址、Lucky 图标库相对路径、空。
+ * ponytail: 兜底只猜 /favicon.ico（自建服务命中率低），失败由 <img onerror> 回落首字母，不引入请求成本
+ */
+export function resolveSiteIcon(
+  iconUrl: string | undefined,
+  site: SiteLinks,
+  effectiveType: 'internal' | 'external' | 'hybrid',
+  iconlibBase = './backend/iconlibs/'
+): string | null {
+  const raw = (iconUrl || '').trim()
+  if (raw) {
+    if (/^https?:\/\//i.test(raw)) return raw
+    return iconlibBase + raw
+  }
+
+  // 未配置：用当前生效链接的 origin 推导 favicon
+  const best = getBestUrl(site, effectiveType)
+  if (!best) return null
+  try {
+    return new URL('/favicon.ico', best).origin + '/favicon.ico'
+  } catch {
+    return null
+  }
+}

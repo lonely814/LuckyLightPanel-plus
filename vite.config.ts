@@ -2,6 +2,22 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
+import fs from 'node:fs'
+import path from 'node:path'
+
+// 后端不可达时回退到 public/backend 下的 mock JSON（仅开发模式）
+const MOCK_DIR = fileURLToPath(new URL('./public/backend', import.meta.url))
+function serveMock(url: string, res: import('node:http').ServerResponse) {
+  const rel = url.split('?')[0].replace(/^\/backend\/?/, '')
+  const file = path.join(MOCK_DIR, rel)
+  if (!file.startsWith(MOCK_DIR) || !fs.existsSync(file) || !fs.statSync(file).isFile()) {
+    res.statusCode = 404
+    res.end('mock not found: ' + rel)
+    return
+  }
+  res.setHeader('Content-Type', 'application/json')
+  res.end(fs.readFileSync(file))
+}
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -21,7 +37,15 @@ export default defineConfig({
       // 代理后端 API
       '/backend': {
         target: 'http://127.0.0.1:16666/aaa/',
-        changeOrigin: true
+        changeOrigin: true,
+        // 后端未启动（ECONNREFUSED 等）时回退 mock JSON
+        configure(proxy) {
+          proxy.on('error', (_err, _req, res) => {
+            if ('statusCode' in res && !res.headersSent) {
+              serveMock((_req as { url?: string }).url || '', res as import('node:http').ServerResponse)
+            }
+          })
+        }
       }
     }
   },

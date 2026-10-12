@@ -8,6 +8,7 @@ import SearchBox from '@/components/common/SearchBox.vue'
 import GroupDropdown from '@/components/common/GroupDropdown.vue'
 import DataLayoutSwitcher from '@/components/common/DataLayoutSwitcher.vue'
 import type { LuckyService, Group } from '@/types'
+import { pruneGroupSelection } from '@/utils/groups'
 
 const navStore = useNavStore()
 const configStore = useConfigStore()
@@ -94,12 +95,9 @@ const groups = computed(() => {
 
 // 监听分组列表变化，如果当前分组不存在则自动切换到全部
 watch(groups, (newGroups) => {
-  const currentGroup = configStore.currentGroup
-  if (currentGroup !== 'all') {
-    const exists = newGroups.some(g => g.key === currentGroup)
-    if (!exists) {
-      configStore.resetCurrentTabGroup()
-    }
+  const next = pruneGroupSelection(configStore.currentGroup, newGroups.map(g => g.key))
+  if (next !== null) {
+    configStore.setCurrentGroup(next)
   }
 }, { immediate: true })
 
