@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Lint
+        run: npx eslint . --max-warnings=0
+
+      - name: Test
+        run: npm run test
+
+      - name: Architecture guard
+        run: npm run guard
+
+      - name: Build
+        run: npm run build
+
+      - name: CSS size gate
+        run: |
+          SIZE=$(gzip -c dist/assets/*.css | wc -c)
+          LIMIT=$((60 * 1024))
+          echo "CSS gzip: ${SIZE} bytes (limit ${LIMIT})"
+          if [ "$SIZE" -gt "$LIMIT" ]; then
+            echo "::error::CSS 体积超限，gzip ${SIZE} > ${LIMIT}"
+            exit 1
+          fi

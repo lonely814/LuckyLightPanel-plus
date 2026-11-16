@@ -281,8 +281,12 @@ onMounted(async () => {
   }
 })
 
+// 加载中不纠正：预加载是并行的，nav.json 先到而 docker/luckyServices 数据
+// 尚未到达时 availableTabs 只是 ['sites']，此刻纠正会把用户存的 tab 覆盖成
+// sites（实测：从"Lucky 服务"进入会莫名跳回"站点"）。加载完成后 onMounted
+// 里还会再纠正一次，所以这里跳过不影响正确性。
 watch(availableTabs, () => {
-  ensureValidTab()
+  if (!isLoading.value) ensureValidTab()
 })
 
 // ============ 统计轮询控制（按当前标签页 + 页面可见性） ============

@@ -32,6 +32,16 @@ export default [
 
   ...pluginVue.configs['flat/recommended'],
 
+  // Node 脚本（视觉回归 / 架构守卫）
+  {
+    files: ['scripts/**/*.mjs'],
+    languageOptions: {
+      ecmaVersion: 2023,
+      sourceType: 'module',
+      globals: { ...globals.node }
+    }
+  },
+
   {
     files: ['**/*.ts'],
     languageOptions: {

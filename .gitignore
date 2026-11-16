@@ -11,3 +11,12 @@ vite.config.js
 
 # 本地工具目录
 /.opencode/
+.alma-snapshots
+
+# 视觉回归产物：全部不入库。
+# 基线 171 张 PNG 约 170MB，放仓库会让 clone 变得很难受；
+# 改代码前先 npm run baseline 生成，改完 npm run snapshot:current + npm run compare。
+/docs/baseline/
+/docs/current/
+/docs/.det*/
+/docs/.diff/
