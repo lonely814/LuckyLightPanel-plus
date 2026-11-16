@@ -99,12 +99,9 @@
 
 /* ---------- 制图标注：卡片虚线外框 + 等宽标签 ---------- */
 
-[data-theme="blueprint"] .cyber-card,
-[data-theme="blueprint"] .site-card,
-[data-theme="blueprint"] .docker-card,
-[data-theme="blueprint"] .service-card {
-  outline: 1px dashed hsl(var(--primary) / 0.28);
-  outline-offset: 3px;
+[data-theme="blueprint"] {
+  --surface-card-outline: 1px dashed hsl(var(--primary) / 0.28);
+  --surface-card-outline-offset: 3px;
 }
 
 [data-theme="blueprint"] .group-title,

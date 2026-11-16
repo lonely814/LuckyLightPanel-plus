@@ -138,38 +138,18 @@
    卡片 - 打印条目
    ============================================ */
 
-[data-theme="receipt"] .glass-card,
-[data-theme="receipt"] .glass-card-neon,
-[data-theme="receipt"] .cyber-card,
-[data-theme="receipt"] .docker-card,
-[data-theme="receipt"] .service-card {
-  border: 1px dashed hsl(var(--r-ink) / 0.35) !important;
-  box-shadow: var(--card-shadow) !important;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-
-[data-theme="receipt"] .glass-card::after,
-[data-theme="receipt"] .glass-card-neon::after,
-[data-theme="receipt"] .card-border-glow {
-  display: none !important;
-}
-
-[data-theme="receipt"] .cyber-card:not(.layout-minimal):hover,
-[data-theme="receipt"] .docker-card:not(.layout-minimal):hover,
-[data-theme="receipt"] .service-card:not(.layout-minimal):hover {
-  transform: translateY(-1px) !important;
-  border-color: hsl(var(--r-ink) / 0.55) !important;
-  border-style: solid !important;
-  box-shadow: var(--card-shadow-hover) !important;
-}
-
-[data-theme="receipt"] .cyber-card.layout-minimal,
-[data-theme="receipt"] .docker-card.layout-minimal,
-[data-theme="receipt"] .service-card.layout-minimal {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent;
+[data-theme="receipt"] {
+  --surface-card-border: 1px dashed hsl(var(--r-ink) / 0.35);
+  --surface-card-backdrop: none;
+  --surface-card-shadow: var(--card-shadow);
+  --surface-card-glow-display: none;
+  --surface-card-hover-lift: translateY(-1px);
+  --surface-card-hover-border: hsl(var(--r-ink) / 0.55);
+  --surface-card-hover-border-style: solid;
+  --surface-card-hover-shadow: var(--card-shadow-hover);
+  --surface-card-minimal-border: none;
+  --surface-card-minimal-shadow: none;
+  --surface-card-minimal-bg: transparent;
 }
 
 /* 标题 - 打印标题 */

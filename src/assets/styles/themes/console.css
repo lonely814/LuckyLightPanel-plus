@@ -140,37 +140,17 @@
    卡片 - 内凹模块 + 铭牌
    ============================================ */
 
-[data-theme="console"] .glass-card,
-[data-theme="console"] .glass-card-neon,
-[data-theme="console"] .cyber-card,
-[data-theme="console"] .docker-card,
-[data-theme="console"] .service-card {
-  border: 1px solid hsl(0 0% 0% / 0.5) !important;
-  box-shadow: var(--card-shadow) !important;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-
-[data-theme="console"] .glass-card::after,
-[data-theme="console"] .glass-card-neon::after,
-[data-theme="console"] .card-border-glow {
-  display: none !important;
-}
-
-[data-theme="console"] .cyber-card:not(.layout-minimal):hover,
-[data-theme="console"] .docker-card:not(.layout-minimal):hover,
-[data-theme="console"] .service-card:not(.layout-minimal):hover {
-  transform: translateY(-1px) !important;
-  border-color: hsl(var(--cs-amber) / 0.5) !important;
-  box-shadow: var(--card-shadow-hover) !important;
-}
-
-[data-theme="console"] .cyber-card.layout-minimal,
-[data-theme="console"] .docker-card.layout-minimal,
-[data-theme="console"] .service-card.layout-minimal {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent;
+[data-theme="console"] {
+  --surface-card-border: 1px solid hsl(0 0% 0% / 0.5);
+  --surface-card-backdrop: none;
+  --surface-card-shadow: var(--card-shadow);
+  --surface-card-glow-display: none;
+  --surface-card-hover-lift: translateY(-1px);
+  --surface-card-hover-border: hsl(var(--cs-amber) / 0.5);
+  --surface-card-hover-shadow: var(--card-shadow-hover);
+  --surface-card-minimal-border: none;
+  --surface-card-minimal-shadow: none;
+  --surface-card-minimal-bg: transparent;
 }
 
 /* 铭牌标题 - 丝印背光字 */

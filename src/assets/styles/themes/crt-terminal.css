@@ -141,37 +141,18 @@
   display: none !important;
 }
 
-/* 卡片 - 终端面板 */
-[data-theme="crt-terminal"] .glass-card,
-[data-theme="crt-terminal"] .glass-card-neon,
-[data-theme="crt-terminal"] .docker-card,
-[data-theme="crt-terminal"] .service-card,
-[data-theme="crt-terminal"] .cyber-card {
-  border-radius: 0;
-  border: 1px solid hsl(var(--crt-dim) / 0.7) !important;
-  box-shadow: var(--card-shadow) !important;
-}
-
-[data-theme="crt-terminal"] .glass-card::after,
-[data-theme="crt-terminal"] .glass-card-neon::after,
-[data-theme="crt-terminal"] .card-border-glow {
-  display: none !important;
-}
-
-[data-theme="crt-terminal"] .docker-card:not(.layout-minimal):hover,
-[data-theme="crt-terminal"] .service-card:not(.layout-minimal):hover,
-[data-theme="crt-terminal"] .cyber-card:not(.layout-minimal):hover {
-  transform: translateY(-2px) !important;
-  border-color: hsl(var(--crt-green)) !important;
-  box-shadow: var(--card-shadow-hover) !important;
-}
-
-[data-theme="crt-terminal"] .docker-card.layout-minimal,
-[data-theme="crt-terminal"] .service-card.layout-minimal,
-[data-theme="crt-terminal"] .cyber-card.layout-minimal {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent;
+/* 卡片 - 终端面板：只给表面契约变量 */
+[data-theme="crt-terminal"] {
+  --surface-card-radius: 0;
+  --surface-card-border: 1px solid hsl(var(--crt-dim) / 0.7);
+  --surface-card-shadow: var(--card-shadow);
+  --surface-card-glow-display: none;
+  --surface-card-hover-lift: translateY(-2px);
+  --surface-card-hover-border: hsl(var(--crt-green));
+  --surface-card-hover-shadow: var(--card-shadow-hover);
+  --surface-card-minimal-border: none;
+  --surface-card-minimal-shadow: none;
+  --surface-card-minimal-bg: transparent;
 }
 
 [data-theme="crt-terminal"] .icon-box,

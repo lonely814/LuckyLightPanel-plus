@@ -172,48 +172,22 @@
    卡片 - 磨砂冰晶
    ============================================ */
 
-[data-theme="arctic-aurora"] .glass-card,
-[data-theme="arctic-aurora"] .glass-card-neon,
-[data-theme="arctic-aurora"] .cyber-card,
-[data-theme="arctic-aurora"] .docker-card,
-[data-theme="arctic-aurora"] .service-card {
-  border: 1px solid hsl(var(--site-card-border)) !important;
-  box-shadow: var(--card-shadow) !important;
-}
-
-[data-theme="arctic-aurora"] .glass-card::after,
-[data-theme="arctic-aurora"] .glass-card-neon::after,
-[data-theme="arctic-aurora"] .card-border-glow {
-  display: none !important;
-}
-
-[data-theme="arctic-aurora"] .glass-card::before,
-[data-theme="arctic-aurora"] .glass-card-neon::before,
-[data-theme="arctic-aurora"] .cyber-card::before,
-[data-theme="arctic-aurora"] .docker-card::before,
-[data-theme="arctic-aurora"] .service-card::before {
-  background-image: linear-gradient(
+[data-theme="arctic-aurora"] {
+  --surface-card-border: 1px solid hsl(var(--site-card-border));
+  --surface-card-shadow: var(--card-shadow);
+  --surface-card-glow-display: none;
+  --surface-card-shine: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.7) 0%,
     rgba(255, 255, 255, 0) 45%
-  ) !important;
-  opacity: 1 !important;
-}
-
-[data-theme="arctic-aurora"] .cyber-card:not(.layout-minimal):hover,
-[data-theme="arctic-aurora"] .docker-card:not(.layout-minimal):hover,
-[data-theme="arctic-aurora"] .service-card:not(.layout-minimal):hover {
-  transform: translateY(-2px) !important;
-  border-color: hsl(var(--site-card-border-hover)) !important;
-  box-shadow: var(--card-shadow-hover) !important;
-}
-
-[data-theme="arctic-aurora"] .cyber-card.layout-minimal,
-[data-theme="arctic-aurora"] .docker-card.layout-minimal,
-[data-theme="arctic-aurora"] .service-card.layout-minimal {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent;
+  );
+  --surface-card-shine-opacity: 1;
+  --surface-card-hover-lift: translateY(-2px);
+  --surface-card-hover-border: hsl(var(--site-card-border-hover));
+  --surface-card-hover-shadow: var(--card-shadow-hover);
+  --surface-card-minimal-border: none;
+  --surface-card-minimal-shadow: none;
+  --surface-card-minimal-bg: transparent;
 }
 
 [data-theme="arctic-aurora"] .icon-box,

@@ -100,12 +100,15 @@ const cardClass = computed(() => {
 .docker-card {
   position: relative;
   overflow: hidden;
-  border-radius: var(--radius-lg);
-  background: hsl(var(--site-card-bg));
-  backdrop-filter: blur(var(--site-card-blur)) saturate(var(--site-card-saturation));
-  -webkit-backdrop-filter: blur(var(--site-card-blur)) saturate(var(--site-card-saturation));
-  border: 1px solid hsl(var(--site-card-border));
-  box-shadow: var(--site-card-shadow);
+  border-radius: var(--surface-card-radius, var(--radius-lg));
+  outline: var(--surface-card-outline, none);
+  outline-offset: var(--surface-card-outline-offset, 0);
+  /* 表面契约：主题只改 --surface-card-* 变量，不碰组件内部 */
+  background: var(--surface-card-bg, hsl(var(--site-card-bg)));
+  backdrop-filter: var(--surface-card-backdrop, blur(var(--site-card-blur)) saturate(var(--site-card-saturation)));
+  -webkit-backdrop-filter: var(--surface-card-backdrop, blur(var(--site-card-blur)) saturate(var(--site-card-saturation)));
+  border: var(--surface-card-border, 1px solid hsl(var(--site-card-border)));
+  box-shadow: var(--surface-card-shadow, var(--site-card-shadow));
   transition:
     transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1),
     box-shadow 300ms ease,
@@ -119,27 +122,29 @@ const cardClass = computed(() => {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(
+  background: var(--surface-card-shine, linear-gradient(
     135deg,
     hsl(var(--site-card-inner-glow)) 0%,
     transparent 50%,
     transparent 100%
-  );
-  opacity: var(--site-card-shine-opacity);
+  ));
+  background-size: var(--surface-card-shine-size, auto);
+  opacity: var(--surface-card-shine-opacity, var(--site-card-shine-opacity));
   transition: opacity var(--duration-normal) ease;
   pointer-events: none;
   z-index: 1;
 }
 
 .docker-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  background: hsl(var(--site-card-bg-hover));
-  border-color: hsl(var(--site-card-border-hover));
+  transform: var(--surface-card-hover-lift, translateY(-4px) scale(1.01));
+  background: var(--surface-card-hover-bg, hsl(var(--site-card-bg-hover)));
+  border-color: var(--surface-card-hover-border, hsl(var(--site-card-border-hover)));
+  border-style: var(--surface-card-hover-border-style, solid);
   /* 橙色系发光 */
-  box-shadow:
+  box-shadow: var(--surface-card-hover-shadow,
     var(--site-card-shadow-hover),
     0 0 20px -6px hsl(var(--docker-orange) / 0.3),
-    0 0 40px -10px hsl(var(--neon-purple) / 0.12);
+    0 0 40px -10px hsl(var(--neon-purple) / 0.12));
 }
 
 .docker-card:hover::before {
@@ -158,23 +163,30 @@ const cardClass = computed(() => {
 
 /* List 布局 */
 .docker-card.layout-list {
+  border-left: var(--surface-card-list-border-left, var(--surface-card-border, 3px solid transparent));
   padding: 0.875rem 1rem;
-  border-left: 3px solid transparent;
 }
 
 .docker-card.layout-list:hover {
   transform: translateY(-2px);
-  border-left-color: hsl(var(--docker-orange));
+  border-left-color: var(--surface-card-list-hover-border-left, hsl(var(--docker-orange)));
 }
 
 /* Minimal 布局 */
 .docker-card.layout-minimal {
   padding: 0.75rem 0.5rem;
   text-align: center;
+  box-shadow: var(--surface-card-minimal-shadow, var(--surface-card-shadow, var(--site-card-shadow)));
+  background: var(--surface-card-minimal-bg, var(--surface-card-bg, hsl(var(--site-card-bg))));
+  border: var(--surface-card-minimal-border, var(--surface-card-border, 1px solid hsl(var(--site-card-border))));
 }
 
 .docker-card.layout-minimal:hover {
   transform: translateY(-3px) scale(1.02);
+  box-shadow: var(--surface-card-minimal-shadow,
+    var(--surface-card-hover-shadow, var(--site-card-shadow-hover),
+    0 0 20px -6px hsl(var(--docker-orange) / 0.3),
+    0 0 40px -10px hsl(var(--neon-purple) / 0.12)));
 }
 
 /* 霓虹边框效果 */
@@ -200,6 +212,7 @@ const cardClass = computed(() => {
   border: 1px solid transparent;
   transition: border-color 300ms;
   pointer-events: none;
+  display: var(--surface-card-glow-display, block);
 }
 
 /* 背景装饰 */
@@ -233,6 +246,19 @@ const cardClass = computed(() => {
 .docker-card:focus-visible {
   outline: 2px solid hsl(var(--docker-orange));
   outline-offset: 2px;
+}
+
+/* 入场动画：主题给 --surface-card-animation 才生效 */
+.docker-card:not(.layout-minimal) {
+  animation: var(--surface-card-animation, none);
+}
+
+.docker-card:nth-child(2n):not(.layout-minimal) {
+  animation-delay: var(--surface-card-animation-delay-2n, 0ms);
+}
+
+.docker-card:nth-child(3n):not(.layout-minimal) {
+  animation-delay: var(--surface-card-animation-delay-3n, 0ms);
 }
 
 /* 减少动画偏好 */

@@ -133,24 +133,6 @@
    卡片 - 包豪斯 hover：位移 + 硬阴影生长 + 倾斜
    ============================================ */
 
-[data-theme="bauhaus"] .glass-card,
-[data-theme="bauhaus"] .glass-card-neon {
-  border-radius: 0;
-  border: 2px solid hsl(var(--bauhaus-black)) !important;
-  box-shadow: var(--card-shadow) !important;
-}
-
-[data-theme="bauhaus"] .glass-card::after,
-[data-theme="bauhaus"] .glass-card-neon::after {
-  display: none;
-}
-
-[data-theme="bauhaus"] .glass-card:hover,
-[data-theme="bauhaus"] .glass-card-neon:hover {
-  transform: translate(-2px, -2px) !important;
-  box-shadow: var(--card-shadow-hover) !important;
-}
-
 /* ============================================
    页头 - 包豪斯横幅
    ============================================ */
@@ -556,28 +538,16 @@
    Docker / 服务卡片 - 包豪斯
    ============================================ */
 
-[data-theme="bauhaus"] .docker-card,
-[data-theme="bauhaus"] .service-card,
-[data-theme="bauhaus"] .cyber-card {
-  border-radius: 0;
-  border: 2px solid hsl(var(--bauhaus-black)) !important;
-  box-shadow: var(--card-shadow) !important;
-}
-
-[data-theme="bauhaus"] .docker-card:not(.layout-minimal):hover,
-[data-theme="bauhaus"] .service-card:not(.layout-minimal):hover,
-[data-theme="bauhaus"] .cyber-card:not(.layout-minimal):hover {
-  transform: translate(-2px, -2px) !important;
-  box-shadow: var(--card-shadow-hover) !important;
-}
-
-/* 纯图标模式保留无边框 */
-[data-theme="bauhaus"] .docker-card.layout-minimal,
-[data-theme="bauhaus"] .service-card.layout-minimal,
-[data-theme="bauhaus"] .cyber-card.layout-minimal {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent;
+[data-theme="bauhaus"] {
+  --surface-card-radius: 0;
+  --surface-card-border: 2px solid hsl(var(--bauhaus-black));
+  --surface-card-shadow: var(--card-shadow);
+  --surface-card-hover-lift: translate(-2px, -2px);
+  --surface-card-hover-shadow: var(--card-shadow-hover);
+  /* 纯图标模式保留无边框 */
+  --surface-card-minimal-border: none;
+  --surface-card-minimal-shadow: none;
+  --surface-card-minimal-bg: transparent;
 }
 
 [data-theme="bauhaus"] .icon-box,
@@ -710,32 +680,9 @@
   }
 }
 
-[data-theme="bauhaus"] .docker-card:not(.layout-minimal),
-[data-theme="bauhaus"] .service-card:not(.layout-minimal),
-[data-theme="bauhaus"] .cyber-card:not(.layout-minimal),
-[data-theme="bauhaus"] .glass-card {
-  animation: bauhaus-pop-in var(--duration-slower) var(--ease-out) backwards;
-}
-
-[data-theme="bauhaus"] .docker-card:nth-child(2n),
-[data-theme="bauhaus"] .service-card:nth-child(2n),
-[data-theme="bauhaus"] .cyber-card:nth-child(2n) {
-  animation-delay: 60ms;
-}
-
-[data-theme="bauhaus"] .docker-card:nth-child(3n),
-[data-theme="bauhaus"] .service-card:nth-child(3n),
-[data-theme="bauhaus"] .cyber-card:nth-child(3n) {
-  animation-delay: 120ms;
-}
-
-/* 减少动画偏好 */
-@media (prefers-reduced-motion: reduce) {
-  [data-theme="bauhaus"] .content-tab.active::after,
-  [data-theme="bauhaus"] .docker-card:not(.layout-minimal),
-  [data-theme="bauhaus"] .service-card:not(.layout-minimal),
-  [data-theme="bauhaus"] .cyber-card:not(.layout-minimal),
-  [data-theme="bauhaus"] .glass-card {
-    animation: none;
-  }
+/* 卡片入场动画：错峰由组件 :nth-child 读取 --surface-card-animation-delay */
+[data-theme="bauhaus"] {
+  --surface-card-animation: bauhaus-pop-in var(--duration-slower) var(--ease-out) backwards;
+  --surface-card-animation-delay-2n: 60ms;
+  --surface-card-animation-delay-3n: 120ms;
 }

@@ -196,13 +196,15 @@ const cardClass = computed(() => {
 .cyber-card {
   position: relative;
   overflow: hidden;
-  border-radius: var(--radius-lg);
-  /* 使用站点卡片专属变量 */
-  background: hsl(var(--site-card-bg));
-  backdrop-filter: blur(var(--site-card-blur)) saturate(var(--site-card-saturation));
-  -webkit-backdrop-filter: blur(var(--site-card-blur)) saturate(var(--site-card-saturation));
-  border: 1px solid hsl(var(--site-card-border));
-  box-shadow: var(--site-card-shadow);
+  border-radius: var(--surface-card-radius, var(--radius-lg));
+  outline: var(--surface-card-outline, none);
+  outline-offset: var(--surface-card-outline-offset, 0);
+  /* 表面契约：主题只改 --surface-card-* 变量，不碰组件内部 */
+  background: var(--surface-card-bg, hsl(var(--site-card-bg)));
+  backdrop-filter: var(--surface-card-backdrop, blur(var(--site-card-blur)) saturate(var(--site-card-saturation)));
+  -webkit-backdrop-filter: var(--surface-card-backdrop, blur(var(--site-card-blur)) saturate(var(--site-card-saturation)));
+  border: var(--surface-card-border, 1px solid hsl(var(--site-card-border)));
+  box-shadow: var(--surface-card-shadow, var(--site-card-shadow));
   /* 弹性缓动 - 更有质感的悬浮 */
   transition:
     transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1),
@@ -220,13 +222,14 @@ const cardClass = computed(() => {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(
+  background: var(--surface-card-shine, linear-gradient(
     135deg,
     hsl(var(--site-card-inner-glow)) 0%,
     transparent 50%,
     transparent 100%
-  );
-  opacity: var(--site-card-shine-opacity);
+  ));
+  background-size: var(--surface-card-shine-size, auto);
+  opacity: var(--surface-card-shine-opacity, var(--site-card-shine-opacity));
   transition: opacity var(--duration-normal) ease;
   pointer-events: none;
   z-index: 1;
@@ -239,7 +242,7 @@ const cardClass = computed(() => {
 /* ========== Compact 布局：超紧凑横向条 ========== */
 .cyber-card.layout-compact {
   padding: 0.375rem 0.5rem;
-  border-radius: var(--radius-md);
+  border-radius: var(--surface-card-compact-radius, var(--radius-md));
 }
 
 .cyber-card.layout-compact:hover {
@@ -249,9 +252,9 @@ const cardClass = computed(() => {
 /* ========== Minimal 布局：纯图标模式（外壳透明化） ========== */
 .cyber-card.layout-minimal {
   padding: 0;
-  background: transparent;
-  border: none;
-  box-shadow: none;
+  background: var(--surface-card-minimal-bg, transparent);
+  border: var(--surface-card-minimal-border, none);
+  box-shadow: var(--surface-card-minimal-shadow, none);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
@@ -270,7 +273,7 @@ const cardClass = computed(() => {
 /* ========== List 布局 ========== */
 .cyber-card.layout-list {
   padding: 0.875rem 1rem;
-  border-left: 3px solid transparent;
+  border-left: var(--surface-card-list-border-left, var(--surface-card-border, 3px solid transparent));
   transition:
     transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
     box-shadow 300ms ease,
@@ -281,33 +284,34 @@ const cardClass = computed(() => {
 
 .cyber-card.layout-list:hover {
   transform: translateY(-2px);
-  border-left-color: hsl(var(--neon-cyan));
+  border-left-color: var(--surface-card-list-hover-border-left, hsl(var(--neon-cyan)));
 }
 
 /* ========== Rack 布局：1U 前面板（外壳） ========== */
 .cyber-card.layout-rack {
   padding: 0;
   overflow: hidden;
-  border-radius: var(--radius-md);
+  border-radius: var(--surface-card-rack-radius, var(--surface-card-radius, var(--radius-md)));
 }
 
 .cyber-card.layout-rack:hover {
   transform: translateX(-6px);
   box-shadow:
-    var(--site-card-shadow-hover),
-    0 0 20px -6px hsl(var(--neon-cyan) / 0.3),
-    0 0 40px -10px hsl(var(--neon-purple) / 0.15);
+    var(--surface-card-hover-shadow,
+      var(--site-card-shadow-hover),
+      0 0 20px -6px hsl(var(--neon-cyan) / 0.3),
+      0 0 40px -10px hsl(var(--neon-purple) / 0.15));
 }
 
 /* ========== Map 布局：地铁线路站台（外壳透明化） ========== */
 .cyber-card.layout-map {
   padding: 0;
-  background: transparent;
-  border: none;
-  box-shadow: none;
+  background: var(--surface-card-map-bg, transparent);
+  border: var(--surface-card-map-border, var(--surface-card-border, none));
+  box-shadow: var(--surface-card-map-shadow, var(--surface-card-shadow, none));
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  border-radius: 0;
+  border-radius: var(--surface-card-map-radius, var(--surface-card-radius, 0));
 }
 
 .cyber-card.layout-map::before,
@@ -324,32 +328,34 @@ const cardClass = computed(() => {
 
 /* ========== 通用 hover 效果（非 Minimal） ========== */
 .cyber-card:not(.layout-minimal):hover {
-  transform: translateY(-4px) scale(1.01);
-  background: hsl(var(--site-card-bg-hover));
-  border-color: hsl(var(--site-card-border-hover));
+  transform: var(--surface-card-hover-lift, translateY(-4px) scale(1.01));
+  background: var(--surface-card-hover-bg, hsl(var(--site-card-bg-hover)));
+  border-color: var(--surface-card-hover-border, hsl(var(--site-card-border-hover)));
+  border-style: var(--surface-card-hover-border-style, solid);
   /* 多层次阴影 + 外发光 */
-  box-shadow:
+  box-shadow: var(--surface-card-hover-shadow,
     var(--site-card-shadow-hover),
     0 0 20px -6px hsl(var(--neon-cyan) / 0.3),
-    0 0 40px -10px hsl(var(--neon-purple) / 0.15);
+    0 0 40px -10px hsl(var(--neon-purple) / 0.15));
 }
 
 .cyber-card:not(.layout-minimal):hover::before {
-  opacity: var(--site-card-shine-hover);
+  opacity: var(--surface-card-shine-hover, var(--site-card-shine-hover));
 }
 
 /* ========== Launcher 3D 抬升（normal / large） ==========
    默认主题生效；特色主题以各自的 !important hover 规则为准 */
 .cyber-card.layout-default:hover {
-  transform: translateY(-6px) rotateX(6deg) scale(1.02);
+  transform: var(--surface-card-hover-lift-default, var(--surface-card-hover-lift, translateY(-6px) rotateX(6deg) scale(1.02)));
   box-shadow:
-    var(--site-card-shadow-hover),
-    0 24px 48px -12px rgba(0, 0, 0, 0.35),
-    0 0 20px -6px hsl(var(--neon-cyan) / 0.3);
+    var(--surface-card-hover-shadow,
+      var(--site-card-shadow-hover),
+      0 24px 48px -12px rgba(0, 0, 0, 0.35),
+      0 0 20px -6px hsl(var(--neon-cyan) / 0.3));
 }
 
 .cyber-card.layout-default:hover::before {
-  opacity: var(--site-card-shine-hover);
+  opacity: var(--surface-card-shine-hover, var(--site-card-shine-hover));
 }
 
 /* 边框发光线 - 更精细 */
@@ -372,6 +378,7 @@ const cardClass = computed(() => {
   transition: opacity 300ms ease;
   pointer-events: none;
   z-index: 3;
+  display: var(--surface-card-glow-display, block);
 }
 
 .cyber-card:hover .card-border-glow {
@@ -391,6 +398,19 @@ const cardClass = computed(() => {
 .cyber-card:focus-visible {
   outline: 2px solid hsl(var(--neon-cyan));
   outline-offset: 2px;
+}
+
+/* 入场动画：主题给 --surface-card-animation 才生效 */
+.cyber-card:not(.layout-minimal) {
+  animation: var(--surface-card-animation, none);
+}
+
+.cyber-card:nth-child(2n):not(.layout-minimal) {
+  animation-delay: var(--surface-card-animation-delay-2n, 0ms);
+}
+
+.cyber-card:nth-child(3n):not(.layout-minimal) {
+  animation-delay: var(--surface-card-animation-delay-3n, 0ms);
 }
 
 /* 减少动画偏好 */

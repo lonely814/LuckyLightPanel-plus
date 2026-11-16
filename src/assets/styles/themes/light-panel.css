@@ -167,46 +167,23 @@
    卡片 - LED 灯板
    ============================================ */
 
-[data-theme="light-panel"] .glass-card,
-[data-theme="light-panel"] .glass-card-neon,
-[data-theme="light-panel"] .cyber-card,
-[data-theme="light-panel"] .docker-card,
-[data-theme="light-panel"] .service-card {
-  border: 1px solid hsl(var(--site-card-border)) !important;
-  box-shadow: var(--card-shadow) !important;
-}
-
-[data-theme="light-panel"] .glass-card::after,
-[data-theme="light-panel"] .glass-card-neon::after,
-[data-theme="light-panel"] .card-border-glow {
-  display: none !important;
-}
-
-[data-theme="light-panel"] .glass-card::before,
-[data-theme="light-panel"] .glass-card-neon::before,
-[data-theme="light-panel"] .cyber-card::before,
-[data-theme="light-panel"] .docker-card::before,
-[data-theme="light-panel"] .service-card::before {
-  background-image: radial-gradient(circle at 2px 2px, hsl(var(--lp-amber) / 0.08) 1px, transparent 1.7px) !important;
-  background-size: 12px 12px !important;
-  background-color: transparent !important;
-  opacity: 1 !important;
-}
-
-[data-theme="light-panel"] .cyber-card:not(.layout-minimal):hover,
-[data-theme="light-panel"] .docker-card:not(.layout-minimal):hover,
-[data-theme="light-panel"] .service-card:not(.layout-minimal):hover {
-  transform: translateY(-2px) !important;
-  border-color: hsl(var(--site-card-border-hover)) !important;
-  box-shadow: var(--card-shadow-hover) !important;
-}
-
-[data-theme="light-panel"] .cyber-card.layout-minimal,
-[data-theme="light-panel"] .docker-card.layout-minimal,
-[data-theme="light-panel"] .service-card.layout-minimal {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent;
+[data-theme="light-panel"] {
+  --surface-card-border: 1px solid hsl(var(--site-card-border));
+  --surface-card-shadow: var(--card-shadow);
+  --surface-card-glow-display: none;
+  --surface-card-shine: radial-gradient(
+    circle at 2px 2px,
+    hsl(var(--lp-amber) / 0.08) 1px,
+    transparent 1.7px
+  );
+  --surface-card-shine-size: 12px 12px;
+  --surface-card-shine-opacity: 1;
+  --surface-card-hover-lift: translateY(-2px);
+  --surface-card-hover-border: hsl(var(--site-card-border-hover));
+  --surface-card-hover-shadow: var(--card-shadow-hover);
+  --surface-card-minimal-border: none;
+  --surface-card-minimal-shadow: none;
+  --surface-card-minimal-bg: transparent;
 }
 
 [data-theme="light-panel"] .icon-box,
