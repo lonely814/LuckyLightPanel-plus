@@ -1,85 +1,123 @@
 # LightPanel Vue（二创版）
 
-基于 [LuckyLightPanel](https://github.com/gdy666/LuckyLightPanel)（Lucky Web服务轻面板前端）二次创作的个人导航面板，保留与原版完全兼容的 Lucky 后端数据契约，重做了主题系统、布局系统与使用体验。
+基于 [LuckyLightPanel](https://github.com/gdy666/LuckyLightPanel)（Lucky Web 服务轻面板前端）二次创作的个人导航面板。保留与原版完全兼容的 Lucky 后端数据契约（`/backend/*.json`），前端整体重写：2 套主题、2 种布局、单一 CSS 令牌层。
 
-## 与原版的主要差异
+## 特性
 
-### 主题系统（核心差异）
-
-| 对比项 | 原版 | 二创版 |
-|--------|------|--------|
-| 主题数量 | 浅色 / 深色 | 浅色、深色 + **工程蓝图、包豪斯、复古终端、光牌点阵、调光台、运维小票、冰川极光** 共 9 个 |
-| 背景表现 | 通用渐变 | 每个主题带**独立动态背景组件**（几何图形 / CRT 扫描线 / 点阵 / 调光台 / 打印纸 / 极光绸带 + 飘雪） |
-| 维护方式 | 主题散落 5 处维护 | 新增 `src/themes/registry.ts` **主题注册表**，元数据单一来源；跨主题公共规则收敛到 `themes/_shared.css` |
-
-### 布局系统
-
-- 站点区 **6 种布局**：卡片 / 紧凑 / 列表 / 极简 / **机柜**（1U 前面板 + LED）/ **地铁线路图**（换乘站 + 彩色线路）
-- Docker / Lucky 服务区 **5 种布局**，含机柜布局
-- 布局切换器合并：Docker 与 Lucky 两个几乎相同的切换器收敛为通用 `DataLayoutSwitcher`（props 参数化，少 600+ 行重复代码）
-
-### 设置面板
-
-- **布局比例**：内容区整体缩放（CSS zoom），默认偏小费眼的问题可一键放大
-- **站点卡片尺寸**：站点卡片最小列宽滑杆（70%–150%）
-- **卡片形状**：方形（图标在上）/ 矩形（**左侧图标 + 右侧详情**）
-- **细节调整**：文字对比度 / 圆角大小 / 玻璃模糊 / 卡片不透明度（滑杆，100% = 跟随主题）+ 减弱动效开关
-- 细节调整通过运行时快照主题 CSS 变量并换算覆盖实现，**换主题自动重算，不叠乘**
-
-### 使用体验修复
-
-- 修复启动黑屏：移除 Google Fonts 渲染阻塞 `@import`、FontAwesome CDN 改非阻塞加载、初始化并行化、加载屏 3 秒兜底 + 淡出
-- 默认主题（light/dark）文字对比度优化，次要文字不再看不清
-- 默认深色主题 `--text-muted` 亮度 52% → 60%
-
-### 工程清理
-
-- 修复 ESLint（eslint 9 flat config，`npm run lint` 可用）
-- 移除 4 个无引用的依赖：`radix-vue`、`motion-v`、`vue-router`、`@vueuse/core`
-- 删除孤儿组件 `GroupTabs` 与残留的 `sketch-dark/sketch-light` 主题
-- **新增 vitest 单测**（`npm run test`）：站点链接选择 + 图标推导 + 分组存活校验纯函数，共 32 个用例
-- **卡片组件重构**：三大卡片（site / docker / service）按布局拆分为子组件 + `composables/`，单文件体积大幅下降
-- **图标占位回退**：`common/CardIcon.vue` 图标加载失败时回退到首字母占位，不再空白
-- **站点图标自动推导**：未配 `iconUrl` 时按生效链接的 origin 推导 `/favicon.ico`，失败仍回落首字母；手动配置优先（`utils/siteLinks.ts` 的 `resolveSiteIcon`）
-
-## 功能总览
-
-- 🎨 9 套主题，各带独立动态背景
-- 🗂️ 站点导航：分组管理、内/外网链接自动切换、多链接选择、卡片尺寸与方形/矩形切换
-- 🐳 Docker 容器：实时 CPU / 内存 / 网络 / 磁盘，走势图
-- 🚀 Lucky 服务：端口转发 / STUN / Web 服务状态与流量
-- 🔍 站内快速搜索（分站点 / Docker / Lucky 三区）
-- 📱 响应式布局（机柜布局在 ≥1600px 双列）
-- ⚙️ 设置持久化到 localStorage，支持服务器下发默认配置
+- 🎨 **2 套主题**：浅色 / 深色，纯 HSL 变量，主题文件不写任何组件选择器
+- 🧊 **2 种布局**：卡片（`card`）/ 紧凑（`compact`），由密度令牌驱动，三个数据域共用同一套 Grid 原语
+- ✨ **液态玻璃**：可选的玻璃质感卡片（斜向高光 + 1px 渐变描边 + 颗粒噪点），默认关闭
+- 🗂️ **站点导航**：分组多选、内外网链接自动降级、多链接下拉、图标回落首字母
+- 🐳 **Docker**：实时 CPU / 内存 / 网络速度、60 点走势、资源 TOP5 总览
+- 🚀 **Lucky 服务**：端口转发 / STUN / Web 服务状态、流量与连接数、地址一键复制
+- ⚙️ **设置持久化**：localStorage，旧配置自动迁移；支持服务器下发默认配置
 
 ## 技术栈
 
-- **框架**: Vue 3.5+ (Composition API) · **构建**: Vite 6 · **语言**: TypeScript 5.7
-- **状态**: Pinia · **图标**: lucide-vue-next
-- **样式**: 原生 CSS + CSS 变量主题系统（无 UI 框架）
+| 层 | 选型 |
+|---|---|
+| 框架 | Vue 3.5 Composition API + TypeScript 5.7 strict |
+| 构建 | Vite 6（`base: './'`，可部署任意子路径） |
+| 状态 | Pinia |
+| 样式 | Tailwind CSS 4 + `src/styles/tokens.css` 单文件令牌 |
+| 交互原语 | reka-ui（下拉 / 对话框 / 复选框） |
+| 图标 | lucide-vue-next |
+| 测试 | Vitest 4 + happy-dom + zod 契约校验 |
+
+运行时依赖只有 4 个：`vue`、`pinia`、`reka-ui`、`lucide-vue-next`。
 
 ## 快速开始
 
 ```bash
-# 环境要求 Node.js >= 20
+# Node.js >= 20
+npm install
+npm run dev            # http://localhost:5173，/backend 代理到 Lucky 127.0.0.1:16666
+npm run build          # vue-tsc -b && vite build → dist/
+npm run test           # 全部单测
+npm run test:contract  # 只跑后端 API 契约测试
+npm run lint
+```
 
-npm install      # 安装依赖
-npm run dev      # 开发模式 http://localhost:5173（/backend 代理到 Lucky 16666）
-npm run build    # 生产构建 → dist/
-npm run lint     # ESLint 检查
-npm run test     # vitest 单测
+开发模式下后端不可达时，`vite.config.ts` 的中间件回退到 `public/backend/` 的 mock JSON。
+
+## 目录结构
+
+```
+src/
+├─ types/index.ts          后端契约类型 + ThemeMode/LayoutMode/TabType 常量
+├─ styles/tokens.css       全部设计令牌（主题、密度、玻璃、圆角、细节比例）
+├─ stores/
+│  ├─ config.ts            localStorage 配置 + 旧值迁移（normalizeConfig）
+│  └─ nav.ts               8 个后端接口 + 5s 轮询 + 60 点历史
+├─ utils/
+│  ├─ siteLinks.ts         内外网链接选择、图标推导
+│  ├─ groups.ts            分组多选规整
+│  └─ format.ts            速度/流量/时长/内存格式化
+├─ composables/
+│  └─ useFilteredGroups.ts 三域共用的搜索+分组+剪枝
+├─ components/
+│  ├─ common/              IconTile · Sparkline · GridToolbar · LoadingScreen · BackToTop
+│  ├─ layout/              AppHeader · ContentTabs · GreetingClock
+│  ├─ sites/               SiteCard · SiteGrid
+│  ├─ docker/              DockerCard · DockerGrid · DockerOverview
+│  ├─ luckyServices/       ServiceCard · ServiceGrid
+│  └─ settings/            SettingsPanel
+└─ App.vue                 启动编排、主题/布局属性、轮询调度
+```
+
+## 设计约束
+
+这几条是重写时定下的不变量，改代码前先看：
+
+1. **主题只改变量**。`tokens.css` 里 `[data-theme='dark']` / `[data-theme='light']` 两块只允许出现变量声明，禁止 `[data-theme=x] .某类名` 这种跨层覆盖。
+2. **卡片外观唯一来源**是 `@utility glass`。组件不再各写一套背景/边框/圆角/阴影。
+3. **布局靠令牌，不靠组件**。`--density-gap/min/pad/icon` 由 `[data-layout='compact']` 覆盖，新增布局只需在 `src/types/index.ts` 的 `LAYOUT_IDS` 加一项 + 一段变量覆盖 + `GridToolbar.vue` 的 `LAYOUT_META` 加一条。
+4. **细节调整走 CSS `calc()`**。`--text-factor` / `--radius-scale` / `--blur-scale` / `--alpha-scale` 由设置面板写入，不再像旧版那样快照主题颜色再算。
+5. **禁 `rgba()` 硬编码**。颜色一律 `hsl(var(--x) / α)`，否则明暗主题无法共用。
+6. **后端类型字段不可改名**。`src/types/index.ts` 中与 Lucky 契约相关的字段动一个字母就断联；契约由 `tests/contract/` 的 zod schema 守着。
+
+## 配置迁移
+
+localStorage key 仍是 `lightpanel_config`。旧版 9 套主题 / 8 种布局按下表收敛，用户不需要手动清缓存：
+
+| 旧值 | 新值 |
+|---|---|
+| `blueprint` `bauhaus` `crt-terminal` `console` `arctic-aurora` | `dark` |
+| `light-panel` `receipt` | `light` |
+| `normal` `large` `card` | `card` |
+| `compact` `list` `minimal` `rack` `map` | `compact` |
+
+映射表在 `src/stores/config.ts` 的 `LEGACY_THEME` / `LEGACY_LAYOUT`，由 `src/stores/config.test.ts` 覆盖。
+
+## 测试
+
+```
+tests/contract/          zod 校验 7 个后端接口的真实 fixture + 未知字段检测
+tests/combos.test.ts     3 tab × 2 布局 × 2 主题 = 12 组合挂载冒烟
+tests/App.smoke.test.ts  挂载后断言 data-theme / data-layout / --text-factor 生效
+src/**/*.test.ts         纯函数与配置迁移
 ```
 
 ## 部署
 
-将 `dist/` 部署到任意 HTTP 服务器，或在 Lucky Web服务子规则中配置为静态源（HTTP / 本地 / Rclone / 存储管理均可）。`base: './'` 相对路径，支持任意子路径部署。
+把 `dist/` 放到任意 HTTP 服务器，或在 Lucky Web 服务子规则里配置静态源（HTTP / 本地 / Rclone / 存储管理均可）。`base: './'`，支持任意子路径。
 
-开发模式后端不可达时，`public/backend/` 下的 mock JSON 会自动回退使用（`vite.config.ts` 中间件）。
+发布：打 `v*` tag 触发 `.github/workflows/release.yml`，先跑 `eslint` + `vitest`，再构建并 zip 出包。
+
+## 体积基线
+
+| 产物 | 大小 | gzip |
+|---|---|---|
+| `index-*.css` | 26 kB | 6.2 kB |
+| `index-*.js` | 228 kB | 76.6 kB |
+
+JS 里约 30 kB gzip 是 reka-ui。要再压可以把下拉/对话框换回手写原语。
 
 ## 文档
 
 - [后端 API 契约](./API.md) — Lucky 后端数据接口说明
-- [开发交接文档](./docs/开发交接文档.md) — 架构、主题/布局扩展步骤、注意事项
+- [开发交接文档](./docs/开发交接文档.md) — 启动流程、属性驱动清单、踩坑记录
+- [功能盘点](./docs/feature-inventory.md) — 重写前逐项记录的行为，作为对齐基准
 
 ## 开源协议
 
