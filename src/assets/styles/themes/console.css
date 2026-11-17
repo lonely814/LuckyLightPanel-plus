@@ -245,14 +245,6 @@
   color: hsl(var(--cs-backlit)) !important;
 }
 
-[data-theme="console"] .theme-dropdown {
-  border-radius: var(--radius-xs);
-  background: hsl(220 14% 14%);
-  border: 1px solid hsl(0 0% 0% / 0.55);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 hsl(0 0% 100% / 0.06);
-  backdrop-filter: none;
-}
-
 [data-theme="console"] .theme-option:hover {
   background: hsl(var(--cs-amber) / 0.08);
   color: hsl(var(--text-primary));
@@ -421,19 +413,6 @@
   background: hsl(var(--cs-amber) / 0.13) !important;
   color: hsl(var(--cs-amber)) !important;
   border: 1px solid hsl(0 0% 0% / 0.4);
-}
-
-/* 分组标签页 */
-[data-theme="console"] .group-tabs {
-  background: hsl(0 0% 0% / 0.22);
-  border: 1px solid hsl(0 0% 0% / 0.5);
-  border-radius: var(--radius-sm);
-  box-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.4);
-}
-
-[data-theme="console"] .group-tab:hover {
-  background: hsl(var(--cs-amber) / 0.07);
-  color: hsl(var(--text-primary));
 }
 
 [data-theme="console"] .group-tab.active,
@@ -619,10 +598,6 @@
   background: hsl(220 14% 13%);
   border-left: 2px solid hsl(0 0% 0% / 0.6);
   box-shadow: inset 1px 0 0 hsl(0 0% 100% / 0.05);
-}
-
-[data-theme="console"] .settings-title {
-  border-bottom: 2px solid hsl(0 0% 0% / 0.5);
 }
 
 [data-theme="console"] .section-title {

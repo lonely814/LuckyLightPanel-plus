@@ -79,20 +79,6 @@
   border-radius: 0;
 }
 
-/* 分组标签 - 小圆角 */
-[data-theme="console"] .group-tab,
-[data-theme="receipt"] .group-tab {
-  border-radius: var(--radius-xs);
-  color: hsl(var(--text-secondary));
-}
-
-/* 分组标签 - 方形主题归零圆角 */
-[data-theme="bauhaus"] .group-tab,
-[data-theme="crt-terminal"] .group-tab {
-  border-radius: 0;
-  color: hsl(var(--text-secondary));
-}
-
 /* 内容标签 - 小圆角 */
 [data-theme="console"] .content-tab,
 [data-theme="receipt"] .content-tab {

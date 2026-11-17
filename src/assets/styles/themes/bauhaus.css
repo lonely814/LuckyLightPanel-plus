@@ -200,15 +200,6 @@
   color: hsl(var(--text-primary)) !important;
 }
 
-/* 主题下拉菜单 */
-[data-theme="bauhaus"] .theme-dropdown {
-  border-radius: 0;
-  background: hsl(var(--bg-elevated));
-  border: 2px solid hsl(var(--bauhaus-black));
-  box-shadow: 6px 6px 0 hsl(var(--bauhaus-black));
-  backdrop-filter: none;
-}
-
 [data-theme="bauhaus"] .theme-option {
   border-radius: 0;
 }
@@ -382,21 +373,6 @@
   background: hsl(var(--bauhaus-yellow)) !important;
   color: hsl(var(--text-primary)) !important;
   border: 1px solid hsl(var(--bauhaus-black));
-}
-
-/* ============================================
-   分组标签页
-   ============================================ */
-
-[data-theme="bauhaus"] .group-tabs {
-  background: hsl(var(--bg-elevated));
-  border: 2px solid hsl(var(--bauhaus-black));
-  border-radius: 0;
-  box-shadow: 4px 4px 0 hsl(var(--bauhaus-black));
-}
-
-[data-theme="bauhaus"] .group-tab:hover {
-  background: hsl(var(--bauhaus-paper));
 }
 
 [data-theme="bauhaus"] .group-tab.active,
@@ -591,10 +567,6 @@
   border-left: 3px solid hsl(var(--bauhaus-black));
 }
 
-[data-theme="bauhaus"] .settings-title {
-  border-bottom: 3px solid hsl(var(--bauhaus-black));
-}
-
 [data-theme="bauhaus"] .section-title {
   border-left: 6px solid hsl(var(--bauhaus-red));
   padding-left: 0.5rem;
@@ -607,18 +579,6 @@
   border-radius: 0;
   border: 2px solid hsl(var(--bauhaus-black));
   background: hsl(var(--bg-page));
-}
-
-/* 开关 - 包豪斯方形 */
-[data-theme="bauhaus"] .toggle-track,
-[data-theme="bauhaus"] .switch-track {
-  border-radius: 0;
-  border: 2px solid hsl(var(--bauhaus-black));
-}
-
-[data-theme="bauhaus"] .toggle-thumb,
-[data-theme="bauhaus"] .switch-thumb {
-  border-radius: 0;
 }
 
 /* ============================================

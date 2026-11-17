@@ -218,14 +218,6 @@
   color: hsl(var(--crt-green)) !important;
 }
 
-[data-theme="crt-terminal"] .theme-dropdown {
-  border-radius: 0;
-  background: hsl(var(--bg-elevated));
-  border: 1px solid hsl(var(--crt-dim) / 0.8);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 24px -10px hsl(var(--crt-green) / 0.4);
-  backdrop-filter: none;
-}
-
 [data-theme="crt-terminal"] .theme-option {
   border-radius: 0;
   color: hsl(var(--text-secondary));
@@ -387,19 +379,6 @@
   border: 1px solid hsl(var(--crt-dim) / 0.8);
 }
 
-/* 分组标签页 */
-[data-theme="crt-terminal"] .group-tabs {
-  background: hsl(var(--bg-elevated));
-  border: 1px solid hsl(var(--crt-dim) / 0.8);
-  border-radius: 0;
-  box-shadow: 0 0 20px -12px hsl(var(--crt-green) / 0.4);
-}
-
-[data-theme="crt-terminal"] .group-tab:hover {
-  background: hsl(var(--crt-green) / 0.08);
-  color: hsl(var(--text-primary));
-}
-
 [data-theme="crt-terminal"] .group-tab.active,
 [data-theme="crt-terminal"] .group-tab.color-cyan.active,
 [data-theme="crt-terminal"] .group-tab.color-docker.active,
@@ -555,10 +534,6 @@
   border-radius: 0;
   background: hsl(var(--bg-elevated));
   border-left: 2px solid hsl(var(--crt-dim));
-}
-
-[data-theme="crt-terminal"] .settings-title {
-  border-bottom: 2px solid hsl(var(--crt-dim) / 0.8);
 }
 
 [data-theme="crt-terminal"] .section-title {
