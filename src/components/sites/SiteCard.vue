@@ -96,7 +96,9 @@ function handleClick(event: MouseEvent) {
   const url = getBestUrl(props.site, effectiveType)
   if (url) {
     const target = props.site.target || '_blank'
-    window.open(url, target)
+    // 命名 target（如 "home"）不会自动获得 noopener，手动断开引用
+    const win = window.open(url, target)
+    if (win) win.opener = null
   }
 }
 

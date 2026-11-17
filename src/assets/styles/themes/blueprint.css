@@ -124,3 +124,60 @@
   vertical-align: -0.1em;
   background: hsl(var(--accent));
 }
+
+/* ---------- 徽章 / 下拉：图纸浅底需反色，否则组件硬编码的深色 rgba 会变黑块 ---------- */
+
+[data-theme="blueprint"] .group-badge,
+[data-theme="blueprint"] .layout-badge,
+[data-theme="blueprint"] .overview-badge,
+[data-theme="blueprint"] .network-badge {
+  background: hsl(var(--bg-elevated) / 0.85);
+  border: 1px solid hsl(var(--border-color) / 0.6);
+  border-radius: var(--radius-xs);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 1px 0 hsl(var(--border-color) / 0.25);
+}
+
+[data-theme="blueprint"] .group-badge:hover,
+[data-theme="blueprint"] .layout-badge:hover,
+[data-theme="blueprint"] .overview-badge:hover,
+[data-theme="blueprint"] .network-badge:hover {
+  background: hsl(var(--bg-elevated));
+  border-color: hsl(var(--primary) / 0.55);
+  box-shadow: 0 1px 0 hsl(var(--primary) / 0.28);
+}
+
+[data-theme="blueprint"] .group-dropdown,
+[data-theme="blueprint"] .layout-dropdown,
+[data-theme="blueprint"] .network-dropdown {
+  background: hsl(var(--bg-elevated));
+  border: 1px solid hsl(var(--border-color) / 0.65);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 10px 28px hsl(212 45% 30% / 0.18);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+[data-theme="blueprint"] .group-option,
+[data-theme="blueprint"] .layout-option,
+[data-theme="blueprint"] .network-option {
+  color: hsl(var(--text-secondary));
+  border-radius: var(--radius-xs);
+}
+
+[data-theme="blueprint"] .group-option:hover,
+[data-theme="blueprint"] .layout-option:hover,
+[data-theme="blueprint"] .network-option:hover,
+[data-theme="blueprint"] .option-main:hover {
+  background: hsl(var(--primary) / 0.06);
+  color: hsl(var(--text-primary));
+}
+
+[data-theme="blueprint"] .group-option.active,
+[data-theme="blueprint"] .layout-option.active,
+[data-theme="blueprint"] .network-option.active {
+  background: hsl(var(--primary) / 0.12) !important;
+  color: hsl(var(--primary-dark)) !important;
+  border: 1px solid hsl(var(--primary) / 0.3);
+}

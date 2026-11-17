@@ -87,11 +87,3 @@ export const THEMES: ThemeOption[] = THEME_IDS.map(id => ({
   value: id,
   ...THEME_META[id]
 }))
-
-/** 有效主题 ID 列表（从注册表推导，供配置校验使用） */
-export const VALID_THEMES: ThemeMode[] = THEMES.map(t => t.value)
-
-/** 根据主题 ID 查找选项 */
-export function getTheme(value: string): ThemeOption | undefined {
-  return THEMES.find(t => t.value === value)
-}

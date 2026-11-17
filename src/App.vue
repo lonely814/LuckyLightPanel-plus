@@ -115,6 +115,12 @@ const ALL_DETAIL_VARS = [...DETAIL_TEXT_VARS, ...DETAIL_BLUR_VARS, ...DETAIL_OPA
 // 当前主题的原始变量快照（用于避免重复计算叠乘）
 let themeDetailBase: Record<string, string> = {}
 
+// parseFloat('0px') 得 0，用 || 会误判为缺值，需显式判断 NaN
+function parseFloatOr(raw: string | undefined, fallback: number) {
+  const n = parseFloat(raw ?? '')
+  return Number.isFinite(n) ? n : fallback
+}
+
 function snapshotThemeDetails() {
   const el = document.documentElement
   // 先清除内联覆盖，读取纯主题值
@@ -148,7 +154,7 @@ function applyThemeDetails() {
   // 玻璃模糊
   const blur = cfg.detailGlassBlurScale / 100
   DETAIL_BLUR_VARS.forEach(v => {
-    const base = parseFloat(themeDetailBase[v]) || 20
+    const base = parseFloatOr(themeDetailBase[v], 20)
     el.style.setProperty(v, `${Math.round(base * blur)}px`)
   })
 
@@ -164,7 +170,7 @@ function applyThemeDetails() {
   // 圆角
   const radius = cfg.detailRadiusScale / 100
   DETAIL_RADIUS_VARS.forEach(v => {
-    const base = parseFloat(themeDetailBase[v]) || 0
+    const base = parseFloatOr(themeDetailBase[v], 0)
     el.style.setProperty(v, `${Math.round(base * radius)}px`)
   })
 
@@ -494,7 +500,7 @@ onUnmounted(() => {
   height: 2.5rem;
   border-radius: 0.75rem;
   border: 1px solid hsl(var(--glass-border) / 0.3);
-  background: hsl(var(--glass-bg) / 0.3);
+  background: hsl(var(--glass-bg));
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
   color: hsl(var(--text-muted) / 0.4);

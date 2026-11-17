@@ -79,7 +79,8 @@ function hide() {
 // 打开链接
 function openLink(item: LinkItem) {
   const target = currentSite.value?.target || '_blank'
-  window.open(item.url, target)
+  const win = window.open(item.url, target)
+  if (win) win.opener = null
   hide()
 }
 

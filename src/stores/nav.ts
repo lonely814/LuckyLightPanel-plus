@@ -32,7 +32,6 @@ const API = {
 export const useNavStore = defineStore('nav', () => {
   // 加载状态
   const isLoading = ref(true)
-  const loadError = ref<string | null>(null)
 
   // 全局配置
   const navConfig = ref<NavConfig | null>(null)
@@ -250,10 +249,8 @@ export const useNavStore = defineStore('nav', () => {
       if (data?.ret === 0 && data.stats) {
         const newStats = new Map<string, DockerStat>()
         data.stats.forEach(stat => {
-          // 兼容 key / containerName 两种键（同名容器或旧格式均能命中）
-          const id = stat.key || stat.containerName
+          // 只用 containerName 作键：消费者都是 values() 遍历，双键会让同一容器重复上榜
           newStats.set(stat.containerName, stat)
-          if (id !== stat.containerName) newStats.set(id, stat)
           // 累积历史数据用于走势图
           const entry = dockerHistory.value.get(stat.containerName) || { cpu: [], memory: [], rx: [], tx: [] }
           entry.cpu = pushHistory(entry.cpu, parseFloat(stat.cpuPercent) || 0)
@@ -353,7 +350,6 @@ export const useNavStore = defineStore('nav', () => {
   return {
     // 状态
     isLoading,
-    loadError,
     navConfig,
     sitesData,
     networkType,
