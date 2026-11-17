@@ -1,0 +1,149 @@
+@import 'tailwindcss';
+
+/* ============================================================
+   设计令牌 —— 全站唯一来源。
+   主题文件只允许改这里的变量值，禁止出现 [data-theme] + 组件类名。
+   细节调整用 4 个比例变量参与 calc()，不再由 JS 快照重写颜色。
+   ============================================================ */
+
+:root {
+  --radius-scale: 1;
+  --blur-scale: 1;
+  --alpha-scale: 1;
+  --text-factor: 1;
+
+  --radius-sm: calc(0.5rem * var(--radius-scale));
+  --radius-md: calc(0.75rem * var(--radius-scale));
+  --radius-lg: calc(1rem * var(--radius-scale));
+  --radius-xl: calc(1.5rem * var(--radius-scale));
+
+  --blur-glass: calc(18px * var(--blur-scale));
+  --alpha-soft: min(1, calc(0.55 * var(--alpha-scale)));
+  --alpha-strong: min(1, calc(0.85 * var(--alpha-scale)));
+
+  /* 文字对比度：以 50% 明度为轴放大/缩小，明暗主题同向增强对比 */
+  --fg-1: clamp(1%, calc(50% + (var(--fg-l-1) - 50%) * var(--text-factor)), 99%);
+  --fg-2: clamp(1%, calc(50% + (var(--fg-l-2) - 50%) * var(--text-factor)), 99%);
+  --fg-3: clamp(1%, calc(50% + (var(--fg-l-3) - 50%) * var(--text-factor)), 99%);
+
+  /* 网格密度：card / compact 两套，组件只消费这 4 个变量 */
+  --density-gap: 1rem;
+  --density-min: 220px;
+  --density-pad: 1rem;
+  --density-icon: 2.5rem;
+  /* 站点/服务卡片尺寸倍率，由设置面板写入 */
+  --card-scale: 1;
+}
+
+[data-layout='compact'] {
+  --density-gap: 0.5rem;
+  --density-min: 260px;
+  --density-pad: 0.6rem;
+  --density-icon: 1.75rem;
+}
+
+:root,
+[data-theme='dark'] {
+  --bg-page: 222 30% 7%;
+  --surface: 222 32% 13%;
+  --elevated: 222 30% 18%;
+  --border: 220 20% 55%;
+  --fg-h: 210;
+  --fg-s: 20%;
+  --fg-l-1: 93%;
+  --fg-l-2: 74%;
+  --fg-l-3: 60%;
+  --primary: 217 88% 62%;
+  --success: 150 60% 46%;
+  --warning: 35 88% 56%;
+  --danger: 0 72% 60%;
+  --shadow-card: 0 10px 30px -12px hsl(222 60% 2% / 0.6);
+}
+
+[data-theme='light'] {
+  --bg-page: 220 22% 96%;
+  --surface: 0 0% 100%;
+  --elevated: 220 20% 97%;
+  --border: 220 15% 40%;
+  --fg-h: 220;
+  --fg-s: 18%;
+  --fg-l-1: 16%;
+  --fg-l-2: 34%;
+  --fg-l-3: 44%;
+  --primary: 217 85% 50%;
+  --success: 152 60% 34%;
+  --warning: 30 85% 40%;
+  --danger: 0 70% 48%;
+  --shadow-card: 0 10px 28px -16px hsl(220 40% 40% / 0.45);
+}
+
+@theme inline {
+  --color-page: hsl(var(--bg-page));
+  --color-elevated: hsl(var(--elevated));
+  --color-surface: hsl(var(--surface) / var(--alpha-soft));
+  --color-surface-solid: hsl(var(--surface));
+  --color-surface-hover: hsl(var(--surface) / var(--alpha-strong));
+  --color-line: hsl(var(--border) / 0.28);
+  --color-line-strong: hsl(var(--border) / 0.5);
+  --color-fg: hsl(var(--fg-h) var(--fg-s) var(--fg-1));
+  --color-fg-muted: hsl(var(--fg-h) var(--fg-s) var(--fg-2));
+  --color-fg-subtle: hsl(var(--fg-h) var(--fg-s) var(--fg-3));
+  --color-brand: hsl(var(--primary));
+  --color-success: hsl(var(--success));
+  --color-warning: hsl(var(--warning));
+  --color-danger: hsl(var(--danger));
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  [data-theme='light'] {
+    color-scheme: light;
+  }
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    font-family: system-ui, -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    color: hsl(var(--fg-h) var(--fg-s) var(--fg-1));
+    background-color: hsl(var(--bg-page));
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
+}
+
+/* 玻璃卡片：全站唯一卡片外观定义，组件不再各写一套 */
+@utility glass {
+  background: hsl(var(--surface) / var(--alpha-soft));
+  border: 1px solid hsl(var(--border) / 0.28);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(var(--blur-glass)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(140%);
+}
+
+/* 三域网格共用：密度由 --density-* 驱动，布局切换不新增组件 */
+@utility auto-grid {
+  display: grid;
+  gap: var(--density-gap);
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--density-min) * var(--card-scale)), 1fr));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+[data-reduce-motion='true'] *,
+[data-reduce-motion='true'] *::before,
+[data-reduce-motion='true'] *::after {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
+}

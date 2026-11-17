@@ -130,6 +130,18 @@ export function toSiteLinks(site: Site): ResolvedSiteLinks {
 }
 
 /**
+ * 站点在当前网络模式下可选的链接列表。
+ * 长度 > 1 时应弹下拉让用户选，长度 1 时直接打开（由调用方判断）。
+ */
+export function getLinkChoices(
+  site: SiteLinks,
+  effectiveType: 'internal' | 'external' | 'hybrid'
+): LinkItem[] {
+  if (effectiveType === 'hybrid') return getHybridUrls(site)
+  return getSingleTypeUrls(site, effectiveType)
+}
+
+/**
  * 解析站点图标显示地址。
  * 优先级：手动配置(iconUrl) > 兜底推导(站点 origin + /favicon.ico)
  * iconUrl 支持三种形式：完整 http(s) 地址、Lucky 图标库相对路径、空。

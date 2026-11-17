@@ -1,248 +1,79 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useDockerCard } from '@/composables/useDockerCard'
+import { ArrowDown, ArrowUp, MemoryStick } from 'lucide-vue-next'
 import type { DockerContainer } from '@/types'
-import DockerCardNormal from './DockerCardNormal.vue'
-import DockerCardCompact from './DockerCardCompact.vue'
-import DockerCardList from './DockerCardList.vue'
-import DockerCardRack from './DockerCardRack.vue'
-import DockerCardMinimal from './DockerCardMinimal.vue'
+import { useNavStore } from '@/stores/nav'
+import { compactMemory, dockerStatusDuration, formatSpeed, percentValue } from '@/utils/format'
+import IconTile from '@/components/common/IconTile.vue'
+import Sparkline from '@/components/common/Sparkline.vue'
 
-const props = defineProps<{
-  container: DockerContainer
-  listMaxWidths?: {
-    status: number
-    cpu: number
-    memory: number
-    networkRx: number
-    networkTx: number
-  }
-}>()
+const props = defineProps<{ container: DockerContainer; dense: boolean; showDescription: boolean }>()
 
-const { layout, containerState, stateConfig, ariaLabel } = useDockerCard(props.container)
+const navStore = useNavStore()
 
-// 卡片类名
-const cardClass = computed(() => {
-  const classes = ['docker-card', 'group']
-  if (layout.value === 'list') classes.push('layout-list')
-  else if (layout.value === 'minimal') classes.push('layout-minimal')
-  else if (layout.value === 'compact') classes.push('layout-compact')
-  else if (layout.value === 'rack') classes.push('layout-rack')
-  else classes.push('layout-normal')
-  return classes.join(' ')
+const stats = computed(() => navStore.getContainerStats(props.container.containerName))
+const history = computed(() => navStore.getContainerHistory(props.container.containerName))
+
+const state = computed(() => stats.value?.state ?? props.container.state ?? 'unknown')
+const name = computed(() => props.container.displayName || props.container.containerName)
+const icon = computed(() => {
+  const raw = props.container.iconUrl
+  if (!raw) return null
+  return /^https?:\/\//i.test(raw) ? raw : `./backend/iconlibs/${raw}`
 })
+
+const TONE: Record<string, string> = {
+  running: 'text-success',
+  exited: 'text-danger',
+  dead: 'text-danger',
+  paused: 'text-warning',
+  restarting: 'text-warning'
+}
+const STATE_TEXT: Record<string, string> = {
+  running: '运行中',
+  exited: '已停止',
+  dead: '已停止',
+  paused: '已暂停',
+  restarting: '重启中'
+}
+const tone = computed(() => TONE[state.value] ?? 'text-fg-subtle')
+const stateText = computed(() => STATE_TEXT[state.value] ?? '未知')
+const uptime = computed(() => dockerStatusDuration(stats.value?.status ?? props.container.status))
+
+const cpu = computed(() => percentValue(stats.value?.cpuPercent))
+const memoryText = computed(() => compactMemory(stats.value?.memoryUsage))
+const rx = computed(() => formatSpeed(stats.value?.networkRxSpeed ?? 0))
+const tx = computed(() => formatSpeed(stats.value?.networkTxSpeed ?? 0))
 </script>
 
 <template>
-  <div
-    :class="cardClass"
-    role="article"
-    :aria-label="ariaLabel"
-  >
-    <!-- 霓虹边框效果 -->
-    <div
-      class="card-glow"
-      :style="{ '--shadow-color': `hsl(${stateConfig.shadow})` }"
-    />
+  <div class="glass p-(--density-pad)">
+    <div class="flex items-center gap-3">
+      <IconTile :src="icon" :name="name" />
+      <div class="min-w-0 flex-1">
+        <div class="truncate text-sm font-medium text-fg">{{ name }}</div>
+        <div class="flex items-center gap-1.5 text-xs">
+          <span :class="tone" class="font-medium">{{ stateText }}</span>
+          <span v-if="uptime" class="truncate text-fg-subtle">{{ uptime }}</span>
+        </div>
+      </div>
+      <div v-if="!dense" class="text-right text-xs text-fg-subtle">CPU {{ cpu.toFixed(1) }}%</div>
+    </div>
 
-    <!-- 边框发光线 -->
-    <div
-      class="card-border-glow"
-      :style="{ borderColor: containerState === 'running' ? stateConfig.borderColor : 'transparent' }"
-    />
+    <p v-if="!dense && showDescription && container.description" class="mt-2 line-clamp-2 text-xs text-fg-subtle">
+      {{ container.description }}
+    </p>
 
-    <!-- 背景装饰 -->
-    <div
-      class="card-bg-decor"
-      :style="{ background: `linear-gradient(135deg, ${stateConfig.color}, hsl(var(--docker-orange)))` }"
-    />
+    <div v-if="!dense" class="mt-3 flex items-end justify-between gap-3">
+      <div class="flex items-center gap-1 text-xs text-fg-muted">
+        <MemoryStick class="size-3" />{{ memoryText }}
+      </div>
+      <Sparkline :data="history?.cpu ?? []" :color="`hsl(var(--primary))`" />
+    </div>
 
-    <!-- ============ Normal 布局 - 详细信息 ============ -->
-    <DockerCardNormal
-      v-if="layout === 'normal'"
-      :container="container"
-    />
-
-    <!-- ============ Compact 布局 - 紧凑信息 ============ -->
-    <DockerCardCompact
-      v-else-if="layout === 'compact'"
-      :container="container"
-    />
-
-    <!-- ============ List 布局 - 横向列表 ============ -->
-    <DockerCardList
-      v-else-if="layout === 'list'"
-      :container="container"
-      :list-max-widths="listMaxWidths"
-    />
-
-    <!-- ============ Rack 布局 - 1U 前面板 ============ -->
-    <DockerCardRack
-      v-else-if="layout === 'rack'"
-      :container="container"
-    />
-
-    <!-- ============ Minimal 布局 - 极简 ============ -->
-    <DockerCardMinimal
-      v-else
-      :container="container"
-    />
+    <div class="mt-2 flex items-center gap-3 text-xs text-fg-subtle">
+      <span class="flex items-center gap-1"><ArrowDown class="size-3 text-success" />{{ rx }}</span>
+      <span class="flex items-center gap-1"><ArrowUp class="size-3 text-warning" />{{ tx }}</span>
+    </div>
   </div>
 </template>
-
-<style scoped>
-/* ============================================
-   Docker 容器卡片外壳 - 公共部分
-   各布局内部样式见对应子组件
-   ============================================ */
-
-/* 卡片基础容器 - 复用站点卡片磨砂样式 */
-.docker-card {
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
-  background: hsl(var(--site-card-bg));
-  backdrop-filter: blur(var(--site-card-blur)) saturate(var(--site-card-saturation));
-  -webkit-backdrop-filter: blur(var(--site-card-blur)) saturate(var(--site-card-saturation));
-  border: 1px solid hsl(var(--site-card-border));
-  box-shadow: var(--site-card-shadow);
-  transition:
-    transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 300ms ease,
-    border-color 300ms ease,
-    background 300ms ease;
-}
-
-/* 磨砂内层叠加 - 增强通透感 */
-.docker-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(
-    135deg,
-    hsl(var(--site-card-inner-glow)) 0%,
-    transparent 50%,
-    transparent 100%
-  );
-  opacity: var(--site-card-shine-opacity);
-  transition: opacity var(--duration-normal) ease;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.docker-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  background: hsl(var(--site-card-bg-hover));
-  border-color: hsl(var(--site-card-border-hover));
-  /* 橙色系发光 */
-  box-shadow:
-    var(--site-card-shadow-hover),
-    0 0 20px -6px hsl(var(--docker-orange) / 0.3),
-    0 0 40px -10px hsl(var(--neon-purple) / 0.12);
-}
-
-.docker-card:hover::before {
-  opacity: var(--site-card-shine-hover);
-}
-
-/* Normal 布局 */
-.docker-card.layout-normal {
-  padding: 1rem;
-}
-
-/* Compact 布局 */
-.docker-card.layout-compact {
-  padding: 0.75rem;
-}
-
-/* List 布局 */
-.docker-card.layout-list {
-  padding: 0.875rem 1rem;
-  border-left: 3px solid transparent;
-}
-
-.docker-card.layout-list:hover {
-  transform: translateY(-2px);
-  border-left-color: hsl(var(--docker-orange));
-}
-
-/* Minimal 布局 */
-.docker-card.layout-minimal {
-  padding: 0.75rem 0.5rem;
-  text-align: center;
-}
-
-.docker-card.layout-minimal:hover {
-  transform: translateY(-3px) scale(1.02);
-}
-
-/* 霓虹边框效果 */
-.card-glow {
-  position: absolute;
-  inset: 0;
-  border-radius: var(--radius-lg);
-  opacity: 0;
-  transition: opacity 500ms;
-  pointer-events: none;
-  box-shadow: 0 0 30px -8px var(--shadow-color), inset 0 0 20px -12px var(--shadow-color, hsl(var(--docker-orange) / 0.3));
-}
-
-.docker-card:hover .card-glow {
-  opacity: 0.9;
-}
-
-/* 边框发光线 */
-.card-border-glow {
-  position: absolute;
-  inset: 1px;
-  border-radius: calc(var(--radius-lg) - 1px);
-  border: 1px solid transparent;
-  transition: border-color 300ms;
-  pointer-events: none;
-}
-
-/* 背景装饰 */
-.card-bg-decor {
-  position: absolute;
-  top: -5rem;
-  right: -5rem;
-  width: 10rem;
-  height: 10rem;
-  border-radius: 50%;
-  filter: blur(48px);
-  opacity: 0;
-  transition: opacity 700ms;
-  pointer-events: none;
-}
-
-.docker-card:hover .card-bg-decor {
-  opacity: 0.35;
-}
-
-/* 可访问性 - 焦点状态 */
-.docker-card:focus {
-  outline: none;
-  border-color: hsl(var(--docker-orange) / 0.5);
-  box-shadow:
-    var(--site-card-shadow-hover),
-    0 0 0 3px hsl(var(--docker-orange) / 0.2),
-    0 0 20px -6px hsl(var(--docker-orange) / 0.3);
-}
-
-.docker-card:focus-visible {
-  outline: 2px solid hsl(var(--docker-orange));
-  outline-offset: 2px;
-}
-
-/* 减少动画偏好 */
-@media (prefers-reduced-motion: reduce) {
-  .docker-card {
-    transition: none;
-  }
-
-  .docker-card:hover {
-    transform: none;
-  }
-}
-</style>

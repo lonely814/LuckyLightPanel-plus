@@ -1,70 +1,47 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { computed, ref, type CSSProperties } from 'vue'
 import type {
-  ThemeMode,
+  GroupSelection,
   LayoutMode,
   NetworkMode,
-  TabType,
-  UserConfig,
   PresetBackground,
   TabGroups,
   TabSearchKeywords,
-  GroupSelection
+  TabType,
+  ThemeMode,
+  UserConfig
 } from '@/types'
-import { THEME_IDS } from '@/types'
+import { LAYOUT_IDS, TAB_IDS, THEME_IDS } from '@/types'
 
-const STORAGE_KEY = 'lightpanel_config'
+export const STORAGE_KEY = 'lightpanel_config'
 
-// 预设背景 - 科技感渐变色
 export const PRESET_BACKGROUNDS: PresetBackground[] = [
-  { id: 'cyber', name: '赛博', type: 'gradient', value: 'linear-gradient(135deg, hsl(220 50% 4%) 0%, hsl(240 40% 8%) 50%, hsl(220 50% 4%) 100%)' },
-  { id: 'aurora', name: '极光', type: 'gradient', value: 'linear-gradient(135deg, hsl(250 60% 40%) 0%, hsl(280 50% 35%) 50%, hsl(320 60% 40%) 100%)' },
   { id: 'ocean', name: '深海', type: 'gradient', value: 'linear-gradient(135deg, hsl(200 80% 25%) 0%, hsl(220 70% 40%) 100%)' },
-  { id: 'matrix', name: '矩阵', type: 'gradient', value: 'linear-gradient(180deg, hsl(150 60% 4%) 0%, hsl(180 50% 3%) 100%)' },
-  { id: 'midnight', name: '午夜', type: 'gradient', value: 'linear-gradient(135deg, hsl(220 50% 5%) 0%, hsl(230 45% 12%) 50%, hsl(240 40% 18%) 100%)' },
-  { id: 'neon', name: '霓虹', type: 'gradient', value: 'linear-gradient(135deg, hsl(280 80% 35%) 0%, hsl(320 70% 40%) 50%, hsl(350 60% 45%) 100%)' },
-  { id: 'emerald', name: '翡翠', type: 'gradient', value: 'linear-gradient(135deg, hsl(160 70% 25%) 0%, hsl(150 80% 40%) 100%)' },
+  { id: 'slate', name: '石板', type: 'gradient', value: 'linear-gradient(135deg, hsl(220 30% 12%) 0%, hsl(220 22% 22%) 100%)' },
+  { id: 'aurora', name: '极光', type: 'gradient', value: 'linear-gradient(135deg, hsl(250 60% 40%) 0%, hsl(320 60% 40%) 100%)' },
   { id: 'sunset', name: '日落', type: 'gradient', value: 'linear-gradient(135deg, hsl(320 80% 40%) 0%, hsl(260 70% 50%) 52%, hsl(200 80% 50%) 100%)' },
-  { id: 'cosmic', name: '宇宙', type: 'gradient', value: 'linear-gradient(135deg, hsl(250 60% 15%) 0%, hsl(280 50% 25%) 100%)' },
-  { id: 'slate', name: '石板', type: 'gradient', value: 'linear-gradient(135deg, hsl(220 30% 8%) 0%, hsl(220 25% 15%) 50%, hsl(220 20% 20%) 100%)' }
+  { id: 'emerald', name: '翡翠', type: 'gradient', value: 'linear-gradient(135deg, hsl(160 70% 25%) 0%, hsl(150 80% 40%) 100%)' },
+  { id: 'plain', name: '纯色', type: 'gradient', value: 'linear-gradient(135deg, hsl(220 20% 96%) 0%, hsl(220 25% 90%) 100%)' }
 ]
 
-// 默认分组状态
-const DEFAULT_TAB_GROUPS: TabGroups = {
-  sites: 'all',
-  docker: 'all',
-  luckyServices: 'all'
-}
+const DEFAULT_TAB_GROUPS: TabGroups = { sites: 'all', docker: 'all', luckyServices: 'all' }
+const DEFAULT_SEARCH_KEYWORDS: TabSearchKeywords = { sites: '', docker: '', luckyServices: '' }
 
-// 默认搜索关键字
-const DEFAULT_SEARCH_KEYWORDS: TabSearchKeywords = {
-  sites: '',
-  docker: '',
-  luckyServices: ''
-}
-
-// 默认配置
-const DEFAULT_CONFIG: UserConfig = {
+export const DEFAULT_CONFIG: UserConfig = {
   theme: 'dark',
   background: 'ocean',
   customBgUrl: '',
-  layout: 'normal',
-  dockerLayout: 'list',
-  luckyServicesLayout: 'normal',
+  layout: 'card',
+  dockerLayout: 'card',
+  luckyServicesLayout: 'card',
   layoutScale: 1,
   siteCardSize: 100,
-  siteCardShape: 'square',
   showDescription: true,
   showTime: true,
-  showSearch: false,
   showHeader: true,
-  searchEngine: 'bing',
-  customSearchUrl: '',
   tabGroups: { ...DEFAULT_TAB_GROUPS },
   networkMode: 'hybrid',
   currentTab: 'sites',
-
-  // 细节调整默认值（100 = 跟随主题）
   detailTextContrast: 100,
   detailRadiusScale: 100,
   detailGlassBlurScale: 100,
@@ -72,458 +49,295 @@ const DEFAULT_CONFIG: UserConfig = {
   detailReduceMotion: false
 }
 
+/** 旧 9 套主题 → light / dark（只保留明暗两档） */
+const LEGACY_THEME: Record<string, ThemeMode> = {
+  light: 'light',
+  dark: 'dark',
+  blueprint: 'dark',
+  bauhaus: 'dark',
+  'crt-terminal': 'dark',
+  'light-panel': 'light',
+  console: 'dark',
+  receipt: 'light',
+  'arctic-aurora': 'dark',
+  default: 'dark'
+}
+
+/** 旧 7 种布局 → card / compact */
+const LEGACY_LAYOUT: Record<string, LayoutMode> = {
+  card: 'card',
+  normal: 'card',
+  large: 'card',
+  compact: 'compact',
+  list: 'compact',
+  minimal: 'compact',
+  rack: 'compact',
+  map: 'compact'
+}
+
+const CONFIG_KEYS = Object.keys(DEFAULT_CONFIG) as (keyof UserConfig)[]
+
+function pickTheme(raw: unknown): ThemeMode {
+  const key = String(raw ?? '')
+  return LEGACY_THEME[key] ?? (THEME_IDS.includes(key as ThemeMode) ? (key as ThemeMode) : 'dark')
+}
+
+function pickLayout(raw: unknown, fallback: LayoutMode): LayoutMode {
+  const key = String(raw ?? '')
+  return LEGACY_LAYOUT[key] ?? (LAYOUT_IDS.includes(key as LayoutMode) ? (key as LayoutMode) : fallback)
+}
+
+function pickTab(raw: unknown): TabType {
+  return TAB_IDS.includes(raw as TabType) ? (raw as TabType) : 'sites'
+}
+
+/** 旧版 tabGroups 可能缺键或存成数组/字符串混杂，统一成新结构 */
+function pickTabGroups(raw: unknown): TabGroups {
+  const source = (raw ?? {}) as Record<string, unknown>
+  const pick = (value: unknown): GroupSelection => {
+    if (value === 'all' || value === undefined || value === null) return 'all'
+    if (Array.isArray(value)) return value.filter((v): v is string => typeof v === 'string')
+    return typeof value === 'string' ? [value] : 'all'
+  }
+  return { sites: pick(source.sites), docker: pick(source.docker), luckyServices: pick(source.luckyServices) }
+}
+
+function num(raw: unknown, fallback: number): number {
+  const n = typeof raw === 'number' ? raw : Number.parseFloat(String(raw ?? ''))
+  return Number.isFinite(n) ? n : fallback
+}
+
+function bool(raw: unknown, fallback: boolean): boolean {
+  return typeof raw === 'boolean' ? raw : fallback
+}
+
+function str(raw: unknown, fallback: string): string {
+  return typeof raw === 'string' ? raw : fallback
+}
+
+/** 把任意来源（旧 localStorage / 后端 default-config）规整为合法 UserConfig */
+export function normalizeConfig(input: unknown): UserConfig {
+  const raw = (input ?? {}) as Record<string, unknown>
+  const d = DEFAULT_CONFIG
+  return {
+    theme: pickTheme(raw.theme ?? d.theme),
+    background: str(raw.background, d.background),
+    customBgUrl: str(raw.customBgUrl, d.customBgUrl),
+    layout: pickLayout(raw.layout, d.layout),
+    dockerLayout: pickLayout(raw.dockerLayout, d.dockerLayout),
+    luckyServicesLayout: pickLayout(raw.luckyServicesLayout, d.luckyServicesLayout),
+    layoutScale: num(raw.layoutScale, d.layoutScale),
+    siteCardSize: num(raw.siteCardSize, d.siteCardSize),
+    showDescription: bool(raw.showDescription, d.showDescription),
+    showTime: bool(raw.showTime, d.showTime),
+    showHeader: bool(raw.showHeader, d.showHeader),
+    tabGroups: pickTabGroups(raw.tabGroups ?? d.tabGroups),
+    networkMode: (['auto', 'internal', 'external', 'hybrid'] as NetworkMode[]).includes(raw.networkMode as NetworkMode)
+      ? (raw.networkMode as NetworkMode)
+      : d.networkMode,
+    currentTab: pickTab(raw.currentTab ?? d.currentTab),
+    detailTextContrast: num(raw.detailTextContrast, d.detailTextContrast),
+    detailRadiusScale: num(raw.detailRadiusScale, d.detailRadiusScale),
+    detailGlassBlurScale: num(raw.detailGlassBlurScale, d.detailGlassBlurScale),
+    detailGlassOpacityScale: num(raw.detailGlassOpacityScale, d.detailGlassOpacityScale),
+    detailReduceMotion: bool(raw.detailReduceMotion, d.detailReduceMotion)
+  }
+}
+
 export const useConfigStore = defineStore('config', () => {
-  // 状态
   const config = ref<UserConfig>({ ...DEFAULT_CONFIG })
   const settingsPanelOpen = ref(false)
-  // 搜索关键字（不持久化）
   const searchKeywords = ref<TabSearchKeywords>({ ...DEFAULT_SEARCH_KEYWORDS })
-  // 服务器背景图片列表
   const serverBackgrounds = ref<PresetBackground[]>([])
-  // 是否有本地存储的配置（用于判断是否使用服务器默认背景）
+  /** 本地是否已有配置：有则忽略服务器默认配置 */
   const hasStoredConfig = ref(false)
 
-  // 计算属性：实际生效的主题
-  const effectiveTheme = computed(() => config.value.theme)
-
-  // 计算属性：所有可用背景（预设 + 服务器）
-  const allBackgrounds = computed(() => {
-    return [...PRESET_BACKGROUNDS, ...serverBackgrounds.value]
-  })
-
-  // 计算属性：背景样式
-  const backgroundStyle = computed(() => {
-    const bg = config.value.background
-
-    // 自定义背景
-    if (bg === 'custom' && config.value.customBgUrl) {
-      return {
-        backgroundImage: `url(${config.value.customBgUrl})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }
-    }
-
-    // 预设背景
-    const preset = PRESET_BACKGROUNDS.find(p => p.id === bg)
-    if (preset) {
-      return { background: preset.value }
-    }
-
-    // 服务器背景图片
-    const serverBg = serverBackgrounds.value.find(p => p.id === bg)
-    if (serverBg) {
-      return {
-        backgroundImage: `url(${serverBg.value})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }
-    }
-
-    // 默认渐变
-    return { background: PRESET_BACKGROUNDS[0].value }
-  })
-
-  // 快捷访问器
   const theme = computed(() => config.value.theme)
   const layout = computed(() => config.value.layout)
   const dockerLayout = computed(() => config.value.dockerLayout)
   const luckyServicesLayout = computed(() => config.value.luckyServicesLayout)
-  const layoutScale = computed(() => config.value.layoutScale)
-  const siteCardSize = computed(() => config.value.siteCardSize)
-  const siteCardShape = computed(() => config.value.siteCardShape)
-  const networkMode = computed(() => config.value.networkMode)
   const currentTab = computed(() => config.value.currentTab)
-  
-  // 当前分组选择（支持多选）
-  const currentGroup = computed<GroupSelection>(() => {
-    const tab = config.value.currentTab
-    return config.value.tabGroups[tab] || 'all'
-  })
-  
-  // 当前分组选择的规范化数组形式
-  const currentGroupArray = computed<string[]>(() => {
-    const group = currentGroup.value
-    if (group === 'all') return []
-    if (Array.isArray(group)) return group
-    return [group]
-  })
-  
-  // 是否选中“全部”
-  const isAllSelected = computed(() => {
-    const group = currentGroup.value
-    return group === 'all' || (Array.isArray(group) && group.length === 0)
-  })
-  const showDescription = computed(() => config.value.showDescription)
-  const showTime = computed(() => config.value.showTime)
-  const showSearch = computed(() => config.value.showSearch)
+  const networkMode = computed(() => config.value.networkMode)
   const showHeader = computed(() => config.value.showHeader)
-  const searchEngine = computed(() => config.value.searchEngine)
-  const customSearchUrl = computed(() => config.value.customSearchUrl)
-  // 当前标签页的搜索关键字
-  const currentSearchKeyword = computed(() => {
-    const tab = config.value.currentTab
-    return searchKeywords.value[tab] || ''
+  const showTime = computed(() => config.value.showTime)
+  const showDescription = computed(() => config.value.showDescription)
+
+  const currentGroup = computed<GroupSelection>(() => config.value.tabGroups[config.value.currentTab] ?? 'all')
+  const currentGroupArray = computed<string[]>(() =>
+    currentGroup.value === 'all' ? [] : Array.isArray(currentGroup.value) ? currentGroup.value : [currentGroup.value]
+  )
+  const isAllSelected = computed(() => currentGroupArray.value.length === 0)
+  const currentSearchKeyword = computed(() => searchKeywords.value[config.value.currentTab] ?? '')
+
+  const allBackgrounds = computed(() => [...PRESET_BACKGROUNDS, ...serverBackgrounds.value])
+
+  /** 背景样式：custom → 服务器图 → 预设渐变 → 首张预设 */
+  const backgroundStyle = computed<CSSProperties>(() => {
+    const id = config.value.background
+    if (id === 'custom' && config.value.customBgUrl) {
+      return { backgroundImage: `url(${config.value.customBgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+    }
+    const server = serverBackgrounds.value.find(bg => bg.id === id)
+    if (server) {
+      return { backgroundImage: `url(${server.value})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+    }
+    const preset = PRESET_BACKGROUNDS.find(bg => bg.id === id)
+    return { background: preset?.value ?? PRESET_BACKGROUNDS[0].value }
   })
 
-  // 加载配置
-  function loadConfig() {
+  function saveConfig() {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY)
-      if (stored) {
-        const parsed = JSON.parse(stored)
-        config.value = { ...DEFAULT_CONFIG, ...parsed }
-        hasStoredConfig.value = true
-      } else {
-        hasStoredConfig.value = false
-      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(config.value))
     } catch (e) {
-      console.warn('Failed to load config:', e)
-      hasStoredConfig.value = false
-    }
-
-    // 验证主题有效性
-    const validThemes = THEME_IDS
-    if (!validThemes.includes(config.value.theme)) {
-      config.value.theme = 'dark'
-      saveConfig()
+      console.warn('保存配置失败', e)
     }
   }
 
-  // 应用服务器配置（作为默认值，仅在没有本地配置时使用）
-  // 如果服务器配置不可用或无效，将使用内置默认配置
-  // 注意：background 字段会特殊处理，如果已有服务器背景图片则优先使用
-  function applyServerConfig(serverConfig: Record<string, unknown> | null | undefined) {
-    // 安全检查：配置不存在或为空
-    if (!serverConfig || typeof serverConfig !== 'object' || Object.keys(serverConfig).length === 0) {
-      console.log('No valid server config provided, using defaults')
-      return
+  function loadConfig() {
+    let stored: Record<string, unknown> | null = null
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      if (raw) stored = JSON.parse(raw) as Record<string, unknown>
+    } catch (e) {
+      console.warn('读取配置失败，使用默认值', e)
     }
-
-    // 如果已有本地配置，不覆盖
-    if (hasStoredConfig.value) {
-      console.log('Local config exists, skipping server config')
-      return
-    }
-
-    console.log('Applying server config as defaults:', serverConfig)
-    
-    // 应用配置模板中定义的字段
-    const validKeys: (keyof UserConfig)[] = [
-      'theme', 'background', 'layout', 'dockerLayout', 'luckyServicesLayout',
-      'layoutScale', 'siteCardSize', 'siteCardShape', 'networkMode', 'currentTab', 'showDescription', 'showTime',
-      'showSearch', 'showHeader', 'searchEngine', 'customSearchUrl',
-      'detailTextContrast', 'detailRadiusScale', 'detailGlassBlurScale',
-      'detailGlassOpacityScale', 'detailReduceMotion'
-    ]
-
-    let hasChanges = false
-    for (const key of validKeys) {
-      if (key in serverConfig && serverConfig[key] !== undefined) {
-        // 特殊处理 background 字段：如果已有服务器背景图片，优先使用服务器背景
-        if (key === 'background' && serverBackgrounds.value.length > 0) {
-          // 已有服务器背景图片链接，跳过服务器配置中的默认背景设置
-          console.log('Server backgrounds exist, skipping default background config')
-          continue
-        }
-        
-        try {
-          const value = serverConfig[key] as UserConfig[typeof key]
-          if (config.value[key] !== value) {
-            (config.value as any)[key] = value
-            hasChanges = true
-          }
-        } catch (e) {
-          // 忽略单个字段的错误，继续处理其他字段
-          console.warn(`Failed to apply server config field '${key}':`, e)
-        }
-      }
-    }
-
-    if (hasChanges) {
-      saveConfig()
-    }
+    hasStoredConfig.value = stored !== null
+    config.value = normalizeConfig(stored ?? DEFAULT_CONFIG)
+    // 旧结构迁移后立刻回写，避免每次启动重复迁移
+    if (stored) saveConfig()
   }
 
-  // 设置服务器背景图片
-  // 优先级：服务器背景图片链接 > 预设渐变背景
-  // 如果有服务器背景图片链接，默认使用第一个背景图片
+  /** 服务器下发的默认配置：仅当本地尚未保存过配置时生效 */
+  function applyServerConfig(raw: unknown) {
+    if (hasStoredConfig.value) return
+    if (!raw || typeof raw !== 'object' || Object.keys(raw as object).length === 0) return
+    const merged: Record<string, unknown> = { ...config.value }
+    for (const key of CONFIG_KEYS) {
+      const value = (raw as Record<string, unknown>)[key]
+      if (value !== undefined) merged[key] = value
+    }
+    // 服务器背景已存在时，不允许默认配置把背景改回预设渐变
+    if (serverBackgrounds.value.length > 0) merged.background = config.value.background
+    config.value = normalizeConfig(merged)
+    saveConfig()
+  }
+
   function setServerBackgrounds(urls: string[]) {
-    // 过滤空值
-    const validUrls = urls.filter(url => url && url.trim() !== '')
-    
-    serverBackgrounds.value = validUrls.map((url, index) => ({
+    const valid = urls.filter(url => url && url.trim() !== '')
+    serverBackgrounds.value = valid.map((url, index) => ({
       id: `server_${index}`,
       name: `服务器背景 ${index + 1}`,
       type: 'image' as const,
       value: url
     }))
-    
-    // 如果没有本地配置且有服务器背景图片链接，优先使用第一个背景图片
-    // 这确保了：背景图片链接 > 预设渐变背景
-    if (!hasStoredConfig.value && validUrls.length > 0) {
+    if (!hasStoredConfig.value && valid.length > 0) {
       config.value.background = 'server_0'
-      console.log('Using server background image as default:', validUrls[0])
       saveConfig()
       return
     }
-    
-    // 如果有本地配置，检查当前背景是否有效
     validateCurrentBackground()
   }
 
-  // 验证当前背景是否有效，无效则切换到默认
   function validateCurrentBackground() {
-    const bg = config.value.background
-    // 自定义背景不验证
-    if (bg === 'custom') return
-    // 检查是否在预设背景中
-    const inPreset = PRESET_BACKGROUNDS.some(p => p.id === bg)
-    if (inPreset) return
-    // 检查是否在服务器背景中
-    const inServer = serverBackgrounds.value.some(p => p.id === bg)
-    if (inServer) return
-    // 无效，切换到默认背景
-    console.warn(`Background "${bg}" is invalid, switching to default`)
+    const id = config.value.background
+    if (id === 'custom') return
+    if (PRESET_BACKGROUNDS.some(bg => bg.id === id)) return
+    if (serverBackgrounds.value.some(bg => bg.id === id)) return
     config.value.background = DEFAULT_CONFIG.background
     saveConfig()
   }
 
-  // 保存配置
-  function saveConfig() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(config.value))
-    } catch (e) {
-      console.warn('Failed to save config:', e)
-    }
-  }
-
-  // 更新单个配置项
   function updateConfig<K extends keyof UserConfig>(key: K, value: UserConfig[K]) {
     config.value[key] = value
     saveConfig()
   }
 
-  // 设置主题
-  function setTheme(theme: ThemeMode) {
-    updateConfig('theme', theme)
-  }
+  const setTheme = (value: ThemeMode) => updateConfig('theme', value)
+  const setLayout = (value: LayoutMode) => updateConfig('layout', value)
+  const setDockerLayout = (value: LayoutMode) => updateConfig('dockerLayout', value)
+  const setLuckyServicesLayout = (value: LayoutMode) => updateConfig('luckyServicesLayout', value)
 
-  // 设置布局
-  function setLayout(layout: LayoutMode) {
-    updateConfig('layout', layout)
-  }
-
-  // 设置 Docker 布局
-  function setDockerLayout(layout: LayoutMode) {
-    updateConfig('dockerLayout', layout)
-  }
-
-  // 设置 Lucky 服务布局
-  function setLuckyServicesLayout(layout: LayoutMode) {
-    updateConfig('luckyServicesLayout', layout)
-  }
-
-  // 设置布局缩放比例
-  function setLayoutScale(scale: number) {
-    updateConfig('layoutScale', scale)
-  }
-
-  // 设置站点卡片尺寸（百分比）
-  function setSiteCardSize(size: number) {
-    updateConfig('siteCardSize', size)
-  }
-
-  // 设置站点卡片形状
-  function setSiteCardShape(shape: 'square' | 'rect') {
-    updateConfig('siteCardShape', shape)
-  }
-
-  // 设置网络模式
-  function setNetworkMode(mode: NetworkMode) {
-    updateConfig('networkMode', mode)
-  }
-
-  // 设置当前标签页
   function setCurrentTab(tab: TabType) {
-    updateConfig('currentTab', tab)
+    if (config.value.currentTab !== tab) updateConfig('currentTab', tab)
   }
 
-  // 设置当前分组（根据当前标签页）- 支持多选
-  function setCurrentGroup(group: GroupSelection) {
-    const tab = config.value.currentTab
-    const newTabGroups = { ...config.value.tabGroups, [tab]: group }
-    updateConfig('tabGroups', newTabGroups)
+  function setCurrentGroup(selection: GroupSelection) {
+    updateConfig('tabGroups', { ...config.value.tabGroups, [config.value.currentTab]: selection })
   }
-  
-  // 切换分组选中状态（多选模式）
+
+  /** 多选切换：点「全部」清空，点已选项移除，点未选项追加 */
   function toggleGroup(groupKey: string) {
-    const tab = config.value.currentTab
-    const current = config.value.tabGroups[tab]
-    
-    // 如果点击“全部”，直接设置为 'all'
     if (groupKey === 'all') {
       setCurrentGroup('all')
       return
     }
-    
-    // 当前是 'all'，切换到单选该分组
-    if (current === 'all') {
-      setCurrentGroup([groupKey])
-      return
-    }
-    
-    // 当前是数组
-    if (Array.isArray(current)) {
-      const index = current.indexOf(groupKey)
-      if (index >= 0) {
-        // 已选中，取消选中
-        const newSelection = current.filter(k => k !== groupKey)
-        // 如果没有选中项了，回到 'all'
-        setCurrentGroup(newSelection.length > 0 ? newSelection : 'all')
-      } else {
-        // 未选中，添加选中
-        setCurrentGroup([...current, groupKey])
-      }
-      return
-    }
-    
-    // 当前是单个字符串（旧格式单选）
-    if (current === groupKey) {
-      // 点击已选中的，取消选中回到 'all'
-      setCurrentGroup('all')
-    } else {
-      // 点击未选中的，添加到选中列表
-      setCurrentGroup([current, groupKey])
-    }
-  }
-  
-  // 检查分组是否被选中
-  function isGroupSelected(groupKey: string): boolean {
-    const group = currentGroup.value
-    if (groupKey === 'all') {
-      return group === 'all' || (Array.isArray(group) && group.length === 0)
-    }
-    if (group === 'all') return false
-    if (Array.isArray(group)) return group.includes(groupKey)
-    return group === groupKey
+    const selected = currentGroupArray.value
+    const next = selected.includes(groupKey) ? selected.filter(k => k !== groupKey) : [...selected, groupKey]
+    setCurrentGroup(next.length === 0 ? 'all' : next)
   }
 
-  // 重置当前标签页的分组到全部
-  function resetCurrentTabGroup() {
-    setCurrentGroup('all')
+  function isGroupSelected(groupKey: string) {
+    if (groupKey === 'all') return isAllSelected.value
+    return currentGroupArray.value.includes(groupKey)
   }
 
-  // 设置当前标签页的搜索关键字
-  function setSearchKeyword(keyword: string) {
-    const tab = config.value.currentTab
-    searchKeywords.value[tab] = keyword
+  const setSearchKeyword = (keyword: string) => {
+    searchKeywords.value[config.value.currentTab] = keyword
   }
 
-  // 清空当前标签页的搜索关键字
-  function clearSearchKeyword() {
-    setSearchKeyword('')
+  function setBackground(id: string, customUrl?: string) {
+    updateConfig('background', id)
+    if (customUrl !== undefined) updateConfig('customBgUrl', customUrl)
   }
 
-  // 清空所有搜索关键字
-  function clearAllSearchKeywords() {
-    searchKeywords.value = { ...DEFAULT_SEARCH_KEYWORDS }
-  }
-
-  // 设置背景
-  function setBackground(bgId: string, customUrl?: string) {
-    updateConfig('background', bgId)
-    if (customUrl !== undefined) {
-      updateConfig('customBgUrl', customUrl)
-    }
-  }
-
-  // 设置是否显示搜索栏
-  function setShowSearch(show: boolean) {
-    updateConfig('showSearch', show)
-  }
-
-  // 设置搜索引擎
-  function setSearchEngine(engineId: string) {
-    updateConfig('searchEngine', engineId)
-  }
-
-  // 设置自定义搜索引擎 URL
-  function setCustomSearchUrl(url: string) {
-    updateConfig('customSearchUrl', url)
-  }
-
-  // 切换设置面板
   function toggleSettingsPanel(open?: boolean) {
     settingsPanelOpen.value = open ?? !settingsPanelOpen.value
   }
 
-  // 重置配置
   function resetConfig() {
-    config.value = { ...DEFAULT_CONFIG }
+    config.value = { ...DEFAULT_CONFIG, tabGroups: { ...DEFAULT_TAB_GROUPS } }
     saveConfig()
   }
 
   return {
-    // 状态
     config,
     settingsPanelOpen,
     searchKeywords,
     serverBackgrounds,
+    hasStoredConfig,
 
-    // 计算属性
-    effectiveTheme,
-    backgroundStyle,
-    allBackgrounds,
     theme,
     layout,
     dockerLayout,
     luckyServicesLayout,
-    layoutScale,
-    siteCardSize,
-    siteCardShape,
-    networkMode,
     currentTab,
+    networkMode,
+    showHeader,
+    showTime,
+    showDescription,
     currentGroup,
     currentGroupArray,
     isAllSelected,
-    showDescription,
-    showTime,
-    showSearch,
-    showHeader,
-    searchEngine,
-    customSearchUrl,
     currentSearchKeyword,
+    allBackgrounds,
+    backgroundStyle,
 
-    // 方法
     loadConfig,
     saveConfig,
     updateConfig,
     applyServerConfig,
+    setServerBackgrounds,
+    validateCurrentBackground,
     setTheme,
     setLayout,
     setDockerLayout,
     setLuckyServicesLayout,
-    setLayoutScale,
-    setSiteCardSize,
-    setSiteCardShape,
-    setNetworkMode,
     setCurrentTab,
     setCurrentGroup,
     toggleGroup,
     isGroupSelected,
-    resetCurrentTabGroup,
     setSearchKeyword,
-    clearSearchKeyword,
-    clearAllSearchKeywords,
     setBackground,
-    setShowSearch,
-    setSearchEngine,
-    setCustomSearchUrl,
-    setServerBackgrounds,
-    validateCurrentBackground,
     toggleSettingsPanel,
     resetConfig
   }

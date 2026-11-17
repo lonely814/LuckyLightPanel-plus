@@ -10,8 +10,8 @@ describe('normalizeGroupSelection', () => {
     expect(normalizeGroupSelection(['a', 'b'])).toEqual(['a', 'b'])
   })
 
-  it('单字符串包成数组', () => {
-    expect(normalizeGroupSelection('a')).toEqual(['a'])
+  it('空数组原样返回', () => {
+    expect(normalizeGroupSelection([])).toEqual([])
   })
 })
 
@@ -20,7 +20,7 @@ describe('pruneGroupSelection', () => {
 
   it('全部存活时不变更（关键回归：多选不应被重置）', () => {
     expect(pruneGroupSelection(['apps', 'db'], available)).toBeNull()
-    expect(pruneGroupSelection('apps', available)).toBeNull()
+    expect(pruneGroupSelection(['apps'], available)).toBeNull()
   })
 
   it('部分失效时只剔除失效项', () => {
@@ -29,7 +29,6 @@ describe('pruneGroupSelection', () => {
 
   it('全部失效时回落 all', () => {
     expect(pruneGroupSelection(['gone', 'dead'], available)).toBe('all')
-    expect(pruneGroupSelection('gone', available)).toBe('all')
   })
 
   it('all / 空数组不触发变更', () => {

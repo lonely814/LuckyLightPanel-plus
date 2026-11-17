@@ -1,6 +1,6 @@
-// ============ 全局配置类型 ============
+// ============ 后端契约（与 public/backend/*.json 一一对应） ============
 
-/** 全局配置 */
+/** nav.json */
 export interface NavConfig {
   version?: string
   settings: NavSettings
@@ -9,7 +9,6 @@ export interface NavConfig {
   luckyServicesEnabled?: boolean
 }
 
-/** 面板设置 */
 export interface NavSettings {
   title: string
   subtitle?: string
@@ -19,9 +18,7 @@ export interface NavSettings {
   custom?: Record<string, unknown>
 }
 
-// ============ 分组类型 ============
-
-/** 分组 */
+/** 分组（sites / docker / luckyservices 共用结构） */
 export interface Group {
   key: string
   name: string
@@ -30,9 +27,7 @@ export interface Group {
   count?: number
 }
 
-// ============ 站点类型 ============
-
-/** 站点数据响应 */
+/** sites.json */
 export interface SitesData {
   networkType: NetworkType
   clientIP: string
@@ -40,7 +35,6 @@ export interface SitesData {
   sites: Site[]
 }
 
-/** 站点 */
 export interface Site {
   key: string
   name: string
@@ -54,15 +48,12 @@ export interface Site {
   target?: string
 }
 
-// ============ Docker 类型 ============
-
-/** Docker 数据响应 */
+/** docker.json */
 export interface DockerData {
   groups: Group[]
   containers: DockerContainer[]
 }
 
-/** Docker 容器 */
 export interface DockerContainer {
   key: string
   containerName: string
@@ -71,7 +62,7 @@ export interface DockerContainer {
   description?: string
   iconUrl?: string
   state?: DockerState
-  status?: string // 状态详情，包含运行时长，如 "Up 2 hours" 或 "Exited (0) 3 days ago"
+  status?: string
   groupKey?: string
   order?: number
   enable?: boolean
@@ -79,43 +70,38 @@ export interface DockerContainer {
   composeProject?: string
 }
 
-/** Docker 容器状态 */
 export type DockerState = 'running' | 'exited' | 'paused' | 'restarting' | 'created' | 'unknown'
 
-/** Docker 统计数据响应 */
+/** docker-stats.json（字段可能缺失，见 tests/contract） */
 export interface DockerStatsResponse {
   ret: number
   stats: DockerStat[]
 }
 
-/** Docker 容器统计 */
 export interface DockerStat {
-  key: string
+  key?: string
   containerName: string
   displayName?: string
   iconUrl?: string
   state: string
-  status?: string // 状态详情，包含运行时长，如 "Up 2 hours" 或 "Exited (0) 3 days ago"
-  cpuPercent: string
-  memoryUsage: string
-  memoryPercent: string
-  networkRx: string
-  networkTx: string
-  networkRxSpeed: number
-  networkTxSpeed: number
+  status?: string
+  cpuPercent?: string
+  memoryUsage?: string
+  memoryPercent?: string
+  networkRx?: string
+  networkTx?: string
+  networkRxSpeed?: number
+  networkTxSpeed?: number
   diskReadSpeed?: number
   diskWriteSpeed?: number
 }
 
-// ============ Lucky 服务类型 ============
-
-/** Lucky 服务数据响应 */
+/** luckyservices.json */
 export interface LuckyServicesData {
   groups: Group[]
   services: LuckyService[]
 }
 
-/** Lucky 服务 */
 export interface LuckyService {
   key: string
   name: string
@@ -131,87 +117,56 @@ export interface LuckyService {
   publicAddr?: string
 }
 
-/** 服务类型 */
 export type ServiceType = 'webservice' | 'webservice-main' | 'webservice-default' | 'portforward' | 'stun'
-
-/** 服务状态 */
 export type ServiceState = 'running' | 'enabled' | 'stopped' | 'disabled' | 'error' | 'unknown'
 
-/** Lucky 服务统计数据响应 */
+/** luckyservices-stats.json */
 export interface LuckyServicesStatsResponse {
   ret: number
   stats: LuckyServiceStat[]
 }
 
-/** Lucky 服务统计 */
 export interface LuckyServiceStat {
   key: string
   state: string
   displayName?: string
   iconUrl?: string
-  tcpCurrentConnections: number
-  udpCurrentConnections: number
-  trafficIn: number
-  trafficOut: number
-  inSpeed: number
-  outSpeed: number
+  tcpCurrentConnections?: number
+  udpCurrentConnections?: number
+  trafficIn?: number
+  trafficOut?: number
+  inSpeed?: number
+  outSpeed?: number
   publicAddr?: string
 }
 
-// ============ 网络类型 ============
-
 /** 网络类型 */
 export type NetworkType = 'internal' | 'external'
-
-/** 网络模式 */
 export type NetworkMode = 'auto' | 'internal' | 'external' | 'hybrid'
 
-/** 网络类型响应 */
 export interface NetworkTypeResponse {
   networkType: NetworkType
   clientIP: string
 }
 
-// ============ 用户配置类型 ============
+// ============ 前端配置 ============
 
-/** 主题模式 */
-export type ThemeMode = 'light' | 'dark' | 'blueprint' | 'bauhaus' | 'crt-terminal' | 'light-panel' | 'console' | 'receipt' | 'arctic-aurora'
+/** 主题：只保留浅色/深色 */
+export type ThemeMode = 'light' | 'dark'
+export const THEME_IDS: readonly ThemeMode[] = ['light', 'dark'] as const
 
-/** 所有主题 ID（单一来源，主题注册表与配置校验共用） */
-export const THEME_IDS: ThemeMode[] = ['light', 'dark', 'blueprint', 'bauhaus', 'crt-terminal', 'light-panel', 'console', 'receipt', 'arctic-aurora']
+/** 布局：只保留卡片/紧凑 */
+export type LayoutMode = 'card' | 'compact'
+export const LAYOUT_IDS: readonly LayoutMode[] = ['card', 'compact'] as const
 
-/** 布局模式 */
-export type LayoutMode = 'compact' | 'normal' | 'large' | 'list' | 'minimal' | 'rack' | 'map'
-
-/** 标签页 */
 export type TabType = 'sites' | 'docker' | 'luckyServices'
+export const TAB_IDS: readonly TabType[] = ['sites', 'docker', 'luckyServices'] as const
 
-/** 分组选择值类型：支持单选(string)或多选(string[]) */
-export type GroupSelection = string | string[]
+/** 分组选择：'all' 或选中键数组（空数组等价 all） */
+export type GroupSelection = 'all' | string[]
+export type TabGroups = Record<TabType, GroupSelection>
+export type TabSearchKeywords = Record<TabType, string>
 
-/** 各标签页的分组状态 */
-export interface TabGroups {
-  sites: GroupSelection
-  docker: GroupSelection
-  luckyServices: GroupSelection
-}
-
-/** 各标签页的搜索关键字 */
-export interface TabSearchKeywords {
-  sites: string
-  docker: string
-  luckyServices: string
-}
-
-/** 搜索引擎 */
-export interface SearchEngine {
-  id: string
-  name: string
-  url: string
-  icon: string
-}
-
-/** 用户配置 */
 export interface UserConfig {
   theme: ThemeMode
   background: string
@@ -221,18 +176,13 @@ export interface UserConfig {
   luckyServicesLayout: LayoutMode
   layoutScale: number
   siteCardSize: number
-  siteCardShape: 'square' | 'rect'
   showDescription: boolean
   showTime: boolean
-  showSearch: boolean
   showHeader: boolean
-  searchEngine: string
-  customSearchUrl: string
   tabGroups: TabGroups
   networkMode: NetworkMode
   currentTab: TabType
-
-  // 细节调整（百分比，100 = 主题默认）
+  /** 以下为百分比，100 = 主题默认 */
   detailTextContrast: number
   detailRadiusScale: number
   detailGlassBlurScale: number
@@ -240,9 +190,6 @@ export interface UserConfig {
   detailReduceMotion: boolean
 }
 
-// ============ 预设背景类型 ============
-
-/** 预设背景 */
 export interface PresetBackground {
   id: string
   name: string
@@ -250,9 +197,6 @@ export interface PresetBackground {
   value: string
 }
 
-// ============ 链接项类型 ============
-
-/** 链接项（用于下拉菜单） */
 export interface LinkItem {
   url: string
   label: string

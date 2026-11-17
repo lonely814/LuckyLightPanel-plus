@@ -1,23 +1,22 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useConfigStore } from './config'
 import type {
-  NavConfig,
-  SitesData,
+  DockerContainer,
   DockerData,
-  DockerStatsResponse,
   DockerStat,
+  DockerStatsResponse,
+  Group,
+  LuckyService,
+  LuckyServiceStat,
   LuckyServicesData,
   LuckyServicesStatsResponse,
-  LuckyServiceStat,
+  NavConfig,
+  NetworkType,
   Site,
-  DockerContainer,
-  LuckyService,
-  Group,
-  NetworkType
+  SitesData
 } from '@/types'
 
-// API 路径
 const API = {
   nav: './backend/nav.json',
   sites: './backend/sites.json',
@@ -27,358 +26,247 @@ const API = {
   luckyServicesStats: './backend/luckyservices-stats.json',
   networkType: './backend/api/network-type',
   config: './backend/default-config.json'
+} as const
+
+const POLL_INTERVAL = 5000
+const HISTORY_LIMIT = 60
+const HISTORY_KEYS = ['cpu', 'memory', 'rx', 'tx'] as const
+
+export interface DockerHistory {
+  cpu: number[]
+  memory: number[]
+  rx: number[]
+  tx: number[]
+}
+
+export interface LuckyHistory {
+  inSpeed: number[]
+  outSpeed: number[]
+}
+
+/** 追加一个样本，超过上限丢弃最旧的 */
+export function pushSample(series: number[], value: number, limit = HISTORY_LIMIT): number[] {
+  const next = series.length >= limit ? series.slice(series.length - limit + 1) : series.slice()
+  next.push(value)
+  return next
+}
+
+function byOrder<T extends { order?: number; enable?: boolean }>(items: T[]): T[] {
+  return items.filter(item => item.enable !== false).sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+}
+
+async function fetchJson<T>(url: string): Promise<T | null> {
+  try {
+    const response = await fetch(url)
+    if (!response.ok) return null
+    return (await response.json()) as T
+  } catch {
+    return null
+  }
 }
 
 export const useNavStore = defineStore('nav', () => {
-  // 加载状态
   const isLoading = ref(true)
 
-  // 全局配置
   const navConfig = ref<NavConfig | null>(null)
-
-  // 站点数据
   const sitesData = ref<SitesData | null>(null)
+  const dockerData = ref<DockerData | null>(null)
+  const luckyServicesData = ref<LuckyServicesData | null>(null)
+
   const networkType = ref<NetworkType>('external')
-  const networkTypeFetchFailed = ref(false)  // 网络类型查询是否失败
+  const networkTypeFetchFailed = ref(false)
   const clientIP = ref('')
 
-  // Docker 数据
-  const dockerData = ref<DockerData | null>(null)
-  const dockerStats = ref<Map<string, DockerStat>>(new Map())
-  const dockerStatsTimer = ref<ReturnType<typeof setInterval> | null>(null)
+  const dockerStats = ref(new Map<string, DockerStat>())
+  const luckyServicesStats = ref(new Map<string, LuckyServiceStat>())
+  const dockerHistory = ref(new Map<string, DockerHistory>())
+  const luckyServicesHistory = ref(new Map<string, LuckyHistory>())
 
-  // Lucky 服务数据
-  const luckyServicesData = ref<LuckyServicesData | null>(null)
-  const luckyServicesStats = ref<Map<string, LuckyServiceStat>>(new Map())
-  const luckyServicesStatsTimer = ref<ReturnType<typeof setInterval> | null>(null)
+  const siteGroups = computed<Group[]>(() => sitesData.value?.groups ?? [])
+  const dockerGroups = computed<Group[]>(() => dockerData.value?.groups ?? [])
+  const luckyServicesGroups = computed<Group[]>(() => luckyServicesData.value?.groups ?? [])
 
-  // 历史数据（用于实时走势图）
-  const HISTORY_LIMIT = 60
-  interface DockerHistoryEntry {
-    cpu: number[]
-    memory: number[]
-    rx: number[]
-    tx: number[]
-  }
-  interface LuckyHistoryEntry {
-    inSpeed: number[]
-    outSpeed: number[]
-  }
-  const dockerHistory = ref<Map<string, DockerHistoryEntry>>(new Map())
-  const luckyServicesHistory = ref<Map<string, LuckyHistoryEntry>>(new Map())
+  const allSites = computed<Site[]>(() => byOrder(sitesData.value?.sites ?? []))
+  const allContainers = computed<DockerContainer[]>(() => byOrder(dockerData.value?.containers ?? []))
+  const allLuckyServices = computed<LuckyService[]>(() => byOrder(luckyServicesData.value?.services ?? []))
 
-  // 配置数据
-  const serverConfig = ref<Record<string, any>>({}) // 服务器下发的用户配置
-
-  // 计算属性：站点分组
-  const siteGroups = computed<Group[]>(() => {
-    return sitesData.value?.groups || []
-  })
-
-  // 计算属性：所有站点
-  const allSites = computed<Site[]>(() => {
-    const sites = sitesData.value?.sites || []
-    return sites.filter((s: Site) => s.enable !== false).sort((a: Site, b: Site) => (a.order || 0) - (b.order || 0))
-  })
-
-  // 计算属性：Docker 分组
-  const dockerGroups = computed<Group[]>(() => {
-    return dockerData.value?.groups || []
-  })
-
-  // 计算属性：所有 Docker 容器
-  const allContainers = computed<DockerContainer[]>(() => {
-    const containers = dockerData.value?.containers || []
-    return containers.filter((c: DockerContainer) => c.enable !== false).sort((a: DockerContainer, b: DockerContainer) => (a.order || 0) - (b.order || 0))
-  })
-
-  // 计算属性：Lucky 服务分组
-  const luckyServicesGroups = computed<Group[]>(() => {
-    return luckyServicesData.value?.groups || []
-  })
-
-  // 计算属性：所有 Lucky 服务
-  const allLuckyServices = computed<LuckyService[]>(() => {
-    const services = luckyServicesData.value?.services || []
-    return services.filter((s: LuckyService) => s.enable !== false).sort((a: LuckyService, b: LuckyService) => (a.order || 0) - (b.order || 0))
-  })
-
-  // 计算属性：面板标题
-  const panelTitle = computed(() => {
-    return navConfig.value?.settings?.title || '轻面板'
-  })
-
-  // 计算属性：面板副标题
-  const panelSubtitle = computed(() => {
-    return navConfig.value?.settings?.subtitle || ''
-  })
-
-  // 计算属性：面板 Logo
-  const panelLogo = computed(() => {
-    return navConfig.value?.settings?.logo || ''
-  })
-
-  // 计算属性：面板 Favicon
-  const panelFavicon = computed(() => {
-    return navConfig.value?.settings?.favicon || ''
-  })
-
-  // 计算属性：模块启用状态
   const sitesEnabled = computed(() => navConfig.value?.sitesEnabled !== false)
   const dockerEnabled = computed(() => navConfig.value?.dockerEnabled === true)
   const luckyServicesEnabled = computed(() => navConfig.value?.luckyServicesEnabled === true)
 
-  // 异步加载 JSON
-  async function fetchJson<T>(url: string): Promise<T | null> {
-    try {
-      const response = await fetch(url)
-      if (!response.ok) return null
-      return await response.json()
-    } catch {
-      return null
-    }
-  }
+  const panelTitle = computed(() => navConfig.value?.settings?.title || '轻面板')
+  const panelSubtitle = computed(() => navConfig.value?.settings?.subtitle || '')
+  const panelFavicon = computed(() => navConfig.value?.settings?.favicon || '')
+  const panelLogo = computed(() => navConfig.value?.settings?.logo || '')
 
-  // 加载基础配置（nav.json）
   async function loadNavConfig() {
-    const config = await fetchJson<NavConfig>(API.nav)
-    if (config) {
-      navConfig.value = config
-      // 设置服务器背景图片
-      const configStore = useConfigStore()
-      const bgImages = config.settings?.backgroundImages || []
-      configStore.setServerBackgrounds(bgImages)
-    }
-    return config
+    const data = await fetchJson<NavConfig>(API.nav)
+    if (!data) return null
+    navConfig.value = data
+    useConfigStore().setServerBackgrounds(data.settings?.backgroundImages ?? [])
+    return data
   }
 
-  // 加载站点数据
   async function loadSitesData() {
     const data = await fetchJson<SitesData>(API.sites)
-    if (data) {
-      sitesData.value = data
-      networkType.value = data.networkType || 'external'
-      clientIP.value = data.clientIP || ''
-    }
+    if (!data) return null
+    sitesData.value = data
+    networkType.value = data.networkType || 'external'
+    clientIP.value = data.clientIP || ''
     return data
   }
 
-  // 加载 Docker 数据
   async function loadDockerData() {
     const data = await fetchJson<DockerData>(API.docker)
-    if (data) {
-      dockerData.value = data
-      // 数据重新加载时清空历史，避免混入旧样本
-      dockerHistory.value = new Map()
-    }
+    if (!data) return null
+    dockerData.value = data
+    dockerHistory.value = new Map()
     return data
   }
 
-  // 加载 Lucky 服务数据
   async function loadLuckyServicesData() {
     const data = await fetchJson<LuckyServicesData>(API.luckyServices)
-    if (data) {
-      luckyServicesData.value = data
-      // 数据重新加载时清空历史，避免混入旧样本
-      luckyServicesHistory.value = new Map()
-    }
+    if (!data) return null
+    luckyServicesData.value = data
+    luckyServicesHistory.value = new Map()
     return data
   }
 
-  // 获取网络类型（用于自动/混合模式）
   async function fetchNetworkType() {
-    try {
-      const response = await fetch(API.networkType)
-      if (response.ok) {
-        const data = await response.json()
-        if (data.networkType) {
-          networkType.value = data.networkType
-          clientIP.value = data.clientIP || ''
-          networkTypeFetchFailed.value = false  // 查询成功
-          console.log('Network type updated:', networkType.value, 'Client IP:', clientIP.value)
-          return
-        }
-      }
-      // 响应不 ok 或没有 networkType 数据，视为失败
-      networkTypeFetchFailed.value = true
-      console.warn('Failed to fetch network type: invalid response')
-    } catch (error) {
-      networkTypeFetchFailed.value = true  // 查询失败
-      console.warn('Failed to fetch network type:', error)
+    const data = await fetchJson<{ networkType?: NetworkType; clientIP?: string }>(API.networkType)
+    if (data?.networkType) {
+      networkType.value = data.networkType
+      clientIP.value = data.clientIP || ''
+      networkTypeFetchFailed.value = false
+      return
     }
+    // 查询失败：auto 模式下降级为 hybrid（见 utils/siteLinks.ts）
+    networkTypeFetchFailed.value = true
   }
 
-  // 获取服务器配置
-  // 注意：此接口可能不存在（如开发模式或旧版本后端），需要优雅降级
-  async function fetchServerConfig(): Promise<Record<string, any> | null> {
-    try {
-      const response = await fetch(API.config)
-      if (!response.ok) {
-        // 404/500 等情况，静默失败，使用默认配置
-        console.log('Server config not available (HTTP %d), using defaults', response.status)
-        return null
-      }
-      const data = await response.json()
-      if (data.ret === 0) {
-        const config = data.config
-        // 检查配置是否有效（存在、非空对象、内容长度足够）
-        if (!config || typeof config !== 'object' || Object.keys(config).length === 0 || JSON.stringify(config).length < 20) {
-          console.log('Server config is empty or invalid, using defaults')
-          return null
-        }
-        serverConfig.value = config
-        console.log('Server config loaded:', serverConfig.value)
-        return config
-      } else {
-        console.log('Server config returned error (ret=%d), using defaults', data.ret)
-      }
-    } catch (error) {
-      // 网络错误、JSON解析错误等，静默失败
-      console.log('Failed to fetch server config, using defaults:', error instanceof Error ? error.message : error)
-    }
-    return null
+  /** 服务器默认配置；接口不存在时静默降级（老版本后端没有此接口） */
+  async function fetchServerConfig(): Promise<Record<string, unknown> | null> {
+    const data = await fetchJson<{ ret?: number; config?: Record<string, unknown> }>(API.config)
+    if (!data || data.ret !== 0 || !data.config) return null
+    if (Object.keys(data.config).length === 0) return null
+    return data.config
   }
 
-  // 加载 Docker 统计（防重入：上一轮未完成时跳过本次）
-  let dockerStatsInFlight = false
+  // ---- 统计轮询：上一轮未完成则跳过，避免慢接口堆积 ----
+  let dockerInFlight = false
+  let luckyInFlight = false
+  let dockerTimer: ReturnType<typeof setInterval> | null = null
+  let luckyTimer: ReturnType<typeof setInterval> | null = null
+
+  function recordDockerHistory(stat: DockerStat) {
+    const key = stat.containerName
+    const prev = dockerHistory.value.get(key) ?? { cpu: [], memory: [], rx: [], tx: [] }
+    dockerHistory.value.set(key, {
+      cpu: pushSample(prev.cpu, Number.parseFloat(stat.cpuPercent ?? '') || 0),
+      memory: pushSample(prev.memory, Number.parseFloat(stat.memoryPercent ?? '') || 0),
+      rx: pushSample(prev.rx, stat.networkRxSpeed ?? 0),
+      tx: pushSample(prev.tx, stat.networkTxSpeed ?? 0)
+    })
+  }
+
   async function loadDockerStats() {
-    if (dockerStatsInFlight) return
-    dockerStatsInFlight = true
+    if (dockerInFlight) return
+    dockerInFlight = true
     try {
       const data = await fetchJson<DockerStatsResponse>(API.dockerStats)
-      if (data?.ret === 0 && data.stats) {
-        const newStats = new Map<string, DockerStat>()
-        data.stats.forEach(stat => {
-          // 只用 containerName 作键：消费者都是 values() 遍历，双键会让同一容器重复上榜
-          newStats.set(stat.containerName, stat)
-          // 累积历史数据用于走势图
-          const entry = dockerHistory.value.get(stat.containerName) || { cpu: [], memory: [], rx: [], tx: [] }
-          entry.cpu = pushHistory(entry.cpu, parseFloat(stat.cpuPercent) || 0)
-          entry.memory = pushHistory(entry.memory, parseFloat(stat.memoryPercent) || 0)
-          entry.rx = pushHistory(entry.rx, stat.networkRxSpeed || 0)
-          entry.tx = pushHistory(entry.tx, stat.networkTxSpeed || 0)
-          dockerHistory.value.set(stat.containerName, entry)
-        })
-        dockerStats.value = newStats
+      if (data?.ret !== 0 || !data.stats) return
+      const next = new Map<string, DockerStat>()
+      for (const stat of data.stats) {
+        next.set(stat.containerName, stat)
+        recordDockerHistory(stat)
       }
+      dockerStats.value = next
     } finally {
-      dockerStatsInFlight = false
+      dockerInFlight = false
     }
   }
 
-  // 开始 Docker 统计轮询
-  function startDockerStatsPolling() {
-    stopDockerStatsPolling()
-    loadDockerStats()
-    dockerStatsTimer.value = setInterval(loadDockerStats, 5000)
-  }
-
-  // 停止 Docker 统计轮询
-  function stopDockerStatsPolling() {
-    if (dockerStatsTimer.value) {
-      clearInterval(dockerStatsTimer.value)
-      dockerStatsTimer.value = null
-    }
-  }
-
-  // 加载 Lucky 服务统计（防重入：上一轮未完成时跳过本次）
-  let luckyServicesStatsInFlight = false
   async function loadLuckyServicesStats() {
-    if (luckyServicesStatsInFlight) return
-    luckyServicesStatsInFlight = true
+    if (luckyInFlight) return
+    luckyInFlight = true
     try {
       const data = await fetchJson<LuckyServicesStatsResponse>(API.luckyServicesStats)
-      if (data?.ret === 0 && data.stats) {
-        const newStats = new Map<string, LuckyServiceStat>()
-        data.stats.forEach(stat => {
-          newStats.set(stat.key, stat)
-          // 累积历史数据用于走势图
-          const entry = luckyServicesHistory.value.get(stat.key) || { inSpeed: [], outSpeed: [] }
-          entry.inSpeed = pushHistory(entry.inSpeed, stat.inSpeed || 0)
-          entry.outSpeed = pushHistory(entry.outSpeed, stat.outSpeed || 0)
-          luckyServicesHistory.value.set(stat.key, entry)
+      if (data?.ret !== 0 || !data.stats) return
+      const next = new Map<string, LuckyServiceStat>()
+      for (const stat of data.stats) {
+        next.set(stat.key, stat)
+        const prev = luckyServicesHistory.value.get(stat.key) ?? { inSpeed: [], outSpeed: [] }
+        luckyServicesHistory.value.set(stat.key, {
+          inSpeed: pushSample(prev.inSpeed, stat.inSpeed ?? 0),
+          outSpeed: pushSample(prev.outSpeed, stat.outSpeed ?? 0)
         })
-        luckyServicesStats.value = newStats
       }
+      luckyServicesStats.value = next
     } finally {
-      luckyServicesStatsInFlight = false
+      luckyInFlight = false
     }
   }
 
-  // 开始 Lucky 服务统计轮询
+  function stopDockerStatsPolling() {
+    if (dockerTimer) {
+      clearInterval(dockerTimer)
+      dockerTimer = null
+    }
+  }
+
+  function startDockerStatsPolling() {
+    stopDockerStatsPolling()
+    void loadDockerStats()
+    dockerTimer = setInterval(() => void loadDockerStats(), POLL_INTERVAL)
+  }
+
+  function stopLuckyServicesStatsPolling() {
+    if (luckyTimer) {
+      clearInterval(luckyTimer)
+      luckyTimer = null
+    }
+  }
+
   function startLuckyServicesStatsPolling() {
     stopLuckyServicesStatsPolling()
-    loadLuckyServicesStats()
-    luckyServicesStatsTimer.value = setInterval(loadLuckyServicesStats, 5000)
+    void loadLuckyServicesStats()
+    luckyTimer = setInterval(() => void loadLuckyServicesStats(), POLL_INTERVAL)
   }
 
-  // 停止 Lucky 服务统计轮询
-  function stopLuckyServicesStatsPolling() {
-    if (luckyServicesStatsTimer.value) {
-      clearInterval(luckyServicesStatsTimer.value)
-      luckyServicesStatsTimer.value = null
-    }
-  }
-
-  // 获取容器统计
-  function getContainerStats(containerName: string): DockerStat | undefined {
-    return dockerStats.value.get(containerName)
-  }
-
-  // 获取服务统计
-  function getServiceStats(key: string): LuckyServiceStat | undefined {
-    return luckyServicesStats.value.get(key)
-  }
-
-  // 向历史数组追加数据（超出上限自动截断）
-  function pushHistory(arr: number[], value: number): number[] {
-    const next = arr.length >= HISTORY_LIMIT ? arr.slice(1) : [...arr]
-    next.push(value)
-    return next
-  }
-
-  // 获取容器历史数据（用于走势图）
-  function getContainerHistory(containerName: string): DockerHistoryEntry | undefined {
-    return dockerHistory.value.get(containerName)
-  }
-
-  // 获取服务历史数据（用于走势图）
-  function getServiceHistory(key: string): LuckyHistoryEntry | undefined {
-    return luckyServicesHistory.value.get(key)
-  }
+  const getContainerStats = (name: string) => dockerStats.value.get(name)
+  const getServiceStats = (key: string) => luckyServicesStats.value.get(key)
+  const getContainerHistory = (name: string) => dockerHistory.value.get(name)
+  const getServiceHistory = (key: string) => luckyServicesHistory.value.get(key)
 
   return {
-    // 状态
+    // state
     isLoading,
     navConfig,
     sitesData,
+    dockerData,
+    luckyServicesData,
     networkType,
     networkTypeFetchFailed,
     clientIP,
-    dockerData,
     dockerStats,
-    dockerHistory,
-    luckyServicesData,
     luckyServicesStats,
+    dockerHistory,
     luckyServicesHistory,
-    serverConfig,
-
-    // 计算属性
+    // computed
     siteGroups,
-    allSites,
     dockerGroups,
-    allContainers,
     luckyServicesGroups,
+    allSites,
+    allContainers,
     allLuckyServices,
+    sitesEnabled,
+    dockerEnabled,
+    luckyServicesEnabled,
     panelTitle,
     panelSubtitle,
     panelLogo,
     panelFavicon,
-    sitesEnabled,
-    dockerEnabled,
-    luckyServicesEnabled,
-
-    // 方法
+    // actions
     loadNavConfig,
     loadSitesData,
     loadDockerData,
@@ -386,9 +274,9 @@ export const useNavStore = defineStore('nav', () => {
     fetchNetworkType,
     fetchServerConfig,
     loadDockerStats,
+    loadLuckyServicesStats,
     startDockerStatsPolling,
     stopDockerStatsPolling,
-    loadLuckyServicesStats,
     startLuckyServicesStatsPolling,
     stopLuckyServicesStatsPolling,
     getContainerStats,
@@ -397,3 +285,5 @@ export const useNavStore = defineStore('nav', () => {
     getServiceHistory
   }
 })
+
+export { HISTORY_KEYS, HISTORY_LIMIT, POLL_INTERVAL }

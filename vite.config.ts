@@ -1,6 +1,7 @@
 /// <reference types="vitest/config" />
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import tailwindcss from '@tailwindcss/vite'
 import { fileURLToPath, URL } from 'node:url'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -24,7 +25,8 @@ export default defineConfig({
   // 使用相对路径，支持非根路径部署
   base: './',
   plugins: [
-    vue()
+    vue(),
+    tailwindcss()
   ],
   resolve: {
     alias: {
@@ -58,5 +60,6 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node'
+    // ponytail: 只测纯函数与 store，需要 DOM 的组件测试时再切 happy-dom 并装 @vue/test-utils 用例
   }
 })

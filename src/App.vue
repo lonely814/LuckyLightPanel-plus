@@ -1,534 +1,174 @@
 <script setup lang="ts">
-import { onMounted, computed, watch, ref, provide, onUnmounted } from 'vue'
-import { useNavStore } from '@/stores/nav'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { Settings } from 'lucide-vue-next'
 import { useConfigStore } from '@/stores/config'
-import { THEMES } from '@/themes/registry'
-import type { TabType } from '@/types'
-import LoadingScreen from '@/components/common/LoadingScreen.vue'
+import { useNavStore } from '@/stores/nav'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import GreetingClock from '@/components/layout/GreetingClock.vue'
-import ContentTabs from '@/components/common/ContentTabs.vue'
+import ContentTabs from '@/components/layout/ContentTabs.vue'
+import LoadingScreen from '@/components/common/LoadingScreen.vue'
+import BackToTop from '@/components/common/BackToTop.vue'
+import SettingsPanel from '@/components/settings/SettingsPanel.vue'
 import SiteGrid from '@/components/sites/SiteGrid.vue'
 import DockerGrid from '@/components/docker/DockerGrid.vue'
 import ServiceGrid from '@/components/luckyServices/ServiceGrid.vue'
-import SettingsPanel from '@/components/settings/SettingsPanel.vue'
-import BackToTop from '@/components/common/BackToTop.vue'
-import LinkDropdown from '@/components/common/LinkDropdown.vue'
-import SearchBar from '@/components/common/SearchBar.vue'
-import { Settings } from 'lucide-vue-next'
 
-const navStore = useNavStore()
 const configStore = useConfigStore()
+const navStore = useNavStore()
 
-const EMPTY_STATE_CONFIG = {
-  icon: '🗂️',
-  title: '暂无可用内容',
-  description: '当前没有可显示的站点、Docker 容器或 Lucky 服务。'
-} as const
+const booting = ref(true)
 
-// 链接下拉菜单组件引用
-const linkDropdownRef = ref<InstanceType<typeof LinkDropdown> | null>(null)
-
-// 提供给子组件
-provide('linkDropdown', {
-  show: (site: any, urls: any[], target: HTMLElement) => {
-    linkDropdownRef.value?.show(site, urls, target)
-  }
+const currentLayout = computed(() => {
+  if (configStore.currentTab === 'docker') return configStore.dockerLayout
+  if (configStore.currentTab === 'luckyServices') return configStore.luckyServicesLayout
+  return configStore.layout
 })
 
-// 计算属性
-const isLoading = computed(() => navStore.isLoading)
-const currentTab = computed(() => configStore.currentTab)
-
-// 各标签页是否可见
-const hasSites = computed(() => navStore.sitesEnabled)
-const hasDocker = computed(() => navStore.dockerEnabled && navStore.allContainers.length > 0)
-const hasLuckyServices = computed(() => navStore.luckyServicesEnabled && navStore.allLuckyServices.length > 0)
-const showHeader = computed(() => configStore.showHeader)
-const availableTabs = computed<TabType[]>(() => {
-  const tabs: TabType[] = []
-
-  if (hasSites.value) {
-    tabs.push('sites')
-  }
-  if (hasDocker.value) {
-    tabs.push('docker')
-  }
-  if (hasLuckyServices.value) {
-    tabs.push('luckyServices')
-  }
-
+const availableTabs = computed(() => {
+  const tabs: string[] = []
+  if (navStore.sitesEnabled) tabs.push('sites')
+  if (navStore.dockerEnabled && navStore.allContainers.length > 0) tabs.push('docker')
+  if (navStore.luckyServicesEnabled && navStore.allLuckyServices.length > 0) tabs.push('luckyServices')
   return tabs
 })
-const showGlobalEmptyState = computed(() => !isLoading.value && availableTabs.value.length === 0)
 
-// 当前主题的背景组件（从注册表获取）
-const currentThemeBackground = computed(() => {
-  return THEMES.find(t => t.value === configStore.theme)?.backgroundComponent
+const emptyState = computed(() => !booting.value && availableTabs.value.length === 0)
+
+/** 细节调整：四个比例变量参与 CSS calc，无需快照主题颜色 */
+watch(
+  () => configStore.config,
+  cfg => {
+    const root = document.documentElement
+    root.style.setProperty('--text-factor', (cfg.detailTextContrast / 100).toFixed(3))
+    root.style.setProperty('--radius-scale', (cfg.detailRadiusScale / 100).toFixed(3))
+    root.style.setProperty('--blur-scale', (cfg.detailGlassBlurScale / 100).toFixed(3))
+    root.style.setProperty('--alpha-scale', (cfg.detailGlassOpacityScale / 100).toFixed(3))
+    root.style.setProperty('--card-scale', (cfg.siteCardSize / 100).toFixed(3))
+  },
+  { deep: true, immediate: true }
+)
+
+watch(() => configStore.theme, theme => document.documentElement.setAttribute('data-theme', theme), {
+  immediate: true
 })
-
-// 获取第一个可用的标签页
-function getFirstAvailableTab(): TabType | null {
-  return availableTabs.value[0] ?? null
-}
-
-// 检查并修正当前标签页
-function ensureValidTab() {
-  const tab = currentTab.value
-  const isCurrentTabValid = availableTabs.value.includes(tab)
-
-  if (!isCurrentTabValid) {
-    const firstTab = getFirstAvailableTab()
-    if (firstTab) {
-      configStore.setCurrentTab(firstTab)
-    }
-  }
-}
-
-// 拼接图标 URL
-function getIconUrl(path: string) {
-  if (!path) return ''
-  if (path.startsWith('http://') || path.startsWith('https://')) {
-    return path
-  }
-  return `./backend/iconlibs/${path}`
-}
-
-// 主题切换
+watch(currentLayout, layout => document.documentElement.setAttribute('data-layout', layout), {
+  immediate: true
+})
 watch(
-  () => configStore.effectiveTheme,
-  (theme) => {
-    document.documentElement.setAttribute('data-theme', theme)
-  },
+  () => configStore.config.detailReduceMotion,
+  reduce => document.documentElement.setAttribute('data-reduce-motion', String(reduce)),
   { immediate: true }
 )
 
-// ============ 细节调整（文字对比度 / 圆角 / 玻璃模糊 / 卡片不透明度 / 减弱动效） ============
-
-// 细节调整涉及的 CSS 变量
-const DETAIL_TEXT_VARS = ['--text-primary', '--text-secondary', '--text-muted'] as const
-const DETAIL_BLUR_VARS = ['--glass-blur', '--site-card-blur'] as const
-const DETAIL_OPACITY_VARS = ['--glass-bg', '--glass-bg-hover', '--card-bg', '--site-card-bg', '--site-card-bg-hover'] as const
-const DETAIL_RADIUS_VARS = ['--radius-xs', '--radius-sm', '--radius-md', '--radius-lg', '--radius-xl'] as const
-const ALL_DETAIL_VARS = [...DETAIL_TEXT_VARS, ...DETAIL_BLUR_VARS, ...DETAIL_OPACITY_VARS, ...DETAIL_RADIUS_VARS]
-
-// 当前主题的原始变量快照（用于避免重复计算叠乘）
-let themeDetailBase: Record<string, string> = {}
-
-// parseFloat('0px') 得 0，用 || 会误判为缺值，需显式判断 NaN
-function parseFloatOr(raw: string | undefined, fallback: number) {
-  const n = parseFloat(raw ?? '')
-  return Number.isFinite(n) ? n : fallback
-}
-
-function snapshotThemeDetails() {
-  const el = document.documentElement
-  // 先清除内联覆盖，读取纯主题值
-  ALL_DETAIL_VARS.forEach(v => el.style.removeProperty(v))
-  const cs = getComputedStyle(el)
-  themeDetailBase = {}
-  ALL_DETAIL_VARS.forEach(v => {
-    themeDetailBase[v] = cs.getPropertyValue(v).trim()
-  })
-}
-
-function applyThemeDetails() {
-  const el = document.documentElement
-  const cfg = configStore.config
-
-  // 文字对比度：按当前明暗方向调整亮度
-  const contrast = cfg.detailTextContrast / 100
-  DETAIL_TEXT_VARS.forEach(v => {
-    const raw = themeDetailBase[v]
-    const m = raw.match(/^([\d.]+)\s+([\d.]+%)\s+([\d.]+%)$/)
-    if (!m) return
-    const hue = m[1]
-    const sat = m[2]
-    const light = parseFloat(m[3])
-    const isLightText = light >= 50
-    const factor = isLightText ? contrast : 1 / contrast
-    const next = Math.min(99, Math.max(1, light * factor))
-    el.style.setProperty(v, `${hue} ${sat} ${next.toFixed(1)}%`)
-  })
-
-  // 玻璃模糊
-  const blur = cfg.detailGlassBlurScale / 100
-  DETAIL_BLUR_VARS.forEach(v => {
-    const base = parseFloatOr(themeDetailBase[v], 20)
-    el.style.setProperty(v, `${Math.round(base * blur)}px`)
-  })
-
-  // 卡片/玻璃不透明度
-  const opacity = cfg.detailGlassOpacityScale / 100
-  DETAIL_OPACITY_VARS.forEach(v => {
-    const m = themeDetailBase[v].match(/^(.+?)\s*\/\s*([\d.]+)$/)
-    if (!m) return
-    const alpha = Math.min(1, parseFloat(m[2]) * opacity)
-    el.style.setProperty(v, `${m[1]} / ${alpha.toFixed(3)}`)
-  })
-
-  // 圆角
-  const radius = cfg.detailRadiusScale / 100
-  DETAIL_RADIUS_VARS.forEach(v => {
-    const base = parseFloatOr(themeDetailBase[v], 0)
-    el.style.setProperty(v, `${Math.round(base * radius)}px`)
-  })
-
-  // 减弱动效
-  el.classList.toggle('motion-reduced', cfg.detailReduceMotion)
-}
-
-watch(
-  () => [
-    configStore.effectiveTheme,
-    configStore.config.detailTextContrast,
-    configStore.config.detailRadiusScale,
-    configStore.config.detailGlassBlurScale,
-    configStore.config.detailGlassOpacityScale,
-    configStore.config.detailReduceMotion
-  ],
-  () => {
-    snapshotThemeDetails()
-    applyThemeDetails()
-  },
-  { immediate: true }
-)
-
-// 浏览器标题更新
 watch(
   () => navStore.panelTitle,
-  (title) => {
-    if (title) {
-      document.title = title
-    }
+  title => {
+    if (title) document.title = title
   },
   { immediate: true }
 )
 
-// 浏览器 Favicon 更新
 watch(
   () => navStore.panelFavicon,
-  (favicon) => {
-    if (favicon) {
-      const faviconUrl = getIconUrl(favicon)
-      let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement
-      if (!link) {
-        link = document.createElement('link')
-        link.rel = 'icon'
-        document.head.appendChild(link)
-      }
-      link.href = faviconUrl
+  favicon => {
+    if (!favicon) return
+    const href = /^https?:\/\//i.test(favicon) ? favicon : `./backend/iconlibs/${favicon}`
+    let link = document.querySelector<HTMLLinkElement>("link[rel~='icon']")
+    if (!link) {
+      link = document.createElement('link')
+      link.rel = 'icon'
+      document.head.appendChild(link)
     }
+    link.href = href
   },
   { immediate: true }
 )
 
-// 初始化
-onMounted(async () => {
-  navStore.isLoading = true
-
-  // 先加载本地配置（包含默认值）
-  configStore.loadConfig()
-
-  const startTime = Date.now()
-
-  // 兜底：无论初始化多久都最多黑屏 3 秒
-  const forceFinish = setTimeout(() => {
-    navStore.isLoading = false
-  }, 3000)
-
-  // 最短展示时间（避免过快闪烁），成功后淡出
-  const finish = () => {
-    clearTimeout(forceFinish)
-    const elapsed = Date.now() - startTime
-    const wait = Math.max(0, 500 - elapsed)
-    setTimeout(() => {
-      navStore.isLoading = false
-    }, wait)
-  }
-
-  try {
-    // 加载基础配置（nav.json）和服务器配置
-    const [, serverConfig] = await Promise.all([
-      navStore.loadNavConfig(),
-      navStore.fetchServerConfig()
-    ])
-
-    // 尝试应用服务器配置
-    if (serverConfig) {
-      configStore.applyServerConfig(serverConfig)
-    }
-
-    // 预加载已启用模块的数据，用于决定顶部页签是否显示；
-    // 网络类型识别（自动/混合模式）与数据预加载并行，不再串行等待
-    const preloadTasks: Promise<unknown>[] = []
-
-    if (navStore.sitesEnabled) {
-      preloadTasks.push(navStore.loadSitesData())
-    }
-    if (navStore.dockerEnabled) {
-      preloadTasks.push(navStore.loadDockerData())
-    }
-    if (navStore.luckyServicesEnabled) {
-      preloadTasks.push(navStore.loadLuckyServicesData())
-    }
-
-    const mode = configStore.networkMode
-    if (mode === 'auto' || mode === 'hybrid') {
-      preloadTasks.push(navStore.fetchNetworkType())
-    }
-
-    await Promise.all(preloadTasks)
-
-    // 检查当前标签页是否有效，无效则切换到第一个可用标签页
-    ensureValidTab()
-  } finally {
-    finish()
-  }
-})
-
-watch(availableTabs, () => {
-  ensureValidTab()
-})
-
-// ============ 统计轮询控制（按当前标签页 + 页面可见性） ============
-// 不依赖 ContentTabs 挂载：只有单个 tab（组件不渲染）时轮询也能启动
 function syncPolling() {
   navStore.stopDockerStatsPolling()
   navStore.stopLuckyServicesStatsPolling()
   if (document.hidden) return
-  if (currentTab.value === 'docker' && hasDocker.value) {
-    navStore.startDockerStatsPolling()
-  } else if (currentTab.value === 'luckyServices' && hasLuckyServices.value) {
-    navStore.startLuckyServicesStatsPolling()
-  }
+  if (configStore.currentTab === 'docker') navStore.startDockerStatsPolling()
+  if (configStore.currentTab === 'luckyServices') navStore.startLuckyServicesStatsPolling()
 }
 
-watch([currentTab, isLoading], syncPolling, { immediate: true })
+watch([() => configStore.currentTab, booting], syncPolling, { immediate: true })
+watch(availableTabs, tabs => {
+  if (tabs.length > 0 && !tabs.includes(configStore.currentTab)) {
+    configStore.setCurrentTab(tabs[0] as typeof configStore.currentTab)
+  }
+})
 
-// 页面隐藏时暂停轮询，恢复时按当前 tab 重启
-function handleVisibilityChange() {
+onMounted(async () => {
+  const started = Date.now()
+  configStore.loadConfig()
+  await Promise.all([navStore.loadNavConfig(), navStore.fetchServerConfig()]).then(([, serverConfig]) => {
+    configStore.applyServerConfig(serverConfig)
+  })
+
+  await Promise.all([
+    navStore.sitesEnabled ? navStore.loadSitesData() : null,
+    navStore.dockerEnabled ? navStore.loadDockerData() : null,
+    navStore.luckyServicesEnabled ? navStore.loadLuckyServicesData() : null
+  ])
+
+  if (configStore.networkMode === 'auto' || configStore.networkMode === 'hybrid') {
+    navStore.fetchNetworkType()
+  }
+
+  // 最短展示 500ms，避免闪烁
+  const rest = 500 - (Date.now() - started)
+  if (rest > 0) await new Promise(resolve => setTimeout(resolve, rest))
+  booting.value = false
+  syncPolling()
+})
+
+function onVisibility() {
   syncPolling()
 }
 
-document.addEventListener('visibilitychange', handleVisibilityChange)
+onMounted(() => document.addEventListener('visibilitychange', onVisibility))
 onUnmounted(() => {
-  document.removeEventListener('visibilitychange', handleVisibilityChange)
+  document.removeEventListener('visibilitychange', onVisibility)
   navStore.stopDockerStatsPolling()
   navStore.stopLuckyServicesStatsPolling()
 })
 </script>
 
 <template>
-  <!-- 主题背景 -->
-  <component :is="currentThemeBackground" />
+  <!-- 背景图 + 主题色遮罩：任意背景图下，明暗主题的文字对比度都由 --bg-page 兜底 -->
+  <div class="relative min-h-dvh" :style="configStore.backgroundStyle">
+    <div class="absolute inset-0 bg-[hsl(var(--bg-page)/0.55)]" aria-hidden="true" />
 
-  <!-- 加载屏幕 -->
-  <Transition name="screen-fade">
-    <LoadingScreen v-if="isLoading" />
-  </Transition>
+    <LoadingScreen :visible="booting" />
 
-  <!-- 主内容 -->
-  <div v-if="!isLoading" class="app-main">
-    <!-- 页头（时间已内联在页头右侧） -->
-    <AppHeader v-if="showHeader" />
+    <div class="relative mx-auto max-w-6xl px-4 py-4" :style="{ zoom: String(configStore.config.layoutScale) }">
+      <AppHeader v-if="configStore.showHeader" />
 
-    <!-- 无页头时：时钟独立成行 -->
-    <div v-if="showHeader === false && configStore.showTime" class="greeting-clock-wrap">
-      <GreetingClock />
+      <div v-else class="mb-4 flex flex-wrap items-center gap-2">
+        <GreetingClock v-if="configStore.showTime" />
+        <ContentTabs class="ml-auto" />
+        <button
+          type="button"
+          class="glass ml-auto grid size-8 place-items-center text-fg-muted hover:text-fg"
+          aria-label="打开设置"
+          @click="configStore.toggleSettingsPanel()"
+        >
+          <Settings class="size-4" />
+        </button>
+      </div>
+
+      <main>
+        <SiteGrid v-if="configStore.currentTab === 'sites' && navStore.sitesEnabled" />
+        <DockerGrid v-else-if="configStore.currentTab === 'docker' && navStore.dockerEnabled" />
+        <ServiceGrid v-else-if="configStore.currentTab === 'luckyServices' && navStore.luckyServicesEnabled" />
+        <p v-else-if="emptyState" class="glass px-4 py-16 text-center text-sm text-fg-subtle">
+          当前没有可显示的站点、Docker 容器或 Lucky 服务。
+        </p>
+      </main>
     </div>
 
-    <!-- 浮动设置按钮（仅在隐藏页头时显示） -->
-    <button 
-      v-if="!showHeader" 
-      class="floating-settings-btn"
-      @click="configStore.toggleSettingsPanel(true)"
-    >
-      <Settings class="floating-settings-icon" />
-    </button>
-
-    <!-- 搜索栏（仅在站点页面显示） -->
-    <SearchBar v-if="configStore.showSearch && currentTab === 'sites' && hasSites" />
-
-    <!-- 主区域 -->
-    <main class="main-content" :class="{ 'no-header': !showHeader }" :style="{ '--layout-scale': configStore.layoutScale }">
-      <!-- 内容标签页 -->
-      <ContentTabs class="mb-16" />
-
-      <!-- 站点网格 -->
-      <SiteGrid v-if="currentTab === 'sites' && hasSites" />
-
-      <!-- Docker 网格 -->
-      <DockerGrid v-else-if="currentTab === 'docker' && hasDocker" />
-
-      <!-- Lucky 服务网格 -->
-      <ServiceGrid v-else-if="currentTab === 'luckyServices' && hasLuckyServices" />
-
-      <div v-else-if="showGlobalEmptyState" class="global-empty-state">
-        <div class="global-empty-icon">{{ EMPTY_STATE_CONFIG.icon }}</div>
-        <h2 class="global-empty-title">{{ EMPTY_STATE_CONFIG.title }}</h2>
-        <p class="global-empty-description">{{ EMPTY_STATE_CONFIG.description }}</p>
-      </div>
-    </main>
-
-    <!-- 设置面板 -->
-    <SettingsPanel />
-
-    <!-- 返回顶部 -->
     <BackToTop />
-
-    <!-- 链接选择下拉菜单 -->
-    <LinkDropdown ref="linkDropdownRef" />
+    <SettingsPanel />
   </div>
 </template>
-
-<style scoped>
-.app-main {
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-}
-
-.main-content {
-  flex: 1;
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0.75rem 1rem 2rem;
-  zoom: var(--layout-scale, 1);
-}
-
-.greeting-clock-wrap {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-.main-content.no-header {
-  padding-top: 1rem;
-}
-
-.global-empty-state {
-  min-height: min(48vh, 420px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  padding: 2rem 1.5rem;
-  text-align: center;
-  border: 1px solid hsl(var(--glass-border));
-  border-radius: 1.5rem;
-  background: hsl(var(--glass-bg));
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-  box-shadow:
-    0 24px 48px rgba(15, 23, 42, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-.global-empty-icon {
-  display: grid;
-  place-items: center;
-  width: 4rem;
-  height: 4rem;
-  border-radius: 1.25rem;
-  background: linear-gradient(135deg, hsl(var(--primary) / 0.18) 0%, hsl(var(--primary-dark) / 0.08) 100%);
-  font-size: 2rem;
-}
-
-.global-empty-title {
-  margin: 0;
-  color: hsl(var(--text-primary));
-  font-size: clamp(1.25rem, 2vw, 1.6rem);
-  font-weight: 700;
-}
-
-.global-empty-description {
-  margin: 0;
-  max-width: 32rem;
-  color: hsl(var(--text-secondary));
-  line-height: 1.6;
-}
-
-@media (min-width: 640px) {
-  .main-content {
-    padding: 0.75rem 1.5rem 2.5rem;
-  }
-
-  .greeting-clock-wrap {
-    padding: 0 1.5rem;
-  }
-  
-  .main-content.no-header {
-    padding-top: 1.5rem;
-  }
-}
-
-/* 移动端 ContentTabs 间距调整 */
-@media (max-width: 480px) {
-  .main-content .mb-16 {
-    margin-bottom: 0.75rem;
-  }
-
-  .global-empty-state {
-    min-height: 42vh;
-    padding: 1.5rem 1rem;
-    border-radius: 1.25rem;
-  }
-}
-
-/* 加载屏淡出过渡 */
-.screen-fade-enter-active,
-.screen-fade-leave-active {
-  transition: opacity 400ms ease;
-}
-.screen-fade-enter-from,
-.screen-fade-leave-to {
-  opacity: 0;
-}
-
-/* 浮动设置按钮 */
-.floating-settings-btn {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 100;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 0.75rem;
-  border: 1px solid hsl(var(--glass-border) / 0.3);
-  background: hsl(var(--glass-bg));
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  color: hsl(var(--text-muted) / 0.4);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 300ms ease;
-  box-shadow: none;
-  opacity: 0.5;
-}
-
-.floating-settings-btn:hover {
-  opacity: 1;
-  color: hsl(var(--neon-cyan));
-  border-color: hsl(var(--neon-cyan) / 0.4);
-  background: hsl(var(--glass-bg));
-  box-shadow: 0 0 15px hsl(var(--neon-cyan) / 0.3);
-  transform: scale(1.05);
-}
-
-.floating-settings-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  transition: transform 500ms;
-}
-
-.floating-settings-btn:hover .floating-settings-icon {
-  transform: rotate(90deg);
-}
-</style>

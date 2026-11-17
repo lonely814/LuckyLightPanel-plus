@@ -1,184 +1,38 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-
-defineProps<{
-  /** compact：单行内联，供页头使用；默认：竖排大字块 */
-  compact?: boolean
-}>()
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 const now = ref(new Date())
-let timer: ReturnType<typeof setInterval>
+let timer: ReturnType<typeof setInterval> | undefined
 
 onMounted(() => {
-  timer = setInterval(() => {
-    now.value = new Date()
-  }, 1000)
+  timer = setInterval(() => (now.value = new Date()), 1000)
 })
+onUnmounted(() => clearInterval(timer))
 
-onUnmounted(() => {
-  if (timer) clearInterval(timer)
-})
-
-// 问候语（按时段）
 const greeting = computed(() => {
-  const h = now.value.getHours()
-  if (h >= 5 && h < 9) return '早上好'
-  if (h >= 9 && h < 12) return '上午好'
-  if (h >= 12 && h < 14) return '中午好'
-  if (h >= 14 && h < 18) return '下午好'
-  if (h >= 18 && h < 23) return '晚上好'
+  const hour = now.value.getHours()
+  if (hour >= 5 && hour < 9) return '早上好'
+  if (hour >= 9 && hour < 12) return '上午好'
+  if (hour >= 12 && hour < 14) return '中午好'
+  if (hour >= 14 && hour < 18) return '下午好'
+  if (hour >= 18 && hour < 23) return '晚上好'
   return '夜深了，注意休息'
-})
-
-const timeText = computed(() => {
-  return now.value.toLocaleTimeString('zh-CN', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  })
-})
-
-const seconds = computed(() => {
-  return now.value.getSeconds().toString().padStart(2, '0')
 })
 
 const dateText = computed(() => {
   const weekdays = ['日', '一', '二', '三', '四', '五', '六']
-  const w = weekdays[now.value.getDay()]
-  const y = now.value.getFullYear()
-  const m = now.value.getMonth() + 1
-  const d = now.value.getDate()
-  return `${y}年${m}月${d}日 · 周${w}`
+  const d = now.value
+  return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 · 周${weekdays[d.getDay()]}`
 })
 
-const isNight = computed(() => {
-  const h = now.value.getHours()
-  return h >= 19 || h < 6
-})
+const timeText = computed(() =>
+  now.value.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
+)
 </script>
 
 <template>
-  <div class="greeting-clock" :class="{ compact }">
-    <div class="gc-greeting">
-      <span class="gc-greeting-text">{{ greeting }}</span>
-      <span class="gc-greeting-sep">·</span>
-      <span class="gc-date">{{ dateText }}</span>
-    </div>
-
-    <div class="gc-time">
-      <span class="gc-time-value">{{ timeText }}</span>
-      <span class="gc-seconds" :class="{ night: isNight }">{{ seconds }}</span>
-    </div>
+  <div class="glass inline-flex flex-wrap items-baseline gap-2 px-3 py-2">
+    <span class="text-xs text-fg-muted">{{ greeting }} · {{ dateText }}</span>
+    <span class="font-mono text-sm tabular-nums text-fg">{{ timeText }}</span>
   </div>
 </template>
-
-<style scoped>
-.greeting-clock {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.125rem;
-  padding: 0.5rem 0.75rem 0.5rem 0.25rem;
-}
-
-.gc-greeting {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.8125rem;
-}
-
-.gc-greeting-text {
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: hsl(var(--text-secondary));
-}
-
-.gc-greeting-sep {
-  color: hsl(var(--text-muted));
-  opacity: 0.5;
-}
-
-.gc-date {
-  font-size: 0.75rem;
-  color: hsl(var(--text-muted));
-  letter-spacing: 0.02em;
-}
-
-.gc-time {
-  display: flex;
-  align-items: baseline;
-  gap: 0.25rem;
-  font-family: var(--font-mono, ui-monospace, monospace);
-}
-
-.gc-time-value {
-  font-size: 1.75rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  line-height: 1.1;
-  color: hsl(var(--text-primary));
-  font-variant-numeric: tabular-nums;
-}
-
-.gc-seconds {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: hsl(var(--neon-cyan) / 0.9);
-  font-variant-numeric: tabular-nums;
-}
-
-.gc-seconds.night {
-  color: hsl(var(--neon-purple) / 0.85);
-}
-
-/* 页头内联版：单行右对齐，尺寸收小 */
-.greeting-clock.compact {
-  flex-direction: row;
-  align-items: baseline;
-  gap: 0.625rem;
-  padding: 0;
-}
-
-.compact .gc-greeting {
-  gap: 0.375rem;
-  font-size: 0.75rem;
-}
-
-.compact .gc-time {
-  gap: 0.1875rem;
-}
-
-.compact .gc-time-value {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.compact .gc-seconds {
-  font-size: 0.75rem;
-}
-
-@media (min-width: 640px) {
-  .gc-time-value {
-    font-size: 2rem;
-  }
-
-  .compact .gc-time-value {
-    font-size: 1.375rem;
-  }
-}
-
-/* 窄屏隐藏日期与问候语，只留时间，避免页头拥挤 */
-@media (max-width: 768px) {
-  .compact .gc-greeting {
-    display: none;
-  }
-}
-
-/* 手机上页头过挤：整个时钟隐藏 */
-@media (max-width: 560px) {
-  .greeting-clock.compact {
-    display: none;
-  }
-}
-</style>
