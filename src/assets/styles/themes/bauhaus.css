@@ -210,34 +210,6 @@
 }
 
 /* ============================================
-   网络徽章 - 包豪斯徽章
-   ============================================ */
-
-[data-theme="bauhaus"] .net-badge {
-  border-radius: 0;
-  border: 2px solid hsl(var(--bauhaus-black));
-  background: hsl(var(--bauhaus-blue));
-  box-shadow: 3px 3px 0 hsl(var(--bauhaus-black));
-}
-
-[data-theme="bauhaus"] .net-badge:hover {
-  background: hsl(var(--bauhaus-blue));
-  box-shadow: 4px 4px 0 hsl(var(--bauhaus-black));
-  transform: translate(-1px, -1px);
-}
-
-[data-theme="bauhaus"] .net-badge.internal {
-  background: hsl(var(--neon-green));
-}
-
-[data-theme="bauhaus"] .net-badge-icon,
-[data-theme="bauhaus"] .net-badge-label,
-[data-theme="bauhaus"] .net-badge.internal .net-badge-icon,
-[data-theme="bauhaus"] .net-badge.internal .net-badge-label {
-  color: hsl(var(--text-on-primary)) !important;
-}
-
-/* ============================================
    问候时钟 - 包豪斯大字排版
    ============================================ */
 
@@ -257,32 +229,6 @@
 
 [data-theme="bauhaus"] .gc-greeting-text {
   color: hsl(var(--text-primary));
-}
-/* 活动标签 - 动画斜纹 */
-
-/* ============================================
-   分组徽章 / 布局切换器 - 包豪斯方形按钮
-   ============================================ */
-
-[data-theme="bauhaus"] .group-badge,
-[data-theme="bauhaus"] .layout-badge,
-[data-theme="bauhaus"] .overview-badge,
-[data-theme="bauhaus"] .network-badge {
-  background: hsl(var(--bg-elevated));
-  border: 2px solid hsl(var(--bauhaus-black));
-  border-radius: 0;
-  box-shadow: 3px 3px 0 hsl(var(--bauhaus-black));
-  color: hsl(var(--text-primary)) !important;
-  backdrop-filter: none;
-}
-
-[data-theme="bauhaus"] .group-badge:hover,
-[data-theme="bauhaus"] .layout-badge:hover,
-[data-theme="bauhaus"] .overview-badge:hover,
-[data-theme="bauhaus"] .network-badge:hover {
-  background: hsl(var(--bauhaus-yellow));
-  box-shadow: 4px 4px 0 hsl(var(--bauhaus-black)) !important;
-  transform: translate(-1px, -1px);
 }
 
 [data-theme="bauhaus"] .group-dropdown,
@@ -612,5 +558,27 @@
   );
   --surface-tab-active-decor-size: 17px 17px;
   --surface-tab-active-decor-animation: bauhaus-stripes 1.2s linear infinite;
+}
+
+[data-theme="bauhaus"] {
+  --surface-netbadge-radius: 0;
+  --surface-netbadge-border: 2px solid hsl(var(--bauhaus-black));
+  --surface-netbadge-bg: hsl(var(--bauhaus-blue));
+  --surface-netbadge-shadow: 3px 3px 0 hsl(var(--bauhaus-black));
+  --surface-netbadge-hover-bg: hsl(var(--bauhaus-blue));
+  --surface-netbadge-hover-shadow: 4px 4px 0 hsl(var(--bauhaus-black));
+  --surface-netbadge-hover-transform: translate(-1px, -1px);
+  --surface-netbadge-internal-bg: hsl(var(--neon-green));
+  --surface-netbadge-color: hsl(var(--text-on-primary));
+  --surface-netbadge-internal-color: hsl(var(--text-on-primary));
+  --surface-badge-bg: hsl(var(--bg-elevated));
+  --surface-badge-border: 2px solid hsl(var(--bauhaus-black));
+  --surface-badge-radius: 0;
+  --surface-badge-shadow: 3px 3px 0 hsl(var(--bauhaus-black));
+  --surface-badge-color: hsl(var(--text-primary));
+  --surface-badge-backdrop: none;
+  --surface-badge-hover-bg: hsl(var(--bauhaus-yellow));
+  --surface-badge-hover-shadow: 4px 4px 0 hsl(var(--bauhaus-black));
+  --surface-badge-hover-transform: translate(-1px, -1px);
 }
 

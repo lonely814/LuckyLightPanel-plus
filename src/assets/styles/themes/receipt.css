@@ -256,30 +256,9 @@
   color: hsl(var(--r-stamp)) !important;
 }
 
-/* 网络徽章 - 邮戳 */
-[data-theme="receipt"] .net-badge {
-  border-radius: var(--radius-xs);
-  border: 1px solid hsl(var(--r-ink) / 0.45);
-  background: transparent;
-}
-
-[data-theme="receipt"] .net-badge:hover {
-  border-color: hsl(var(--r-ink) / 0.7);
-}
-
 [data-theme="receipt"] .net-badge.internal {
   border-style: double;
   border-width: 3px;
-}
-
-[data-theme="receipt"] .net-badge-icon,
-[data-theme="receipt"] .net-badge-label {
-  color: hsl(var(--text-primary)) !important;
-}
-
-[data-theme="receipt"] .net-badge.internal .net-badge-icon,
-[data-theme="receipt"] .net-badge.internal .net-badge-label {
-  color: hsl(var(--success)) !important;
 }
 
 /* ============================================
@@ -338,29 +317,6 @@
 
 [data-theme="receipt"] .gc-seconds.night {
   color: hsl(var(--text-secondary));
-}
-
-/* ============================================
-   分组徽章 / 布局 / 网络 / 总览徽章
-   ============================================ */
-
-[data-theme="receipt"] .group-badge,
-[data-theme="receipt"] .layout-badge,
-[data-theme="receipt"] .overview-badge,
-[data-theme="receipt"] .network-badge {
-  background: hsl(var(--bg-elevated));
-  border: 1px solid hsl(var(--r-ink) / 0.25);
-  border-radius: var(--radius-xs);
-  color: hsl(var(--text-primary)) !important;
-  backdrop-filter: none;
-}
-
-[data-theme="receipt"] .group-badge:hover,
-[data-theme="receipt"] .layout-badge:hover,
-[data-theme="receipt"] .overview-badge:hover,
-[data-theme="receipt"] .network-badge:hover {
-  background: hsl(var(--r-ink) / 0.05);
-  border-color: hsl(var(--r-ink) / 0.5);
 }
 
 [data-theme="receipt"] .group-dropdown,
@@ -624,5 +580,21 @@
   --surface-tab-active-bg: hsl(var(--text-primary));
   --surface-tab-active-color: hsl(var(--text-on-primary));
   --surface-tab-active-border: 1px solid hsl(var(--text-primary));
+}
+
+[data-theme="receipt"] {
+  --surface-netbadge-radius: var(--radius-xs);
+  --surface-netbadge-border: 1px solid hsl(var(--r-ink) / 0.45);
+  --surface-netbadge-bg: transparent;
+  --surface-netbadge-hover-border-color: hsl(var(--r-ink) / 0.7);
+  --surface-netbadge-color: hsl(var(--text-primary));
+  --surface-netbadge-internal-color: hsl(var(--success));
+  --surface-badge-bg: hsl(var(--bg-elevated));
+  --surface-badge-border: 1px solid hsl(var(--r-ink) / 0.25);
+  --surface-badge-radius: var(--radius-xs);
+  --surface-badge-color: hsl(var(--text-primary));
+  --surface-badge-backdrop: none;
+  --surface-badge-hover-bg: hsl(var(--r-ink) / 0.05);
+  --surface-badge-hover-border-color: hsl(var(--r-ink) / 0.5);
 }
 

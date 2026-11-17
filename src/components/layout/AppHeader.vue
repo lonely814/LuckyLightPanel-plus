@@ -439,21 +439,24 @@ function openSettings() {
   display: flex;
   align-items: center;
   padding: 0.25rem 0.625rem;
-  border-radius: 999px;
-  border: 1px solid hsl(var(--neon-blue) / 0.3);
-  background: hsl(var(--neon-blue) / 0.08);
+  border-radius: var(--surface-netbadge-radius, 999px);
+  border: var(--surface-netbadge-border, 1px solid hsl(var(--neon-blue) / 0.3));
+  background: var(--surface-netbadge-bg, hsl(var(--neon-blue) / 0.08));
+  box-shadow: var(--surface-netbadge-shadow, none);
   cursor: default;
   transition: all var(--duration-fast) ease;
 }
 
 .net-badge:hover {
-  border-color: hsl(var(--neon-blue) / 0.5);
-  background: hsl(var(--neon-blue) / 0.14);
+  border-color: var(--surface-netbadge-hover-border-color, hsl(var(--neon-blue) / 0.5));
+  background: var(--surface-netbadge-hover-bg, hsl(var(--neon-blue) / 0.14));
+  box-shadow: var(--surface-netbadge-hover-shadow, none);
+  transform: var(--surface-netbadge-hover-transform, none);
 }
 
 .net-badge.internal {
-  border-color: hsl(var(--neon-green) / 0.3);
-  background: hsl(var(--neon-green) / 0.08);
+  border-color: var(--surface-netbadge-internal-border-color, hsl(var(--neon-green) / 0.3));
+  background: var(--surface-netbadge-internal-bg, hsl(var(--neon-green) / 0.08));
 }
 
 .net-badge.internal:hover {
@@ -470,22 +473,22 @@ function openSettings() {
 .net-badge-icon {
   width: 0.75rem;
   height: 0.75rem;
-  color: hsl(var(--neon-blue));
+  color: var(--surface-netbadge-color, hsl(var(--neon-blue)));
 }
 
 .net-badge.internal .net-badge-icon {
-  color: hsl(var(--neon-green));
+  color: var(--surface-netbadge-internal-color, hsl(var(--neon-green)));
 }
 
 .net-badge-label {
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: hsl(var(--neon-blue));
+  color: var(--surface-netbadge-color, hsl(var(--neon-blue)));
 }
 
 .net-badge.internal .net-badge-label {
-  color: hsl(var(--neon-green));
+  color: var(--surface-netbadge-internal-color, hsl(var(--neon-green)));
 }
 
 .actions-divider {

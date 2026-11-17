@@ -292,32 +292,6 @@
   color: hsl(var(--aa-aurora-cyan)) !important;
 }
 
-/* 网络徽章 - 极光信标 */
-[data-theme="arctic-aurora"] .net-badge {
-  border-radius: var(--radius-sm);
-  border: 1px solid hsl(var(--aa-aurora-cyan) / 0.4);
-  background: hsl(var(--aa-frost) / 0.6);
-}
-
-[data-theme="arctic-aurora"] .net-badge:hover {
-  box-shadow: 0 0 16px -6px hsl(var(--aa-aurora-cyan) / 0.6);
-}
-
-[data-theme="arctic-aurora"] .net-badge.internal {
-  border-color: hsl(var(--aa-aurora-green) / 0.55);
-  background: hsl(var(--aa-aurora-green) / 0.08);
-}
-
-[data-theme="arctic-aurora"] .net-badge-icon,
-[data-theme="arctic-aurora"] .net-badge-label {
-  color: hsl(var(--aa-aurora-cyan)) !important;
-}
-
-[data-theme="arctic-aurora"] .net-badge.internal .net-badge-icon,
-[data-theme="arctic-aurora"] .net-badge.internal .net-badge-label {
-  color: hsl(var(--aa-aurora-green)) !important;
-}
-
 /* ============================================
    问候时钟 - 冰晶数字钟
    ============================================ */
@@ -383,30 +357,6 @@
 
 [data-theme="arctic-aurora"] .gc-seconds.night {
   color: hsl(var(--aa-aurora-purple));
-}
-
-/* ============================================
-   分组徽章 / 布局 / 网络 / 总览徽章
-   ============================================ */
-
-[data-theme="arctic-aurora"] .group-badge,
-[data-theme="arctic-aurora"] .layout-badge,
-[data-theme="arctic-aurora"] .overview-badge,
-[data-theme="arctic-aurora"] .network-badge {
-  background: hsl(var(--aa-frost) / 0.6);
-  border: 1px solid hsl(var(--aa-ice-ink) / 0.2);
-  border-radius: var(--radius-sm);
-  color: hsl(var(--text-primary)) !important;
-  backdrop-filter: blur(var(--glass-blur));
-}
-
-[data-theme="arctic-aurora"] .group-badge:hover,
-[data-theme="arctic-aurora"] .layout-badge:hover,
-[data-theme="arctic-aurora"] .overview-badge:hover,
-[data-theme="arctic-aurora"] .network-badge:hover {
-  background: hsl(var(--aa-aurora-cyan) / 0.08);
-  border-color: hsl(var(--aa-aurora-cyan) / 0.5);
-  box-shadow: 0 0 16px -6px hsl(var(--aa-aurora-cyan) / 0.5) !important;
 }
 
 [data-theme="arctic-aurora"] .group-dropdown,
@@ -695,5 +645,24 @@
   --surface-tab-active-color: hsl(var(--text-on-primary));
   --surface-tab-active-border: 1px solid hsl(var(--aa-aurora-cyan));
   --surface-tab-active-shadow: 0 0 18px -4px hsl(var(--aa-aurora-cyan) / 0.7);
+}
+
+[data-theme="arctic-aurora"] {
+  --surface-netbadge-radius: var(--radius-sm);
+  --surface-netbadge-border: 1px solid hsl(var(--aa-aurora-cyan) / 0.4);
+  --surface-netbadge-bg: hsl(var(--aa-frost) / 0.6);
+  --surface-netbadge-hover-shadow: 0 0 16px -6px hsl(var(--aa-aurora-cyan) / 0.6);
+  --surface-netbadge-internal-border-color: hsl(var(--aa-aurora-green) / 0.55);
+  --surface-netbadge-internal-bg: hsl(var(--aa-aurora-green) / 0.08);
+  --surface-netbadge-color: hsl(var(--aa-aurora-cyan));
+  --surface-netbadge-internal-color: hsl(var(--aa-aurora-green));
+  --surface-badge-bg: hsl(var(--aa-frost) / 0.6);
+  --surface-badge-border: 1px solid hsl(var(--aa-ice-ink) / 0.2);
+  --surface-badge-radius: var(--radius-sm);
+  --surface-badge-color: hsl(var(--text-primary));
+  --surface-badge-backdrop: blur(var(--glass-blur));
+  --surface-badge-hover-bg: hsl(var(--aa-aurora-cyan) / 0.08);
+  --surface-badge-hover-border-color: hsl(var(--aa-aurora-cyan) / 0.5);
+  --surface-badge-hover-shadow: 0 0 16px -6px hsl(var(--aa-aurora-cyan) / 0.5);
 }
 

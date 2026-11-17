@@ -286,32 +286,6 @@
   color: hsl(var(--lp-amber)) !important;
 }
 
-/* 网络徽章 - 信号灯 */
-[data-theme="light-panel"] .net-badge {
-  border-radius: var(--radius-sm);
-  border: 1px solid hsl(var(--lp-amber-dim) / 0.9);
-  background: hsl(var(--lp-amber) / 0.06);
-}
-
-[data-theme="light-panel"] .net-badge:hover {
-  box-shadow: 0 0 16px -6px hsl(var(--lp-amber) / 0.6);
-}
-
-[data-theme="light-panel"] .net-badge.internal {
-  border-color: hsl(var(--lp-green) / 0.7);
-  background: hsl(var(--lp-green) / 0.07);
-}
-
-[data-theme="light-panel"] .net-badge-icon,
-[data-theme="light-panel"] .net-badge-label {
-  color: hsl(var(--lp-amber)) !important;
-}
-
-[data-theme="light-panel"] .net-badge.internal .net-badge-icon,
-[data-theme="light-panel"] .net-badge.internal .net-badge-label {
-  color: hsl(var(--lp-green)) !important;
-}
-
 /* ============================================
    问候时钟 - 七段 LED 大钟
    ============================================ */
@@ -392,30 +366,6 @@
 
 [data-theme="light-panel"] .gc-seconds.night {
   color: hsl(var(--lp-green));
-}
-
-/* ============================================
-   分组徽章 / 布局 / 网络 / 总览徽章
-   ============================================ */
-
-[data-theme="light-panel"] .group-badge,
-[data-theme="light-panel"] .layout-badge,
-[data-theme="light-panel"] .overview-badge,
-[data-theme="light-panel"] .network-badge {
-  background: hsl(var(--bg-elevated));
-  border: 1px solid hsl(var(--lp-unlit) / 0.9);
-  border-radius: var(--radius-sm);
-  color: hsl(var(--text-primary)) !important;
-  backdrop-filter: none;
-}
-
-[data-theme="light-panel"] .group-badge:hover,
-[data-theme="light-panel"] .layout-badge:hover,
-[data-theme="light-panel"] .overview-badge:hover,
-[data-theme="light-panel"] .network-badge:hover {
-  background: hsl(var(--lp-amber) / 0.08);
-  border-color: hsl(var(--lp-amber) / 0.7);
-  box-shadow: 0 0 16px -6px hsl(var(--lp-amber) / 0.6) !important;
 }
 
 [data-theme="light-panel"] .group-dropdown,
@@ -719,5 +669,24 @@
   --surface-tab-active-color: hsl(var(--text-on-primary));
   --surface-tab-active-border: 1px solid hsl(var(--lp-amber));
   --surface-tab-active-shadow: 0 0 18px -4px hsl(var(--lp-amber) / 0.7);
+}
+
+[data-theme="light-panel"] {
+  --surface-netbadge-radius: var(--radius-sm);
+  --surface-netbadge-border: 1px solid hsl(var(--lp-amber-dim) / 0.9);
+  --surface-netbadge-bg: hsl(var(--lp-amber) / 0.06);
+  --surface-netbadge-hover-shadow: 0 0 16px -6px hsl(var(--lp-amber) / 0.6);
+  --surface-netbadge-internal-border-color: hsl(var(--lp-green) / 0.7);
+  --surface-netbadge-internal-bg: hsl(var(--lp-green) / 0.07);
+  --surface-netbadge-color: hsl(var(--lp-amber));
+  --surface-netbadge-internal-color: hsl(var(--lp-green));
+  --surface-badge-bg: hsl(var(--bg-elevated));
+  --surface-badge-border: 1px solid hsl(var(--lp-unlit) / 0.9);
+  --surface-badge-radius: var(--radius-sm);
+  --surface-badge-color: hsl(var(--text-primary));
+  --surface-badge-backdrop: none;
+  --surface-badge-hover-bg: hsl(var(--lp-amber) / 0.08);
+  --surface-badge-hover-border-color: hsl(var(--lp-amber) / 0.7);
+  --surface-badge-hover-shadow: 0 0 16px -6px hsl(var(--lp-amber) / 0.6);
 }
 

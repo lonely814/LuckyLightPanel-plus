@@ -254,28 +254,26 @@ onUnmounted(() => {
   align-items: center;
   gap: 6px;
   padding: 6px 14px;
-  border-radius: 20px;
+  border-radius: var(--surface-badge-radius, 20px);
   font-size: 13px;
   font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: var(--surface-badge-border, 1px solid rgba(255, 255, 255, 0.12));
   cursor: pointer;
   transition: all 0.2s ease;
-  background: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(12px) saturate(150%);
-  -webkit-backdrop-filter: blur(12px) saturate(150%);
-  color: rgba(6, 182, 212, 0.95);
+  background: var(--surface-badge-bg, rgba(0, 0, 0, 0.25));
+  backdrop-filter: var(--surface-badge-backdrop, blur(12px) saturate(150%));
+  -webkit-backdrop-filter: var(--surface-badge-backdrop, blur(12px) saturate(150%));
+  color: var(--surface-badge-color, rgba(6, 182, 212, 0.95));
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 2px 8px -2px rgba(0, 0, 0, 0.15);
+    var(--surface-badge-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.15));
 }
 
 .layout-badge:hover {
-  background: rgba(0, 0, 0, 0.35);
-  border-color: rgba(6, 182, 212, 0.35);
+  background: var(--surface-badge-hover-bg, rgba(0, 0, 0, 0.35));
+  border-color: var(--surface-badge-hover-border-color, rgba(6, 182, 212, 0.35));
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 2px 8px -2px rgba(0, 0, 0, 0.15),
-    0 0 12px -4px rgba(6, 182, 212, 0.3);
+    var(--surface-badge-hover-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.15), 0 0 12px -4px rgba(6, 182, 212, 0.3));
+  transform: var(--surface-badge-hover-transform, none);
 }
 
 .badge-icon {

@@ -255,32 +255,6 @@
   color: hsl(var(--cs-amber)) !important;
 }
 
-/* 网络徽章 - 指示灯座 */
-[data-theme="console"] .net-badge {
-  border-radius: var(--radius-xs);
-  border: 1px solid hsl(0 0% 0% / 0.55);
-  background: hsl(0 0% 0% / 0.3);
-  box-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.5);
-}
-
-[data-theme="console"] .net-badge:hover {
-  box-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.5), 0 0 12px -6px hsl(var(--cs-amber) / 0.6);
-}
-
-[data-theme="console"] .net-badge.internal {
-  border-color: hsl(var(--cs-green) / 0.6);
-}
-
-[data-theme="console"] .net-badge-icon,
-[data-theme="console"] .net-badge-label {
-  color: hsl(var(--cs-amber)) !important;
-}
-
-[data-theme="console"] .net-badge.internal .net-badge-icon,
-[data-theme="console"] .net-badge.internal .net-badge-label {
-  color: hsl(var(--cs-green)) !important;
-}
-
 /* ============================================
    问候时钟 - LCD 读数
    ============================================ */
@@ -326,31 +300,6 @@
 
 [data-theme="console"] .gc-seconds.night {
   color: hsl(var(--cs-green));
-}
-
-/* ============================================
-   分组徽章 / 布局 / 网络 / 总览徽章
-   ============================================ */
-
-[data-theme="console"] .group-badge,
-[data-theme="console"] .layout-badge,
-[data-theme="console"] .overview-badge,
-[data-theme="console"] .network-badge {
-  background: hsl(0 0% 0% / 0.25);
-  border: 1px solid hsl(0 0% 0% / 0.5);
-  border-radius: var(--radius-xs);
-  color: hsl(var(--text-primary)) !important;
-  backdrop-filter: none;
-  box-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.4);
-}
-
-[data-theme="console"] .group-badge:hover,
-[data-theme="console"] .layout-badge:hover,
-[data-theme="console"] .overview-badge:hover,
-[data-theme="console"] .network-badge:hover {
-  background: hsl(var(--cs-amber) / 0.08);
-  border-color: hsl(var(--cs-amber) / 0.55);
-  box-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.4), 0 0 12px -6px hsl(var(--cs-amber) / 0.6) !important;
 }
 
 [data-theme="console"] .group-dropdown,
@@ -620,5 +569,25 @@
   --surface-tab-active-color: hsl(var(--text-on-primary));
   --surface-tab-active-border: 1px solid hsl(var(--cs-amber));
   --surface-tab-active-shadow: 0 0 14px -4px hsl(var(--cs-amber) / 0.7);
+}
+
+[data-theme="console"] {
+  --surface-netbadge-radius: var(--radius-xs);
+  --surface-netbadge-border: 1px solid hsl(0 0% 0% / 0.55);
+  --surface-netbadge-bg: hsl(0 0% 0% / 0.3);
+  --surface-netbadge-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.5);
+  --surface-netbadge-hover-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.5), 0 0 12px -6px hsl(var(--cs-amber) / 0.6);
+  --surface-netbadge-internal-border-color: hsl(var(--cs-green) / 0.6);
+  --surface-netbadge-color: hsl(var(--cs-amber));
+  --surface-netbadge-internal-color: hsl(var(--cs-green));
+  --surface-badge-bg: hsl(0 0% 0% / 0.25);
+  --surface-badge-border: 1px solid hsl(0 0% 0% / 0.5);
+  --surface-badge-radius: var(--radius-xs);
+  --surface-badge-color: hsl(var(--text-primary));
+  --surface-badge-backdrop: none;
+  --surface-badge-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.4);
+  --surface-badge-hover-bg: hsl(var(--cs-amber) / 0.08);
+  --surface-badge-hover-border-color: hsl(var(--cs-amber) / 0.55);
+  --surface-badge-hover-shadow: inset 0 1px 2px hsl(0 0% 0% / 0.4), 0 0 12px -6px hsl(var(--cs-amber) / 0.6);
 }
 
