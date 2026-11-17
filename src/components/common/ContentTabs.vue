@@ -103,9 +103,9 @@ watch([currentTab, () => navStore.isLoading], async ([newTab, isLoading], [oldTa
   border: 1px solid hsl(var(--glass-border));
   border-radius: 16px;
   box-shadow:
-    0 1px 2px rgba(31, 38, 135, 0.06),
-    0 8px 28px rgba(31, 38, 135, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 1px 2px rgba(var(--overlay-dark-rgb), 0.06),
+    0 8px 28px rgba(var(--overlay-dark-rgb), 0.1),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.05);
 }
 
 /* 单个标签按钮 */
@@ -154,7 +154,7 @@ watch([currentTab, () => navStore.isLoading], async ([newTab, isLoading], [oldTa
 
 .content-tab.tab-docker.active {
   background: linear-gradient(135deg, #2496ed 0%, #0db7ed 100%);
-  box-shadow: 0 4px 14px rgba(36, 150, 237, 0.3);
+  box-shadow: 0 4px 14px rgba(var(--primary-rgb), 0.3);
 }
 
 .content-tab.tab-docker.active .tab-icon {
@@ -168,7 +168,7 @@ watch([currentTab, () => navStore.isLoading], async ([newTab, isLoading], [oldTa
 
 .content-tab.tab-luckyServices.active {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 14px rgba(var(--success-rgb), 0.3);
 }
 
 .content-tab.tab-luckyServices.active .tab-icon {
@@ -178,8 +178,8 @@ watch([currentTab, () => navStore.isLoading], async ([newTab, isLoading], [oldTa
 /* 深色主题适配 */
 [data-theme="dark"] .content-tabs {
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    0 8px 32px rgba(var(--overlay-dark-rgb), 0.3),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.03);
 }
 
 /* 响应式：小屏幕隐藏文字 */

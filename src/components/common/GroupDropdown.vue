@@ -175,20 +175,20 @@ onUnmounted(() => {
   border-radius: 20px;
   font-size: 13px;
   font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(var(--overlay-light-rgb), 0.12);
   cursor: pointer;
   transition: all 0.2s ease;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(var(--overlay-dark-rgb), 0.25);
   backdrop-filter: blur(12px) saturate(150%);
   -webkit-backdrop-filter: blur(12px) saturate(150%);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 2px 8px -2px rgba(0, 0, 0, 0.15);
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.05),
+    0 2px 8px -2px rgba(var(--overlay-dark-rgb), 0.15);
 }
 
 .group-badge:hover {
-  background: rgba(0, 0, 0, 0.35);
-  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(var(--overlay-dark-rgb), 0.35);
+  border-color: rgba(var(--overlay-light-rgb), 0.18);
 }
 
 .badge-icon {
@@ -208,19 +208,19 @@ onUnmounted(() => {
 
 /* 青蓝色（默认/站点） */
 .color-cyan .group-badge {
-  color: rgba(6, 182, 212, 0.95);
+  color: rgba(var(--neon-cyan-rgb), 0.95);
 }
 
 .color-cyan .group-badge:hover {
-  border-color: rgba(6, 182, 212, 0.35);
+  border-color: rgba(var(--neon-cyan-rgb), 0.35);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 2px 8px -2px rgba(0, 0, 0, 0.15),
-    0 0 12px -4px rgba(6, 182, 212, 0.3);
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.05),
+    0 2px 8px -2px rgba(var(--overlay-dark-rgb), 0.15),
+    0 0 12px -4px rgba(var(--neon-cyan-rgb), 0.3);
 }
 
 .color-cyan .group-option.active {
-  background: rgba(6, 182, 212, 0.15);
+  background: rgba(var(--neon-cyan-rgb), 0.15);
   color: #06b6d4;
 }
 
@@ -230,19 +230,19 @@ onUnmounted(() => {
 
 /* Docker 蓝色 */
 .color-docker .group-badge {
-  color: rgba(36, 150, 237, 0.95);
+  color: rgba(var(--primary-rgb), 0.95);
 }
 
 .color-docker .group-badge:hover {
-  border-color: rgba(36, 150, 237, 0.35);
+  border-color: rgba(var(--primary-rgb), 0.35);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 2px 8px -2px rgba(0, 0, 0, 0.15),
-    0 0 12px -4px rgba(36, 150, 237, 0.3);
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.05),
+    0 2px 8px -2px rgba(var(--overlay-dark-rgb), 0.15),
+    0 0 12px -4px rgba(var(--primary-rgb), 0.3);
 }
 
 .color-docker .group-option.active {
-  background: rgba(36, 150, 237, 0.15);
+  background: rgba(var(--primary-rgb), 0.15);
   color: #2496ed;
 }
 
@@ -252,19 +252,19 @@ onUnmounted(() => {
 
 /* Lucky服务绿色 */
 .color-green .group-badge {
-  color: rgba(16, 185, 129, 0.95);
+  color: rgba(var(--success-rgb), 0.95);
 }
 
 .color-green .group-badge:hover {
-  border-color: rgba(16, 185, 129, 0.35);
+  border-color: rgba(var(--success-rgb), 0.35);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 2px 8px -2px rgba(0, 0, 0, 0.15),
-    0 0 12px -4px rgba(16, 185, 129, 0.3);
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.05),
+    0 2px 8px -2px rgba(var(--overlay-dark-rgb), 0.15),
+    0 0 12px -4px rgba(var(--success-rgb), 0.3);
 }
 
 .color-green .group-option.active {
-  background: rgba(16, 185, 129, 0.15);
+  background: rgba(var(--success-rgb), 0.15);
   color: #10b981;
 }
 
@@ -281,14 +281,14 @@ onUnmounted(() => {
   max-width: 220px;
   max-height: 320px;
   overflow-y: auto;
-  background: rgba(15, 20, 30, 0.92);
+  background: rgba(var(--overlay-dark-rgb), 0.92);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(var(--overlay-light-rgb), 0.1);
   border-radius: 12px;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 8px 32px rgba(var(--overlay-dark-rgb), 0.25),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.05);
   padding: 6px;
   opacity: 0;
   visibility: hidden;
@@ -310,7 +310,7 @@ onUnmounted(() => {
   align-items: center;
   width: 100%;
   border-radius: 8px;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(var(--overlay-light-rgb), 0.85);
   font-size: 13px;
   transition: all 0.15s ease;
   overflow: hidden;
@@ -326,7 +326,7 @@ button.group-option {
 }
 
 button.group-option:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--overlay-light-rgb), 0.08);
 }
 
 /* 分组选项主体（左侧可点击区域） */
@@ -345,7 +345,7 @@ button.group-option:hover {
 }
 
 .option-main:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--overlay-light-rgb), 0.08);
 }
 
 .option-icon {
@@ -369,8 +369,8 @@ button.group-option:hover {
 .option-count {
   flex-shrink: 0;
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.08);
+  color: rgba(var(--overlay-light-rgb), 0.4);
+  background: rgba(var(--overlay-light-rgb), 0.08);
   padding: 1px 6px;
   border-radius: 8px;
   margin-left: 4px;
@@ -387,7 +387,7 @@ button.group-option:hover {
   padding: 0;
   border: none;
   background: transparent;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(var(--overlay-light-rgb), 0.4);
   font-size: 14px;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -395,8 +395,8 @@ button.group-option:hover {
 }
 
 .option-checkbox:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.7);
+  background: rgba(var(--overlay-light-rgb), 0.1);
+  color: rgba(var(--overlay-light-rgb), 0.7);
 }
 
 .option-checkbox.checked {
@@ -406,67 +406,67 @@ button.group-option:hover {
 /* 分割线 */
 .dropdown-divider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--overlay-light-rgb), 0.08);
   margin: 4px 8px;
 }
 
 /* 浅色主题适配 */
 [data-theme="light"] .group-badge {
-  background: rgba(255, 255, 255, 0.6);
-  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(var(--overlay-light-rgb), 0.6);
+  border-color: rgba(var(--overlay-dark-rgb), 0.08);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    0 2px 8px -2px rgba(0, 0, 0, 0.08);
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.8),
+    0 2px 8px -2px rgba(var(--overlay-dark-rgb), 0.08);
 }
 
 [data-theme="light"] .group-badge:hover {
-  background: rgba(255, 255, 255, 0.75);
-  border-color: rgba(0, 0, 0, 0.12);
+  background: rgba(var(--overlay-light-rgb), 0.75);
+  border-color: rgba(var(--overlay-dark-rgb), 0.12);
 }
 
 [data-theme="light"] .group-dropdown {
-  background: rgba(255, 255, 255, 0.95);
-  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(var(--overlay-light-rgb), 0.95);
+  border-color: rgba(var(--overlay-dark-rgb), 0.08);
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    0 8px 32px rgba(var(--overlay-dark-rgb), 0.12),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.8);
 }
 
 [data-theme="light"] .group-option {
-  color: rgba(0, 0, 0, 0.75);
+  color: rgba(var(--overlay-dark-rgb), 0.75);
 }
 
 [data-theme="light"] .group-option:hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(var(--overlay-dark-rgb), 0.05);
 }
 
 [data-theme="light"] .dropdown-divider {
-  background: rgba(0, 0, 0, 0.06);
+  background: rgba(var(--overlay-dark-rgb), 0.06);
 }
 
 [data-theme="light"] .option-count {
-  color: rgba(0, 0, 0, 0.45);
-  background: rgba(0, 0, 0, 0.06);
+  color: rgba(var(--overlay-dark-rgb), 0.45);
+  background: rgba(var(--overlay-dark-rgb), 0.06);
 }
 
 [data-theme="light"] .option-main:hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(var(--overlay-dark-rgb), 0.05);
 }
 
 [data-theme="light"] .option-checkbox {
-  color: rgba(0, 0, 0, 0.35);
+  color: rgba(var(--overlay-dark-rgb), 0.35);
 }
 
 [data-theme="light"] .option-checkbox:hover {
-  background: rgba(0, 0, 0, 0.08);
-  color: rgba(0, 0, 0, 0.6);
+  background: rgba(var(--overlay-dark-rgb), 0.08);
+  color: rgba(var(--overlay-dark-rgb), 0.6);
 }
 
 /* 深色主题适配 */
 [data-theme="dark"] .group-dropdown {
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    0 8px 32px rgba(var(--overlay-dark-rgb), 0.4),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.03);
 }
 
 /* 响应式 */

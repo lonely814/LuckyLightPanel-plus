@@ -279,26 +279,26 @@ function getMemoryBarWidth(value: number): string {
   border-radius: 20px;
   font-size: 13px;
   font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(var(--overlay-light-rgb), 0.12);
   cursor: pointer;
   transition: all 0.2s ease;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(var(--overlay-dark-rgb), 0.25);
   backdrop-filter: blur(12px) saturate(150%);
   -webkit-backdrop-filter: blur(12px) saturate(150%);
   position: relative;
   overflow: hidden;
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 2px 8px -2px rgba(0, 0, 0, 0.15);
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.05),
+    0 2px 8px -2px rgba(var(--overlay-dark-rgb), 0.15);
 }
 
 .overview-badge:hover {
-  background: rgba(0, 0, 0, 0.35);
-  border-color: rgba(6, 182, 212, 0.35);
+  background: rgba(var(--overlay-dark-rgb), 0.35);
+  border-color: rgba(var(--neon-cyan-rgb), 0.35);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 2px 8px -2px rgba(0, 0, 0, 0.15),
-    0 0 12px -4px rgba(6, 182, 212, 0.3);
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.05),
+    0 2px 8px -2px rgba(var(--overlay-dark-rgb), 0.15),
+    0 0 12px -4px rgba(var(--neon-cyan-rgb), 0.3);
 }
 
 .badge-icon {
@@ -328,15 +328,15 @@ function getMemoryBarWidth(value: number): string {
   top: calc(100% + 10px);
   left: 50%;
   width: 340px;
-  background: rgba(15, 20, 30, 0.88);
+  background: rgba(var(--overlay-dark-rgb), 0.88);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(var(--overlay-light-rgb), 0.1);
   border-radius: 16px;
   box-shadow: 
-    0 10px 40px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(255, 255, 255, 0.03),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    0 10px 40px rgba(var(--overlay-dark-rgb), 0.3),
+    0 0 0 1px rgba(var(--overlay-light-rgb), 0.03),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.06);
   opacity: 0;
   visibility: hidden;
   transform: translateX(-50%) translateY(-10px) scale(0.95);
@@ -358,8 +358,8 @@ function getMemoryBarWidth(value: number): string {
   align-items: center;
   gap: 10px;
   padding: 14px 16px;
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(168, 85, 247, 0.12) 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(135deg, rgba(var(--neon-cyan-rgb), 0.12) 0%, rgba(var(--neon-purple-rgb), 0.12) 100%);
+  border-bottom: 1px solid rgba(var(--overlay-light-rgb), 0.06);
   position: relative;
   overflow: hidden;
 }
@@ -370,7 +370,7 @@ function getMemoryBarWidth(value: number): string {
   left: 10%;
   width: 80%;
   height: 100%;
-  background: radial-gradient(ellipse, rgba(6, 182, 212, 0.2) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(var(--neon-cyan-rgb), 0.2) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -398,9 +398,9 @@ function getMemoryBarWidth(value: number): string {
   border-radius: 10px;
   font-size: 11px;
   font-weight: 600;
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
+  background: linear-gradient(135deg, rgba(var(--neon-cyan-rgb), 0.2) 0%, rgba(var(--neon-purple-rgb), 0.2) 100%);
   color: #06b6d4;
-  border: 1px solid rgba(6, 182, 212, 0.3);
+  border: 1px solid rgba(var(--neon-cyan-rgb), 0.3);
   position: relative;
   z-index: 1;
 }
@@ -435,12 +435,12 @@ function getMemoryBarWidth(value: number): string {
 
 .section-icon.cpu-icon {
   background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
-  box-shadow: 0 4px 12px -2px rgba(6, 182, 212, 0.4);
+  box-shadow: 0 4px 12px -2px rgba(var(--neon-cyan-rgb), 0.4);
 }
 
 .section-icon.memory-icon {
   background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
-  box-shadow: 0 4px 12px -2px rgba(168, 85, 247, 0.4);
+  box-shadow: 0 4px 12px -2px rgba(var(--neon-purple-rgb), 0.4);
 }
 
 .section-title {
@@ -463,24 +463,24 @@ function getMemoryBarWidth(value: number): string {
   gap: 10px;
   padding: 8px 10px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(var(--overlay-light-rgb), 0.03);
+  border: 1px solid rgba(var(--overlay-light-rgb), 0.04);
   transition: all 0.2s ease;
 }
 
 .rank-item:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--overlay-light-rgb), 0.06);
+  border-color: rgba(var(--overlay-light-rgb), 0.08);
 }
 
 /* 排名第一特殊样式 */
 .rank-item.rank-1 {
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.08) 0%, rgba(251, 191, 36, 0.03) 100%);
-  border-color: rgba(251, 191, 36, 0.15);
+  background: linear-gradient(135deg, rgba(var(--warning-rgb), 0.08) 0%, rgba(var(--warning-rgb), 0.03) 100%);
+  border-color: rgba(var(--warning-rgb), 0.15);
 }
 
 .rank-item.rank-1:hover {
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.12) 0%, rgba(251, 191, 36, 0.06) 100%);
+  background: linear-gradient(135deg, rgba(var(--warning-rgb), 0.12) 0%, rgba(var(--warning-rgb), 0.06) 100%);
 }
 
 /* 排名数字 */
@@ -494,15 +494,15 @@ function getMemoryBarWidth(value: number): string {
   font-size: 11px;
   font-weight: 700;
   color: var(--rank-color);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(var(--overlay-light-rgb), 0.05);
   border: 1px solid var(--rank-color);
   flex-shrink: 0;
   transition: all 0.2s ease;
 }
 
 .rank-1 .rank-number {
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(251, 191, 36, 0.1) 100%);
-  box-shadow: 0 0 10px -2px rgba(251, 191, 36, 0.4);
+  background: linear-gradient(135deg, rgba(var(--warning-rgb), 0.2) 0%, rgba(var(--warning-rgb), 0.1) 100%);
+  box-shadow: 0 0 10px -2px rgba(var(--warning-rgb), 0.4);
 }
 
 /* 排行信息 */
@@ -527,7 +527,7 @@ function getMemoryBarWidth(value: number): string {
 .rank-bar-wrapper {
   height: 4px;
   border-radius: 2px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(var(--overlay-light-rgb), 0.06);
   overflow: hidden;
 }
 
@@ -539,12 +539,12 @@ function getMemoryBarWidth(value: number): string {
 
 .rank-bar.cpu-bar {
   background: linear-gradient(90deg, #06b6d4 0%, #22d3ee 100%);
-  box-shadow: 0 0 8px rgba(6, 182, 212, 0.4);
+  box-shadow: 0 0 8px rgba(var(--neon-cyan-rgb), 0.4);
 }
 
 .rank-bar.memory-bar {
   background: linear-gradient(90deg, #a855f7 0%, #c084fc 100%);
-  box-shadow: 0 0 8px rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 8px rgba(var(--neon-purple-rgb), 0.4);
 }
 
 /* 排行数值 */
@@ -570,14 +570,14 @@ function getMemoryBarWidth(value: number): string {
 .divider-line {
   width: 100%;
   height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.08) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(var(--overlay-light-rgb), 0.08) 50%, transparent 100%);
 }
 
 .divider-glow {
   position: absolute;
   width: 60px;
   height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(168, 85, 247, 0.3) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(var(--neon-purple-rgb), 0.3) 50%, transparent 100%);
 }
 
 /* 面板底部 */
@@ -593,7 +593,7 @@ function getMemoryBarWidth(value: number): string {
   width: 60%;
   height: 2px;
   border-radius: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.3) 30%, rgba(168, 85, 247, 0.3) 70%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(var(--neon-cyan-rgb), 0.3) 30%, rgba(var(--neon-purple-rgb), 0.3) 70%, transparent 100%);
 }
 
 .footer-dots {
@@ -605,11 +605,11 @@ function getMemoryBarWidth(value: number): string {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(var(--overlay-light-rgb), 0.15);
 }
 
 .footer-dots span:nth-child(2) {
-  background: rgba(6, 182, 212, 0.4);
+  background: rgba(var(--neon-cyan-rgb), 0.4);
 }
 
 /* 空状态 */
@@ -620,7 +620,7 @@ function getMemoryBarWidth(value: number): string {
   justify-content: center;
   padding: 32px 16px;
   gap: 12px;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--overlay-light-rgb), 0.45);
 }
 
 .empty-icon {
@@ -636,90 +636,90 @@ function getMemoryBarWidth(value: number): string {
 .no-data {
   padding: 16px;
   text-align: center;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--overlay-light-rgb), 0.45);
   font-size: 12px;
 }
 
 /* 浅色主题适配 */
 [data-theme="light"] .overview-badge {
-  background: rgba(255, 255, 255, 0.6);
-  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(var(--overlay-light-rgb), 0.6);
+  border-color: rgba(var(--overlay-dark-rgb), 0.08);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    0 2px 8px -2px rgba(0, 0, 0, 0.08);
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.8),
+    0 2px 8px -2px rgba(var(--overlay-dark-rgb), 0.08);
 }
 
 [data-theme="light"] .overview-badge:hover {
-  background: rgba(255, 255, 255, 0.75);
-  border-color: rgba(6, 182, 212, 0.4);
+  background: rgba(var(--overlay-light-rgb), 0.75);
+  border-color: rgba(var(--neon-cyan-rgb), 0.4);
 }
 
 [data-theme="light"] .overview-panel {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(var(--overlay-light-rgb), 0.92);
+  border-color: rgba(var(--overlay-dark-rgb), 0.08);
   box-shadow: 
-    0 10px 40px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    0 10px 40px rgba(var(--overlay-dark-rgb), 0.12),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.8);
 }
 
 [data-theme="light"] .panel-header {
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%);
-  border-bottom-color: rgba(0, 0, 0, 0.05);
+  background: linear-gradient(135deg, rgba(var(--neon-cyan-rgb), 0.08) 0%, rgba(var(--neon-purple-rgb), 0.08) 100%);
+  border-bottom-color: rgba(var(--overlay-dark-rgb), 0.05);
 }
 
 [data-theme="light"] .header-title {
-  color: rgba(0, 0, 0, 0.85);
+  color: rgba(var(--overlay-dark-rgb), 0.85);
 }
 
 [data-theme="light"] .section-title {
-  color: rgba(0, 0, 0, 0.85);
+  color: rgba(var(--overlay-dark-rgb), 0.85);
 }
 
 [data-theme="light"] .rank-item {
-  background: rgba(0, 0, 0, 0.02);
-  border-color: rgba(0, 0, 0, 0.04);
+  background: rgba(var(--overlay-dark-rgb), 0.02);
+  border-color: rgba(var(--overlay-dark-rgb), 0.04);
 }
 
 [data-theme="light"] .rank-item:hover {
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(var(--overlay-dark-rgb), 0.04);
 }
 
 [data-theme="light"] .rank-item.rank-1 {
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.06) 0%, rgba(251, 191, 36, 0.02) 100%);
-  border-color: rgba(251, 191, 36, 0.12);
+  background: linear-gradient(135deg, rgba(var(--warning-rgb), 0.06) 0%, rgba(var(--warning-rgb), 0.02) 100%);
+  border-color: rgba(var(--warning-rgb), 0.12);
 }
 
 [data-theme="light"] .rank-name {
-  color: rgba(0, 0, 0, 0.85);
+  color: rgba(var(--overlay-dark-rgb), 0.85);
 }
 
 [data-theme="light"] .rank-value {
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(var(--overlay-dark-rgb), 0.6);
 }
 
 [data-theme="light"] .rank-number {
-  background: rgba(0, 0, 0, 0.03);
+  background: rgba(var(--overlay-dark-rgb), 0.03);
 }
 
 [data-theme="light"] .rank-bar-wrapper {
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(var(--overlay-dark-rgb), 0.04);
 }
 
 [data-theme="light"] .empty-state,
 [data-theme="light"] .no-data {
-  color: rgba(0, 0, 0, 0.4);
+  color: rgba(var(--overlay-dark-rgb), 0.4);
 }
 
 [data-theme="light"] .footer-dots span {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(var(--overlay-dark-rgb), 0.1);
 }
 
 /* 深色主题 */
 [data-theme="dark"] .overview-panel {
   box-shadow: 
-    0 12px 48px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(255, 255, 255, 0.03),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 12px 48px rgba(var(--overlay-dark-rgb), 0.4),
+    0 0 0 1px rgba(var(--overlay-light-rgb), 0.03),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.05);
 }
 
 /* 响应式 - 移动端适配 */

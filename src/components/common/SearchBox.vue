@@ -100,26 +100,26 @@ function clearSearch() {
   height: 36px;
   padding: 0 36px;
   font-size: 13px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(var(--overlay-light-rgb), 0.12);
   border-radius: 18px;
   outline: none;
   transition: all 0.2s ease;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(var(--overlay-dark-rgb), 0.25);
   backdrop-filter: blur(12px) saturate(150%);
   -webkit-backdrop-filter: blur(12px) saturate(150%);
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(var(--overlay-light-rgb), 0.9);
   box-shadow: 
-    inset 0 1px 2px rgba(0, 0, 0, 0.1),
-    0 1px 0 rgba(255, 255, 255, 0.05);
+    inset 0 1px 2px rgba(var(--overlay-dark-rgb), 0.1),
+    0 1px 0 rgba(var(--overlay-light-rgb), 0.05);
 }
 
 .search-input::placeholder {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--overlay-light-rgb), 0.45);
 }
 
 .search-input:focus {
-  background: rgba(0, 0, 0, 0.35);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(var(--overlay-dark-rgb), 0.35);
+  border-color: rgba(var(--overlay-light-rgb), 0.2);
 }
 
 .search-clear {
@@ -138,7 +138,7 @@ function clearSearch() {
 }
 
 .search-clear:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(var(--overlay-light-rgb), 0.15);
 }
 
 .search-clear i {
@@ -147,91 +147,91 @@ function clearSearch() {
 
 /* Cyan 主题（站点） */
 .search-cyan .search-icon {
-  color: rgba(6, 182, 212, 0.8);
+  color: rgba(var(--neon-cyan-rgb), 0.8);
 }
 
 .search-cyan .search-input:focus {
-  border-color: rgba(6, 182, 212, 0.5);
+  border-color: rgba(var(--neon-cyan-rgb), 0.5);
   box-shadow: 
-    inset 0 1px 2px rgba(0, 0, 0, 0.1),
-    0 0 0 2px rgba(6, 182, 212, 0.15),
-    0 0 12px -4px rgba(6, 182, 212, 0.3);
+    inset 0 1px 2px rgba(var(--overlay-dark-rgb), 0.1),
+    0 0 0 2px rgba(var(--neon-cyan-rgb), 0.15),
+    0 0 12px -4px rgba(var(--neon-cyan-rgb), 0.3);
 }
 
 .search-cyan .search-clear {
-  color: rgba(6, 182, 212, 0.8);
+  color: rgba(var(--neon-cyan-rgb), 0.8);
 }
 
 .search-cyan .search-clear:hover {
   color: #06b6d4;
-  background: rgba(6, 182, 212, 0.15);
+  background: rgba(var(--neon-cyan-rgb), 0.15);
 }
 
 /* Docker 主题 */
 .search-docker .search-icon {
-  color: rgba(36, 150, 237, 0.8);
+  color: rgba(var(--primary-rgb), 0.8);
 }
 
 .search-docker .search-input:focus {
-  border-color: rgba(36, 150, 237, 0.5);
+  border-color: rgba(var(--primary-rgb), 0.5);
   box-shadow: 
-    inset 0 1px 2px rgba(0, 0, 0, 0.1),
-    0 0 0 2px rgba(36, 150, 237, 0.15),
-    0 0 12px -4px rgba(36, 150, 237, 0.3);
+    inset 0 1px 2px rgba(var(--overlay-dark-rgb), 0.1),
+    0 0 0 2px rgba(var(--primary-rgb), 0.15),
+    0 0 12px -4px rgba(var(--primary-rgb), 0.3);
 }
 
 .search-docker .search-clear {
-  color: rgba(36, 150, 237, 0.8);
+  color: rgba(var(--primary-rgb), 0.8);
 }
 
 .search-docker .search-clear:hover {
   color: #2496ed;
-  background: rgba(36, 150, 237, 0.15);
+  background: rgba(var(--primary-rgb), 0.15);
 }
 
 /* Green 主题（Lucky服务） */
 .search-green .search-icon {
-  color: rgba(16, 185, 129, 0.8);
+  color: rgba(var(--success-rgb), 0.8);
 }
 
 .search-green .search-input:focus {
-  border-color: rgba(16, 185, 129, 0.5);
+  border-color: rgba(var(--success-rgb), 0.5);
   box-shadow: 
-    inset 0 1px 2px rgba(0, 0, 0, 0.1),
-    0 0 0 2px rgba(16, 185, 129, 0.15),
-    0 0 12px -4px rgba(16, 185, 129, 0.3);
+    inset 0 1px 2px rgba(var(--overlay-dark-rgb), 0.1),
+    0 0 0 2px rgba(var(--success-rgb), 0.15),
+    0 0 12px -4px rgba(var(--success-rgb), 0.3);
 }
 
 .search-green .search-clear {
-  color: rgba(16, 185, 129, 0.8);
+  color: rgba(var(--success-rgb), 0.8);
 }
 
 .search-green .search-clear:hover {
   color: #10b981;
-  background: rgba(16, 185, 129, 0.15);
+  background: rgba(var(--success-rgb), 0.15);
 }
 
 /* 浅色主题适配 */
 [data-theme="light"] .search-input {
-  background: rgba(255, 255, 255, 0.6);
-  border-color: rgba(0, 0, 0, 0.08);
-  color: rgba(0, 0, 0, 0.85);
+  background: rgba(var(--overlay-light-rgb), 0.6);
+  border-color: rgba(var(--overlay-dark-rgb), 0.08);
+  color: rgba(var(--overlay-dark-rgb), 0.85);
   box-shadow: 
-    inset 0 1px 2px rgba(0, 0, 0, 0.05),
-    0 1px 0 rgba(255, 255, 255, 0.8);
+    inset 0 1px 2px rgba(var(--overlay-dark-rgb), 0.05),
+    0 1px 0 rgba(var(--overlay-light-rgb), 0.8);
 }
 
 [data-theme="light"] .search-input::placeholder {
-  color: rgba(0, 0, 0, 0.4);
+  color: rgba(var(--overlay-dark-rgb), 0.4);
 }
 
 [data-theme="light"] .search-input:focus {
-  background: rgba(255, 255, 255, 0.75);
-  border-color: rgba(0, 0, 0, 0.12);
+  background: rgba(var(--overlay-light-rgb), 0.75);
+  border-color: rgba(var(--overlay-dark-rgb), 0.12);
 }
 
 [data-theme="light"] .search-clear:hover {
-  background: rgba(0, 0, 0, 0.08);
+  background: rgba(var(--overlay-dark-rgb), 0.08);
 }
 
 /* 响应式 */

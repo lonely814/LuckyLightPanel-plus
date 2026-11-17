@@ -227,24 +227,24 @@ onUnmounted(() => {
   border-radius: 20px;
   font-size: 13px;
   font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(var(--overlay-light-rgb), 0.12);
   cursor: pointer;
   transition: all 0.2s ease;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(var(--overlay-dark-rgb), 0.25);
   backdrop-filter: blur(12px) saturate(150%);
   -webkit-backdrop-filter: blur(12px) saturate(150%);
   color: rgb(var(--accent-rgb), 0.95);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 2px 8px -2px rgba(0, 0, 0, 0.15);
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.05),
+    0 2px 8px -2px rgba(var(--overlay-dark-rgb), 0.15);
 }
 
 .layout-badge:hover {
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(var(--overlay-dark-rgb), 0.35);
   border-color: rgb(var(--accent-rgb), 0.35);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 2px 8px -2px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.05),
+    0 2px 8px -2px rgba(var(--overlay-dark-rgb), 0.15),
     0 0 12px -4px rgb(var(--accent-rgb), 0.3);
 }
 
@@ -268,14 +268,14 @@ onUnmounted(() => {
   position: absolute;
   top: calc(100% + 8px);
   left: 50%;
-  background: rgba(15, 20, 30, 0.85);
+  background: rgba(var(--overlay-dark-rgb), 0.85);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(var(--overlay-light-rgb), 0.1);
   border-radius: 14px;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 8px 32px rgba(var(--overlay-dark-rgb), 0.25),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.05);
   padding: 10px;
   opacity: 0;
   visibility: hidden;
@@ -321,14 +321,14 @@ onUnmounted(() => {
   border: none;
   background: transparent;
   border-radius: 10px;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(var(--overlay-light-rgb), 0.85);
   cursor: pointer;
   transition: all 0.15s ease;
   position: relative;
 }
 
 .layout-option:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--overlay-light-rgb), 0.08);
 }
 
 .layout-option.active {
@@ -358,8 +358,8 @@ onUnmounted(() => {
   width: 48px;
   height: 36px;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(var(--overlay-light-rgb), 0.15);
+  background: rgba(var(--overlay-dark-rgb), 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -402,14 +402,14 @@ onUnmounted(() => {
   height: 2px;
   width: 100%;
   border-radius: 1px;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(var(--overlay-light-rgb), 0.3);
 }
 
 .preview-badge {
   height: 2px;
   width: 50%;
   border-radius: 1px;
-  background: rgba(0, 255, 128, 0.6);
+  background: rgba(var(--accent-rgb), 0.6);
 }
 
 .preview-stats {
@@ -455,7 +455,7 @@ onUnmounted(() => {
   flex: 1;
   height: 2px;
   border-radius: 1px;
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(var(--overlay-light-rgb), 0.25);
 }
 
 /* 列表布局预览 */
@@ -487,14 +487,14 @@ onUnmounted(() => {
   flex: 1;
   height: 2px;
   border-radius: 1px;
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(var(--overlay-light-rgb), 0.25);
 }
 
 .preview-list-badge {
   width: 8px;
   height: 3px;
   border-radius: 1px;
-  background: rgba(0, 255, 128, 0.6);
+  background: rgba(var(--accent-rgb), 0.6);
   flex-shrink: 0;
 }
 
@@ -529,7 +529,7 @@ onUnmounted(() => {
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: rgba(0, 255, 128, 0.7);
+  background: rgba(var(--accent-rgb), 0.7);
 }
 
 /* 机柜布局预览 - 1U 面板堆叠 */
@@ -556,7 +556,7 @@ onUnmounted(() => {
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: rgba(0, 255, 128, 0.8);
+  background: rgba(var(--accent-rgb), 0.8);
   flex-shrink: 0;
 }
 
@@ -572,7 +572,7 @@ onUnmounted(() => {
   flex: 1;
   height: 2px;
   border-radius: 1px;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(var(--overlay-light-rgb), 0.3);
 }
 
 .preview-rack-chip {
@@ -592,50 +592,50 @@ onUnmounted(() => {
 
 /* 浅色主题适配 */
 [data-theme="light"] .layout-badge {
-  background: rgba(255, 255, 255, 0.6);
-  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(var(--overlay-light-rgb), 0.6);
+  border-color: rgba(var(--overlay-dark-rgb), 0.08);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    0 2px 8px -2px rgba(0, 0, 0, 0.08);
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.8),
+    0 2px 8px -2px rgba(var(--overlay-dark-rgb), 0.08);
 }
 
 [data-theme="light"] .layout-badge:hover {
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(var(--overlay-light-rgb), 0.75);
   border-color: rgb(var(--accent-rgb), 0.4);
 }
 
 [data-theme="light"] .layout-dropdown {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(var(--overlay-light-rgb), 0.92);
+  border-color: rgba(var(--overlay-dark-rgb), 0.08);
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    0 8px 32px rgba(var(--overlay-dark-rgb), 0.12),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.8);
 }
 
 [data-theme="light"] .layout-option {
-  color: rgba(0, 0, 0, 0.75);
+  color: rgba(var(--overlay-dark-rgb), 0.75);
 }
 
 [data-theme="light"] .layout-option:hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(var(--overlay-dark-rgb), 0.05);
 }
 
 [data-theme="light"] .layout-preview {
-  border-color: rgba(0, 0, 0, 0.1);
-  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(var(--overlay-dark-rgb), 0.1);
+  background: rgba(var(--overlay-dark-rgb), 0.03);
 }
 
 [data-theme="light"] .preview-line,
 [data-theme="light"] .preview-line-short,
 [data-theme="light"] .preview-list-line {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(var(--overlay-dark-rgb), 0.2);
 }
 
 /* 深色主题适配 */
 [data-theme="dark"] .layout-dropdown {
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    0 8px 32px rgba(var(--overlay-dark-rgb), 0.4),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.03);
 }
 
 /* 响应式 */

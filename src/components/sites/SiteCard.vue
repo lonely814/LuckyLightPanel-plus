@@ -346,7 +346,7 @@ const cardClass = computed(() => {
   transform: translateY(-6px) rotateX(6deg) scale(1.02);
   box-shadow:
     var(--site-card-shadow-hover),
-    0 24px 48px -12px rgba(0, 0, 0, 0.35),
+    0 24px 48px -12px rgba(var(--overlay-dark-rgb), 0.35),
     0 0 20px -6px hsl(var(--neon-cyan) / 0.3);
 }
 

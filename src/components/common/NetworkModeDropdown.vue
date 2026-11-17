@@ -116,25 +116,25 @@ onUnmounted(() => {
   border-radius: 20px;
   font-size: 13px;
   font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(var(--overlay-light-rgb), 0.12);
   cursor: pointer;
   transition: all 0.2s ease;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(var(--overlay-dark-rgb), 0.25);
   backdrop-filter: blur(12px) saturate(150%);
   -webkit-backdrop-filter: blur(12px) saturate(150%);
-  color: rgba(168, 85, 247, 0.95);
+  color: rgba(var(--neon-purple-rgb), 0.95);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 2px 8px -2px rgba(0, 0, 0, 0.15);
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.05),
+    0 2px 8px -2px rgba(var(--overlay-dark-rgb), 0.15);
 }
 
 .network-badge:hover {
-  background: rgba(0, 0, 0, 0.35);
-  border-color: rgba(168, 85, 247, 0.35);
+  background: rgba(var(--overlay-dark-rgb), 0.35);
+  border-color: rgba(var(--neon-purple-rgb), 0.35);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 2px 8px -2px rgba(0, 0, 0, 0.15),
-    0 0 12px -4px rgba(168, 85, 247, 0.3);
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.05),
+    0 2px 8px -2px rgba(var(--overlay-dark-rgb), 0.15),
+    0 0 12px -4px rgba(var(--neon-purple-rgb), 0.3);
 }
 
 .badge-icon {
@@ -159,14 +159,14 @@ onUnmounted(() => {
   left: 50%;
   min-width: 120px;
   max-width: 160px;
-  background: rgba(15, 20, 30, 0.85);
+  background: rgba(var(--overlay-dark-rgb), 0.85);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(var(--overlay-light-rgb), 0.1);
   border-radius: 12px;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 8px 32px rgba(var(--overlay-dark-rgb), 0.25),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.05);
   padding: 6px;
   opacity: 0;
   visibility: hidden;
@@ -192,7 +192,7 @@ onUnmounted(() => {
   border: none;
   background: transparent;
   border-radius: 8px;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(var(--overlay-light-rgb), 0.85);
   font-size: 13px;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -200,11 +200,11 @@ onUnmounted(() => {
 }
 
 .network-option:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--overlay-light-rgb), 0.08);
 }
 
 .network-option.active {
-  background: rgba(168, 85, 247, 0.15);
+  background: rgba(var(--neon-purple-rgb), 0.15);
   color: #a855f7;
 }
 
@@ -217,39 +217,39 @@ onUnmounted(() => {
 
 /* 浅色主题适配 */
 [data-theme="light"] .network-badge {
-  background: rgba(255, 255, 255, 0.6);
-  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(var(--overlay-light-rgb), 0.6);
+  border-color: rgba(var(--overlay-dark-rgb), 0.08);
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    0 2px 8px -2px rgba(0, 0, 0, 0.08);
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.8),
+    0 2px 8px -2px rgba(var(--overlay-dark-rgb), 0.08);
 }
 
 [data-theme="light"] .network-badge:hover {
-  background: rgba(255, 255, 255, 0.75);
-  border-color: rgba(168, 85, 247, 0.4);
+  background: rgba(var(--overlay-light-rgb), 0.75);
+  border-color: rgba(var(--neon-purple-rgb), 0.4);
 }
 
 [data-theme="light"] .network-dropdown {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(var(--overlay-light-rgb), 0.92);
+  border-color: rgba(var(--overlay-dark-rgb), 0.08);
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    0 8px 32px rgba(var(--overlay-dark-rgb), 0.12),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.8);
 }
 
 [data-theme="light"] .network-option {
-  color: rgba(0, 0, 0, 0.75);
+  color: rgba(var(--overlay-dark-rgb), 0.75);
 }
 
 [data-theme="light"] .network-option:hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(var(--overlay-dark-rgb), 0.05);
 }
 
 /* 深色主题适配 */
 [data-theme="dark"] .network-dropdown {
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    0 8px 32px rgba(var(--overlay-dark-rgb), 0.4),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.03);
 }
 
 /* 响应式 */

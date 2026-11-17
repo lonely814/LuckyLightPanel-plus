@@ -9,35 +9,9 @@
 @import './variables/_base.css';
 
 /* ============ 2. 主题样式 ============ */
-/* 默认主题（必须首先加载） */
+/* 只内置 :root 基础变量。其余主题由 src/themes/loadTheme.ts 按需 import()，
+   首屏不再下发全部 9 套主题规则。新增主题时记得同步 loadTheme.ts。 */
 @import './themes/default.css';
-/* 深色主题 */
-@import './themes/dark.css';
-/* 浅色主题 */
-@import './themes/light.css';
-/* 工程蓝图主题（浅色） */
-@import './themes/blueprint.css';
-/* 包豪斯主题 */
-@import './themes/bauhaus.css';
-/* 复古终端主题 */
-@import './themes/crt-terminal.css';
-/* 光牌点阵主题 */
-@import './themes/light-panel.css';
-/* 调光控制台主题 */
-@import './themes/console.css';
-/* 运维小票主题 */
-@import './themes/receipt.css';
-/* 冰川极光主题 */
-@import './themes/arctic-aurora.css';
-/* 多主题共享块（各主题字面重复的简单规则） */
-@import './themes/_shared.css';
-
-/* 
- * 扩展主题示例：
- * @import './themes/purple.css';
- * @import './themes/ocean.css';
- * @import './themes/forest.css';
- */
 
 /* ============ 3. 基础样式 ============ */
 @import './base/_reset.css';

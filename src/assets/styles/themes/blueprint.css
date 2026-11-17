@@ -5,6 +5,7 @@
    ============================================ */
 
 [data-theme="blueprint"] {
+  --shadow-rgb: 30, 60, 110;
   /* 强调色 - 标注橙（制图红笔） */
   --neon-cyan: 210 65% 42%;
   --neon-cyan-rgb: 62, 122, 166;
@@ -47,16 +48,16 @@
   --glass-saturation: 115%;
   --glass-border: 212 35% 62% / 0.55;
   --glass-border-glow: 212 70% 50% / 0.35;
-  --glass-shine: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 55%);
+  --glass-shine: linear-gradient(135deg, rgba(var(--overlay-light-rgb),0.7) 0%, rgba(var(--overlay-light-rgb),0) 55%);
 
   /* 卡片 - 直角、细边、无重阴影 */
   --card-bg: 210 50% 100% / 0.78;
   --card-shadow:
     0 1px 0 hsl(212 35% 62% / 0.18),
-    0 4px 14px rgba(30, 60, 110, 0.07);
+    0 4px 14px rgba(var(--shadow-rgb), 0.07);
   --card-shadow-hover:
     0 2px 0 hsl(212 45% 52% / 0.22),
-    0 10px 26px rgba(30, 60, 110, 0.12);
+    0 10px 26px rgba(var(--shadow-rgb), 0.12);
   --card-glow: 0 0 0 1px hsl(var(--primary) / 0.12);
   --card-glow-hover: 0 0 0 1px hsl(var(--primary) / 0.22);
 
@@ -82,10 +83,10 @@
   --site-card-inner-glow: 0 0% 100% / 0.8;
   --site-card-shadow:
     0 1px 0 hsl(212 35% 62% / 0.2),
-    0 4px 14px rgba(30, 60, 110, 0.08);
+    0 4px 14px rgba(var(--shadow-rgb), 0.08);
   --site-card-shadow-hover:
     0 2px 0 hsl(212 45% 52% / 0.24),
-    0 12px 28px rgba(30, 60, 110, 0.13);
+    0 12px 28px rgba(var(--shadow-rgb), 0.13);
   --site-card-shine-opacity: 0.1;
   --site-card-shine-hover: 0.18;
 

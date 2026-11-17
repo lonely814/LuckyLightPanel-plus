@@ -172,7 +172,7 @@ defineExpose({
   -webkit-backdrop-filter: blur(20px) saturate(var(--glass-saturation));
   border: 1px solid hsl(var(--glass-border));
   border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 40px rgba(var(--overlay-dark-rgb), 0.2);
   animation: dropdownFadeIn 0.15s ease;
 }
 
@@ -288,6 +288,6 @@ defineExpose({
 
 /* 深色主题适配 */
 [data-theme="dark"] .link-dropdown {
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 40px rgba(var(--overlay-dark-rgb), 0.4);
 }
 </style>

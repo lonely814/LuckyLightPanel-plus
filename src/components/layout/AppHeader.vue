@@ -4,6 +4,7 @@ import { useConfigStore } from '@/stores/config'
 import { useNavStore } from '@/stores/nav'
 import { Settings, Zap, ChevronDown, Wifi, Globe, X } from 'lucide-vue-next'
 import { THEMES } from '@/themes/registry'
+import { loadAllThemes } from '@/themes/loadTheme'
 import type { ThemeMode } from '@/types'
 import ThemePreview from '@/components/common/ThemePreview.vue'
 import GreetingClock from './GreetingClock.vue'
@@ -33,9 +34,10 @@ const currentThemeLabel = computed(() => {
   return option?.label || '主题'
 })
 
-// 打开主题面板
-function openThemePanel() {
+// 打开主题面板：预览要同时显示 9 套主题的配色，需先把全部主题 CSS 载入
+async function openThemePanel() {
   themePanelOpen.value = true
+  await loadAllThemes()
 }
 
 // 关闭主题面板
@@ -599,7 +601,7 @@ function openSettings() {
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(var(--overlay-dark-rgb), 0.35);
 }
 
 .theme-modal {

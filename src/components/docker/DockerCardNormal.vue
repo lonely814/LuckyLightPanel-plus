@@ -209,7 +209,7 @@ const {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, var(--icon-overlay-opacity, 0));
+  background: rgba(var(--overlay-dark-rgb), var(--icon-overlay-opacity, 0));
   border-radius: inherit;
   pointer-events: none;
 }

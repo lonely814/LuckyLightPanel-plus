@@ -4,6 +4,7 @@
    ============================================ */
 
 [data-theme="light"] {
+  --shadow-rgb: 20, 30, 50;
   /* 柔和降饱和的强调色 */
   --neon-cyan: 192 48% 42%;
   --neon-cyan-rgb: 48, 148, 163;
@@ -28,18 +29,18 @@
   --glass-bg-hover: 220 40% 100% / 0.7;
   --glass-border: 220 20% 82% / 0.65;
   --glass-border-glow: 210 60% 60% / 0.3;
-  --glass-shine: linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0) 50%);
+  --glass-shine: linear-gradient(135deg, rgba(var(--overlay-light-rgb),0.85) 0%, rgba(var(--overlay-light-rgb),0) 50%);
 
   /* 卡片样式 - 柔和明亮 */
   --card-bg: 220 35% 100% / 0.62;
   --card-shadow:
-    0 1px 2px rgba(20, 30, 50, 0.04),
-    0 8px 24px rgba(20, 30, 50, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    0 1px 2px rgba(var(--shadow-rgb), 0.04),
+    0 8px 24px rgba(var(--shadow-rgb), 0.08),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.7);
   --card-shadow-hover:
-    0 2px 4px rgba(20, 30, 50, 0.06),
-    0 16px 40px rgba(20, 30, 50, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    0 2px 4px rgba(var(--shadow-rgb), 0.06),
+    0 16px 40px rgba(var(--shadow-rgb), 0.12),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.8);
   --card-glow: 0 0 30px -14px rgba(var(--primary-rgb), 0.3);
   --card-glow-hover: 0 0 44px -12px rgba(var(--primary-rgb), 0.36);
 
@@ -63,13 +64,13 @@
   --site-card-border-hover: 210 50% 58% / 0.55;
   --site-card-inner-glow: 0 0% 100% / 0.75;
   --site-card-shadow:
-    0 1px 2px rgba(20, 30, 50, 0.05),
-    0 6px 20px rgba(20, 30, 50, 0.07),
-    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+    0 1px 2px rgba(var(--shadow-rgb), 0.05),
+    0 6px 20px rgba(var(--shadow-rgb), 0.07),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.75);
   --site-card-shadow-hover:
-    0 2px 4px rgba(20, 30, 50, 0.06),
-    0 16px 36px rgba(20, 30, 50, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    0 2px 4px rgba(var(--shadow-rgb), 0.06),
+    0 16px 36px rgba(var(--shadow-rgb), 0.12),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.85);
   --site-card-shine-opacity: 0.12;
   --site-card-shine-hover: 0.24;
 }

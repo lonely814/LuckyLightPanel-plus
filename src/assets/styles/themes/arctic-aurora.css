@@ -8,6 +8,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 [data-theme="arctic-aurora"] {
+  --shadow-rgb: 60, 90, 110;
   /* 冰川专用色 - 冰原语义 */
   --aa-ice-base: 198 45% 88%;
   --aa-ice-base-rgb: 204, 224, 235;
@@ -73,18 +74,18 @@
   --glass-border-glow: 192 75% 50% / 0.35;
   --glass-blur: 26px;
   --glass-saturation: 130%;
-  --glass-shine: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 50%);
+  --glass-shine: linear-gradient(135deg, rgba(var(--overlay-light-rgb),0.9) 0%, rgba(var(--overlay-light-rgb),0) 50%);
 
   /* 卡片 - 磨砂冰晶 */
   --card-bg: 200 35% 98% / 0.62;
   --card-shadow:
-    0 1px 2px rgba(60, 90, 110, 0.06),
-    0 8px 26px rgba(60, 90, 110, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    0 1px 2px rgba(var(--shadow-rgb), 0.06),
+    0 8px 26px rgba(var(--shadow-rgb), 0.1),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.85);
   --card-shadow-hover:
-    0 2px 4px rgba(60, 90, 110, 0.08),
-    0 18px 44px rgba(60, 90, 110, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    0 2px 4px rgba(var(--shadow-rgb), 0.08),
+    0 18px 44px rgba(var(--shadow-rgb), 0.16),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.95);
   --card-glow: 0 0 30px -12px rgba(var(--primary-rgb), 0.3);
   --card-glow-hover: 0 0 46px -10px rgba(var(--primary-rgb), 0.38);
 
@@ -109,13 +110,13 @@
   --site-card-border-hover: 192 75% 48% / 0.5;
   --site-card-inner-glow: 0 0% 100% / 0.8;
   --site-card-shadow:
-    0 1px 2px rgba(60, 90, 110, 0.05),
-    0 8px 24px rgba(60, 90, 110, 0.09),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    0 1px 2px rgba(var(--shadow-rgb), 0.05),
+    0 8px 24px rgba(var(--shadow-rgb), 0.09),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.85);
   --site-card-shadow-hover:
-    0 2px 4px rgba(60, 90, 110, 0.07),
-    0 18px 40px rgba(60, 90, 110, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    0 2px 4px rgba(var(--shadow-rgb), 0.07),
+    0 18px 40px rgba(var(--shadow-rgb), 0.14),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.95);
   --site-card-shine-opacity: 0.14;
   --site-card-shine-hover: 0.28;
 }
@@ -194,8 +195,8 @@
 [data-theme="arctic-aurora"] .service-card::before {
   background-image: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.7) 0%,
-    rgba(255, 255, 255, 0) 45%
+    rgba(var(--overlay-light-rgb), 0.7) 0%,
+    rgba(var(--overlay-light-rgb), 0) 45%
   ) !important;
   opacity: 1 !important;
 }
@@ -234,7 +235,7 @@
   border-radius: var(--radius-lg);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
-  box-shadow: 0 8px 30px -14px rgba(60, 90, 110, 0.35);
+  box-shadow: 0 8px 30px -14px rgba(var(--shadow-rgb), 0.35);
 }
 
 [data-theme="arctic-aurora"] .header-bg::after {
@@ -312,7 +313,7 @@
   border-radius: var(--radius-sm);
   background: hsl(var(--aa-frost) / 0.95);
   border: 1px solid hsl(var(--aa-ice-ink) / 0.2);
-  box-shadow: 0 12px 32px rgba(60, 90, 110, 0.25), 0 0 24px -10px hsl(var(--aa-aurora-cyan) / 0.25);
+  box-shadow: 0 12px 32px rgba(var(--shadow-rgb), 0.25), 0 0 24px -10px hsl(var(--aa-aurora-cyan) / 0.25);
 }
 
 [data-theme="arctic-aurora"] .theme-option:hover {
@@ -363,7 +364,7 @@
   border: 1px solid hsl(var(--aa-ice-ink) / 0.18);
   background: hsl(var(--aa-frost) / 0.55);
   box-shadow:
-    0 8px 30px -16px rgba(60, 90, 110, 0.35),
+    0 8px 30px -16px rgba(var(--shadow-rgb), 0.35),
     inset 0 0 40px -20px hsl(var(--aa-aurora-cyan) / 0.25);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -483,7 +484,7 @@
   background: hsl(var(--aa-frost) / 0.95);
   border: 1px solid hsl(var(--aa-ice-ink) / 0.2);
   border-radius: var(--radius-sm);
-  box-shadow: 0 12px 32px rgba(60, 90, 110, 0.25), 0 0 24px -10px hsl(var(--aa-aurora-cyan) / 0.25);
+  box-shadow: 0 12px 32px rgba(var(--shadow-rgb), 0.25), 0 0 24px -10px hsl(var(--aa-aurora-cyan) / 0.25);
   backdrop-filter: blur(var(--glass-blur));
 }
 
@@ -582,7 +583,7 @@
   background: hsl(var(--aa-frost) / 0.95);
   border: 1px solid hsl(var(--aa-ice-ink) / 0.2);
   border-radius: var(--radius-sm);
-  box-shadow: 0 12px 32px rgba(60, 90, 110, 0.25);
+  box-shadow: 0 12px 32px rgba(var(--shadow-rgb), 0.25);
   backdrop-filter: blur(var(--glass-blur));
 }
 

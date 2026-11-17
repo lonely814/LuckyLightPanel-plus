@@ -440,7 +440,7 @@ onMounted(() => {
   height: 4rem;
   margin: 0 auto 1rem;
   border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(var(--overlay-light-rgb), 0.05);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -451,16 +451,16 @@ onMounted(() => {
 }
 
 .empty-text {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(var(--overlay-light-rgb), 0.5);
   font-size: 0.875rem;
 }
 
 /* 浅色主题适配 */
 [data-theme="light"] .empty-icon {
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(var(--overlay-dark-rgb), 0.04);
 }
 
 [data-theme="light"] .empty-text {
-  color: rgba(0, 0, 0, 0.45);
+  color: rgba(var(--overlay-dark-rgb), 0.45);
 }
 </style>

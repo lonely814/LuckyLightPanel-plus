@@ -109,7 +109,7 @@ const iconClass = computed(() => {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, var(--icon-overlay-opacity, 0));
+  background: rgba(var(--overlay-dark-rgb), var(--icon-overlay-opacity, 0));
   border-radius: inherit;
   pointer-events: none;
 }
@@ -180,9 +180,9 @@ const iconClass = computed(() => {
   inset: 0;
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.05) 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    rgba(255, 255, 255, 0.05) 100%
+    rgba(var(--overlay-light-rgb), 0.05) 0%,
+    rgba(var(--overlay-light-rgb), 0.1) 50%,
+    rgba(var(--overlay-light-rgb), 0.05) 100%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;

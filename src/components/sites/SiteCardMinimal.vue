@@ -93,7 +93,7 @@ defineProps<{
 [data-theme="light"] .minimal-name {
   background: hsl(220 15% 98% / 0.95);
   border-color: hsl(220 15% 85%);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(var(--overlay-dark-rgb), 0.1);
 }
 
 [data-theme="light"] .minimal-name span {

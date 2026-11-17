@@ -3,6 +3,8 @@ import { onMounted, computed, watch, ref, provide, onUnmounted } from 'vue'
 import { useNavStore } from '@/stores/nav'
 import { useConfigStore } from '@/stores/config'
 import { THEMES } from '@/themes/registry'
+import { loadTheme } from '@/themes/loadTheme'
+import { applyLiquidPreset } from '@/themes/liquidPresets'
 import type { TabType } from '@/types'
 import LoadingScreen from '@/components/common/LoadingScreen.vue'
 import AppHeader from '@/components/layout/AppHeader.vue'
@@ -94,11 +96,15 @@ function getIconUrl(path: string) {
   return `./backend/iconlibs/${path}`
 }
 
-// 主题切换
+// 主题切换：先加载该主题的 CSS，再写属性，确保细节快照读到的是新主题的值
 watch(
   () => configStore.effectiveTheme,
-  (theme) => {
+  async (theme) => {
+    await loadTheme(theme)
     document.documentElement.setAttribute('data-theme', theme)
+    // CSS 注入后重算细节比例，否则快照仍是上一套主题的变量
+    snapshotThemeDetails()
+    applyThemeDetails()
   },
   { immediate: true }
 )
@@ -176,6 +182,14 @@ function applyThemeDetails() {
 
   // 减弱动效
   el.classList.toggle('motion-reduced', cfg.detailReduceMotion)
+
+  // 液态玻璃折射（_glass.css 里 [data-liquid='true'] 生效）
+  if (cfg.detailLiquid) {
+    applyLiquidPreset(cfg.detailLiquidPreset)
+    el.setAttribute('data-liquid', 'true')
+  } else {
+    el.removeAttribute('data-liquid')
+  }
 }
 
 watch(
@@ -185,7 +199,9 @@ watch(
     configStore.config.detailRadiusScale,
     configStore.config.detailGlassBlurScale,
     configStore.config.detailGlassOpacityScale,
-    configStore.config.detailReduceMotion
+    configStore.config.detailReduceMotion,
+    configStore.config.detailLiquid,
+    configStore.config.detailLiquidPreset
   ],
   () => {
     snapshotThemeDetails()
@@ -425,8 +441,8 @@ onUnmounted(() => {
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
   box-shadow:
-    0 24px 48px rgba(15, 23, 42, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    0 24px 48px rgba(var(--overlay-dark-rgb), 0.14),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.08);
 }
 
 .global-empty-icon {

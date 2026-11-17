@@ -17,14 +17,14 @@
   overflow: hidden;
   box-shadow: 
     0 4px 15px -3px hsl(var(--neon-cyan) / 0.5),
-    inset 0 1px 0 rgba(255,255,255,0.2);
+    inset 0 1px 0 rgba(var(--overlay-light-rgb),0.2);
 }
 
 .btn-primary::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.3) 100%);
+  background: linear-gradient(135deg, transparent 0%, rgba(var(--overlay-light-rgb),0.3) 100%);
   opacity: 0;
   transition: opacity var(--duration-fast) ease;
 }
@@ -34,7 +34,7 @@
   box-shadow: 
     0 8px 25px -5px hsl(var(--neon-cyan) / 0.6),
     0 0 40px -10px hsl(var(--neon-cyan) / 0.5),
-    inset 0 1px 0 rgba(255,255,255,0.2);
+    inset 0 1px 0 rgba(var(--overlay-light-rgb),0.2);
 }
 
 .btn-primary:hover::before {

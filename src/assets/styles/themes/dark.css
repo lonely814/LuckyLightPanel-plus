@@ -31,18 +31,18 @@
   --glass-bg-hover: 222 32% 18% / 0.5;
   --glass-border: 220 25% 65% / 0.13;
   --glass-border-glow: 210 60% 60% / 0.22;
-  --glass-shine: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 45%);
+  --glass-shine: linear-gradient(135deg, rgba(var(--overlay-light-rgb),0.06) 0%, rgba(var(--overlay-light-rgb),0) 45%);
 
   /* 卡片样式 - 柔和深邃 */
   --card-bg: 222 32% 15% / 0.48;
   --card-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.07),
-    0 8px 26px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 1px 1px rgba(var(--overlay-dark-rgb), 0.07),
+    0 8px 26px rgba(var(--overlay-dark-rgb), 0.2),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.05);
   --card-shadow-hover:
-    0 2px 2px rgba(0, 0, 0, 0.07),
-    0 18px 44px rgba(0, 0, 0, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    0 2px 2px rgba(var(--overlay-dark-rgb), 0.07),
+    0 18px 44px rgba(var(--overlay-dark-rgb), 0.28),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.07);
   --card-glow: 0 0 36px -14px rgba(var(--primary-rgb), 0.3);
   --card-glow-hover: 0 0 56px -12px rgba(var(--primary-rgb), 0.38);
 
@@ -66,13 +66,13 @@
   --site-card-border-hover: 210 50% 62% / 0.26;
   --site-card-inner-glow: 0 0% 100% / 0.04;
   --site-card-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.06),
-    0 6px 20px rgba(0, 0, 0, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    0 1px 1px rgba(var(--overlay-dark-rgb), 0.06),
+    0 6px 20px rgba(var(--overlay-dark-rgb), 0.18),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.04);
   --site-card-shadow-hover:
-    0 2px 2px rgba(0, 0, 0, 0.07),
-    0 18px 42px rgba(0, 0, 0, 0.26),
-    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    0 2px 2px rgba(var(--overlay-dark-rgb), 0.07),
+    0 18px 42px rgba(var(--overlay-dark-rgb), 0.26),
+    inset 0 1px 0 rgba(var(--overlay-light-rgb), 0.07);
   --site-card-shine-opacity: 0.04;
   --site-card-shine-hover: 0.09;
 }

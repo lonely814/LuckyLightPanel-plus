@@ -238,6 +238,10 @@ export interface UserConfig {
   detailGlassBlurScale: number
   detailGlassOpacityScale: number
   detailReduceMotion: boolean
+  /** 液态玻璃折射（仅 Chromium 生效） */
+  detailLiquid: boolean
+  /** 液态玻璃预设 id（见 src/themes/liquidPresets.ts） */
+  detailLiquidPreset: string
 }
 
 // ============ 预设背景类型 ============

@@ -11,3 +11,6 @@ vite.config.js
 
 # 本地工具目录
 /.opencode/
+
+# ZCode 本地工具目录
+/.zcode/

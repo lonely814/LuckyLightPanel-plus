@@ -44,7 +44,7 @@ onUnmounted(() => {
           cy="24"
           r="20"
           fill="none"
-          stroke="rgba(255,255,255,0.2)"
+          stroke="rgba(var(--overlay-light-rgb),0.2)"
           stroke-width="2"
         />
         <circle
@@ -82,33 +82,33 @@ onUnmounted(() => {
   border-radius: 1rem;
   overflow: hidden;
   cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(var(--overlay-light-rgb), 0.15);
   padding: 0;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 
-    0 4px 16px rgba(0, 0, 0, 0.15),
-    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    0 4px 16px rgba(var(--overlay-dark-rgb), 0.15),
+    0 0 0 1px rgba(var(--overlay-light-rgb), 0.05) inset;
   transition: all 200ms ease;
 }
 
 .back-to-top-btn:hover {
-  border-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(var(--overlay-light-rgb), 0.25);
   box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.2),
-    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    0 8px 24px rgba(var(--overlay-dark-rgb), 0.2),
+    0 0 0 1px rgba(var(--overlay-light-rgb), 0.1) inset;
   transform: translateY(-2px);
 }
 
 .btn-bg {
   position: absolute;
   inset: 0;
-  background: rgba(30, 30, 50, 0.4);
+  background: rgba(var(--overlay-dark-rgb), 0.4);
   transition: background 200ms;
 }
 
 .back-to-top-btn:hover .btn-bg {
-  background: rgba(30, 30, 50, 0.55);
+  background: rgba(var(--overlay-dark-rgb), 0.55);
 }
 
 .progress-ring {
@@ -147,9 +147,9 @@ onUnmounted(() => {
   inset: 0;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.15) 0%,
-    rgba(255, 255, 255, 0.05) 50%,
-    rgba(255, 255, 255, 0) 100%
+    rgba(var(--overlay-light-rgb), 0.15) 0%,
+    rgba(var(--overlay-light-rgb), 0.05) 50%,
+    rgba(var(--overlay-light-rgb), 0) 100%
   );
   opacity: 1;
   transition: opacity 200ms;
