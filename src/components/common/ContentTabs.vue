@@ -97,15 +97,15 @@ watch([currentTab, () => navStore.isLoading], async ([newTab, isLoading], [oldTa
   display: flex;
   gap: 6px;
   padding: 5px;
-  background: hsl(var(--glass-bg));
+  background: var(--surface-tabs-bg, hsl(var(--glass-bg)));
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-  border: 1px solid hsl(var(--glass-border));
-  border-radius: 16px;
-  box-shadow:
+  border: var(--surface-tabs-border, 1px solid hsl(var(--glass-border)));
+  border-radius: var(--surface-tabs-radius, 16px);
+  box-shadow: var(--surface-tabs-shadow,
     0 1px 2px rgba(31, 38, 135, 0.06),
     0 8px 28px rgba(31, 38, 135, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    inset 0 1px 0 rgba(255, 255, 255, 0.05));
 }
 
 /* 单个标签按钮 */
@@ -113,11 +113,12 @@ watch([currentTab, () => navStore.isLoading], async ([newTab, isLoading], [oldTa
   display: flex;
   align-items: center;
   gap: 6px;
+  position: relative;
   padding: 6px 14px;
-  border: none;
+  border: var(--surface-tab-border, none);
   background: transparent;
-  border-radius: 10px;
-  color: hsl(var(--text-secondary));
+  border-radius: var(--surface-tab-radius, 10px);
+  color: var(--surface-tab-color, hsl(var(--text-secondary)));
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -127,52 +128,65 @@ watch([currentTab, () => navStore.isLoading], async ([newTab, isLoading], [oldTa
 .content-tab .tab-icon {
   width: 18px;
   height: 18px;
+  color: var(--surface-tab-icon-color, currentColor);
   transition: color 0.2s ease;
 }
 
 /* 悬停状态 */
 .content-tab:hover {
-  background: hsl(var(--glass-bg-hover));
-  color: hsl(var(--text-primary));
+  background: var(--surface-tab-hover-bg, hsl(var(--glass-bg-hover)));
+  color: var(--surface-tab-hover-color, hsl(var(--text-primary)));
 }
 
 /* 激活状态 - 默认（站点） */
 .content-tab.active {
-  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-dark)) 100%);
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(var(--primary-rgb) / 0.35);
+  background: var(--surface-tab-active-bg, linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-dark)) 100%));
+  color: var(--surface-tab-active-color, #fff);
+  border: var(--surface-tab-active-border, var(--surface-tab-border, none));
+  box-shadow: var(--surface-tab-active-shadow, 0 4px 14px rgba(var(--primary-rgb) / 0.35));
+}
+
+/* 主题装饰层（包豪斯斜纹等），默认无 */
+.content-tab.active::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--surface-tab-active-decor, none);
+  background-size: var(--surface-tab-active-decor-size, auto);
+  animation: var(--surface-tab-active-decor-animation, none);
 }
 
 .content-tab.active .tab-icon {
-  color: #fff;
+  color: var(--surface-tab-active-icon-color, #fff);
 }
 
 /* Docker 标签特殊样式 */
 .content-tab.tab-docker .tab-icon {
-  color: #2496ed;
+  color: var(--surface-tab-icon-color, #2496ed);
 }
 
 .content-tab.tab-docker.active {
-  background: linear-gradient(135deg, #2496ed 0%, #0db7ed 100%);
-  box-shadow: 0 4px 14px rgba(36, 150, 237, 0.3);
+  background: var(--surface-tab-active-bg, linear-gradient(135deg, #2496ed 0%, #0db7ed 100%));
+  box-shadow: var(--surface-tab-active-shadow, 0 4px 14px rgba(36, 150, 237, 0.3));
 }
 
 .content-tab.tab-docker.active .tab-icon {
-  color: #fff;
+  color: var(--surface-tab-active-icon-color, #fff);
 }
 
 /* Lucky服务标签特殊样式 */
 .content-tab.tab-luckyServices .tab-icon {
-  color: #10b981;
+  color: var(--surface-tab-icon-color, #10b981);
 }
 
 .content-tab.tab-luckyServices.active {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+  background: var(--surface-tab-active-bg, linear-gradient(135deg, #10b981 0%, #059669 100%));
+  box-shadow: var(--surface-tab-active-shadow, 0 4px 14px rgba(16, 185, 129, 0.3));
 }
 
 .content-tab.tab-luckyServices.active .tab-icon {
-  color: #fff;
+  color: var(--surface-tab-active-icon-color, #fff);
 }
 
 /* 深色主题适配 */

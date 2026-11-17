@@ -386,41 +386,6 @@
 }
 
 /* ============================================
-   内容标签页 - 极光标签
-   ============================================ */
-
-[data-theme="arctic-aurora"] .content-tabs {
-  background: hsl(var(--aa-frost) / 0.6);
-  border: 1px solid hsl(var(--aa-ice-ink) / 0.18);
-  border-radius: var(--radius-md);
-  box-shadow: 0 0 24px -12px hsl(var(--aa-aurora-cyan) / 0.3);
-}
-
-[data-theme="arctic-aurora"] .content-tab {
-  border-radius: var(--radius-sm);
-  color: hsl(var(--text-secondary));
-  border: 1px solid transparent;
-}
-
-[data-theme="arctic-aurora"] .content-tab:hover {
-  background: hsl(var(--aa-aurora-cyan) / 0.07);
-  color: hsl(var(--text-primary));
-}
-
-[data-theme="arctic-aurora"] .content-tab.active {
-  background: hsl(var(--aa-aurora-cyan)) !important;
-  color: hsl(var(--text-on-primary)) !important;
-  border: 1px solid hsl(var(--aa-aurora-cyan)) !important;
-  box-shadow: 0 0 18px -4px hsl(var(--aa-aurora-cyan) / 0.7) !important;
-}
-
-[data-theme="arctic-aurora"] .content-tab.tab-docker.active,
-[data-theme="arctic-aurora"] .content-tab.tab-luckyServices.active {
-  background: hsl(var(--aa-aurora-cyan)) !important;
-  box-shadow: 0 0 18px -4px hsl(var(--aa-aurora-cyan) / 0.7) !important;
-}
-
-/* ============================================
    分组徽章 / 布局 / 网络 / 总览徽章
    ============================================ */
 
@@ -715,3 +680,20 @@
     animation: none;
   }
 }
+
+[data-theme="arctic-aurora"] {
+  --surface-tabs-bg: hsl(var(--aa-frost) / 0.6);
+  --surface-tabs-border: 1px solid hsl(var(--aa-ice-ink) / 0.18);
+  --surface-tabs-radius: var(--radius-md);
+  --surface-tabs-shadow: 0 0 24px -12px hsl(var(--aa-aurora-cyan) / 0.3);
+  --surface-tab-radius: var(--radius-sm);
+  --surface-tab-color: hsl(var(--text-secondary));
+  --surface-tab-border: 1px solid transparent;
+  --surface-tab-hover-bg: hsl(var(--aa-aurora-cyan) / 0.07);
+  --surface-tab-hover-color: hsl(var(--text-primary));
+  --surface-tab-active-bg: hsl(var(--aa-aurora-cyan));
+  --surface-tab-active-color: hsl(var(--text-on-primary));
+  --surface-tab-active-border: 1px solid hsl(var(--aa-aurora-cyan));
+  --surface-tab-active-shadow: 0 0 18px -4px hsl(var(--aa-aurora-cyan) / 0.7);
+}
+

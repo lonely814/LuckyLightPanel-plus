@@ -288,43 +288,6 @@
   color: hsl(var(--crt-cyan));
 }
 
-/* 内容标签页 - 终端菜单 */
-[data-theme="crt-terminal"] .content-tabs {
-  background: hsl(var(--bg-elevated));
-  border: 1px solid hsl(var(--crt-dim) / 0.8);
-  border-radius: 0;
-  box-shadow: 0 0 24px -12px hsl(var(--crt-green) / 0.4);
-}
-
-[data-theme="crt-terminal"] .content-tab {
-  border-radius: 0;
-  color: hsl(var(--text-secondary));
-  border: 1px solid transparent;
-}
-
-[data-theme="crt-terminal"] .content-tab:hover {
-  background: hsl(var(--crt-green) / 0.08);
-  color: hsl(var(--text-primary));
-}
-
-[data-theme="crt-terminal"] .content-tab.active {
-  background: hsl(var(--crt-green)) !important;
-  color: hsl(var(--crt-black)) !important;
-  border: 1px solid hsl(var(--crt-green)) !important;
-  box-shadow: 0 0 18px -4px hsl(var(--crt-green) / 0.6) !important;
-}
-
-[data-theme="crt-terminal"] .content-tab.tab-docker.active,
-[data-theme="crt-terminal"] .content-tab.tab-luckyServices.active {
-  background: hsl(var(--crt-green)) !important;
-  box-shadow: 0 0 18px -4px hsl(var(--crt-green) / 0.6) !important;
-}
-
-[data-theme="crt-terminal"] .content-tab .tab-icon,
-[data-theme="crt-terminal"] .content-tab.active .tab-icon {
-  color: hsl(var(--crt-black)) !important;
-}
-
 /* 分组徽章 / 布局 / 网络 / 总览徽章 */
 [data-theme="crt-terminal"] .group-badge,
 [data-theme="crt-terminal"] .layout-badge,
@@ -581,3 +544,22 @@
     animation: none;
   }
 }
+
+[data-theme="crt-terminal"] {
+  --surface-tabs-bg: hsl(var(--bg-elevated));
+  --surface-tabs-border: 1px solid hsl(var(--crt-dim) / 0.8);
+  --surface-tabs-radius: 0;
+  --surface-tabs-shadow: 0 0 24px -12px hsl(var(--crt-green) / 0.4);
+  --surface-tab-radius: 0;
+  --surface-tab-color: hsl(var(--text-secondary));
+  --surface-tab-border: 1px solid transparent;
+  --surface-tab-hover-bg: hsl(var(--crt-green) / 0.08);
+  --surface-tab-hover-color: hsl(var(--text-primary));
+  --surface-tab-active-bg: hsl(var(--crt-green));
+  --surface-tab-active-color: hsl(var(--crt-black));
+  --surface-tab-active-border: 1px solid hsl(var(--crt-green));
+  --surface-tab-active-shadow: 0 0 18px -4px hsl(var(--crt-green) / 0.6);
+  --surface-tab-icon-color: hsl(var(--crt-black));
+  --surface-tab-active-icon-color: hsl(var(--crt-black));
+}
+

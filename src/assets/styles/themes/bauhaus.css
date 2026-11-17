@@ -258,65 +258,7 @@
 [data-theme="bauhaus"] .gc-greeting-text {
   color: hsl(var(--text-primary));
 }
-
-/* ============================================
-   内容标签页 - 海报标签
-   ============================================ */
-
-[data-theme="bauhaus"] .content-tabs {
-  background: hsl(var(--bg-elevated));
-  border: 2px solid hsl(var(--bauhaus-black));
-  border-radius: 0;
-  box-shadow: 5px 5px 0 hsl(var(--bauhaus-black));
-}
-
-[data-theme="bauhaus"] .content-tab {
-  border-radius: 0;
-  color: hsl(var(--text-secondary));
-  border: 2px solid transparent;
-  position: relative;
-}
-
-[data-theme="bauhaus"] .content-tab:hover {
-  background: hsl(var(--bauhaus-paper));
-  color: hsl(var(--text-primary));
-}
-
-[data-theme="bauhaus"] .content-tab.active {
-  background: hsl(var(--bauhaus-yellow)) !important;
-  color: hsl(var(--text-primary)) !important;
-  border: 2px solid hsl(var(--bauhaus-black)) !important;
-  box-shadow: 3px 3px 0 hsl(var(--bauhaus-black)) !important;
-}
-
-[data-theme="bauhaus"] .content-tab.tab-docker.active,
-[data-theme="bauhaus"] .content-tab.tab-luckyServices.active {
-  background: hsl(var(--bauhaus-yellow)) !important;
-  box-shadow: 3px 3px 0 hsl(var(--bauhaus-black)) !important;
-}
-
-[data-theme="bauhaus"] .content-tab .tab-icon {
-  color: hsl(var(--text-secondary)) !important;
-}
-
-[data-theme="bauhaus"] .content-tab.active .tab-icon {
-  color: hsl(var(--text-primary)) !important;
-}
-
 /* 活动标签 - 动画斜纹 */
-[data-theme="bauhaus"] .content-tab.active::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    135deg,
-    transparent 0 6px,
-    hsl(var(--bauhaus-red) / 0.12) 6px 12px
-  );
-  background-size: 17px 17px;
-  animation: bauhaus-stripes 1.2s linear infinite;
-}
 
 /* ============================================
    分组徽章 / 布局切换器 - 包豪斯方形按钮
@@ -646,3 +588,29 @@
   --surface-card-animation-delay-2n: 60ms;
   --surface-card-animation-delay-3n: 120ms;
 }
+
+[data-theme="bauhaus"] {
+  --surface-tabs-bg: hsl(var(--bg-elevated));
+  --surface-tabs-border: 2px solid hsl(var(--bauhaus-black));
+  --surface-tabs-radius: 0;
+  --surface-tabs-shadow: 5px 5px 0 hsl(var(--bauhaus-black));
+  --surface-tab-radius: 0;
+  --surface-tab-color: hsl(var(--text-secondary));
+  --surface-tab-border: 2px solid transparent;
+  --surface-tab-hover-bg: hsl(var(--bauhaus-paper));
+  --surface-tab-hover-color: hsl(var(--text-primary));
+  --surface-tab-active-bg: hsl(var(--bauhaus-yellow));
+  --surface-tab-active-color: hsl(var(--text-primary));
+  --surface-tab-active-border: 2px solid hsl(var(--bauhaus-black));
+  --surface-tab-active-shadow: 3px 3px 0 hsl(var(--bauhaus-black));
+  --surface-tab-icon-color: hsl(var(--text-secondary));
+  --surface-tab-active-icon-color: hsl(var(--text-primary));
+  --surface-tab-active-decor: repeating-linear-gradient(
+    135deg,
+    transparent 0 6px,
+    hsl(var(--bauhaus-red) / 0.12) 6px 12px
+  );
+  --surface-tab-active-decor-size: 17px 17px;
+  --surface-tab-active-decor-animation: bauhaus-stripes 1.2s linear infinite;
+}
+

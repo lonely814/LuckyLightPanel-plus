@@ -395,41 +395,6 @@
 }
 
 /* ============================================
-   内容标签页 - 点亮标签
-   ============================================ */
-
-[data-theme="light-panel"] .content-tabs {
-  background: hsl(var(--bg-elevated));
-  border: 1px solid hsl(var(--lp-unlit) / 0.9);
-  border-radius: var(--radius-md);
-  box-shadow: 0 0 24px -12px hsl(var(--lp-amber) / 0.3);
-}
-
-[data-theme="light-panel"] .content-tab {
-  border-radius: var(--radius-sm);
-  color: hsl(var(--text-secondary));
-  border: 1px solid transparent;
-}
-
-[data-theme="light-panel"] .content-tab:hover {
-  background: hsl(var(--lp-amber) / 0.07);
-  color: hsl(var(--text-primary));
-}
-
-[data-theme="light-panel"] .content-tab.active {
-  background: hsl(var(--lp-amber)) !important;
-  color: hsl(var(--text-on-primary)) !important;
-  border: 1px solid hsl(var(--lp-amber)) !important;
-  box-shadow: 0 0 18px -4px hsl(var(--lp-amber) / 0.7) !important;
-}
-
-[data-theme="light-panel"] .content-tab.tab-docker.active,
-[data-theme="light-panel"] .content-tab.tab-luckyServices.active {
-  background: hsl(var(--lp-amber)) !important;
-  box-shadow: 0 0 18px -4px hsl(var(--lp-amber) / 0.7) !important;
-}
-
-/* ============================================
    分组徽章 / 布局 / 网络 / 总览徽章
    ============================================ */
 
@@ -739,3 +704,20 @@
     transform: none;
   }
 }
+
+[data-theme="light-panel"] {
+  --surface-tabs-bg: hsl(var(--bg-elevated));
+  --surface-tabs-border: 1px solid hsl(var(--lp-unlit) / 0.9);
+  --surface-tabs-radius: var(--radius-md);
+  --surface-tabs-shadow: 0 0 24px -12px hsl(var(--lp-amber) / 0.3);
+  --surface-tab-radius: var(--radius-sm);
+  --surface-tab-color: hsl(var(--text-secondary));
+  --surface-tab-border: 1px solid transparent;
+  --surface-tab-hover-bg: hsl(var(--lp-amber) / 0.07);
+  --surface-tab-hover-color: hsl(var(--text-primary));
+  --surface-tab-active-bg: hsl(var(--lp-amber));
+  --surface-tab-active-color: hsl(var(--text-on-primary));
+  --surface-tab-active-border: 1px solid hsl(var(--lp-amber));
+  --surface-tab-active-shadow: 0 0 18px -4px hsl(var(--lp-amber) / 0.7);
+}
+

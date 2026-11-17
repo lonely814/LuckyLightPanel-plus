@@ -341,32 +341,6 @@
 }
 
 /* ============================================
-   内容标签页 - 打印菜单
-   ============================================ */
-
-[data-theme="receipt"] .content-tabs {
-  background: hsl(var(--bg-elevated));
-  border: 1px solid hsl(var(--r-ink) / 0.22);
-  border-radius: var(--radius-sm);
-}
-
-[data-theme="receipt"] .content-tab:hover {
-  background: hsl(var(--r-ink) / 0.04);
-  color: hsl(var(--text-primary));
-}
-
-[data-theme="receipt"] .content-tab.active {
-  background: hsl(var(--text-primary)) !important;
-  color: hsl(var(--text-on-primary)) !important;
-  border: 1px solid hsl(var(--text-primary)) !important;
-}
-
-[data-theme="receipt"] .content-tab.tab-docker.active,
-[data-theme="receipt"] .content-tab.tab-luckyServices.active {
-  background: hsl(var(--text-primary)) !important;
-}
-
-/* ============================================
    分组徽章 / 布局 / 网络 / 总览徽章
    ============================================ */
 
@@ -640,3 +614,15 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
+
+[data-theme="receipt"] {
+  --surface-tabs-bg: hsl(var(--bg-elevated));
+  --surface-tabs-border: 1px solid hsl(var(--r-ink) / 0.22);
+  --surface-tabs-radius: var(--radius-sm);
+  --surface-tab-hover-bg: hsl(var(--r-ink) / 0.04);
+  --surface-tab-hover-color: hsl(var(--text-primary));
+  --surface-tab-active-bg: hsl(var(--text-primary));
+  --surface-tab-active-color: hsl(var(--text-on-primary));
+  --surface-tab-active-border: 1px solid hsl(var(--text-primary));
+}
+

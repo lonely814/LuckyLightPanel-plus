@@ -79,21 +79,6 @@
   border-radius: 0;
 }
 
-/* 内容标签 - 小圆角 */
-[data-theme="console"] .content-tab,
-[data-theme="receipt"] .content-tab {
-  border-radius: var(--radius-xs);
-  color: hsl(var(--text-secondary));
-  border: 1px solid transparent;
-}
-
-/* 激活标签图标 */
-[data-theme="light-panel"] .content-tab.active .tab-icon,
-[data-theme="console"] .content-tab.active .tab-icon,
-[data-theme="receipt"] .content-tab.active .tab-icon {
-  color: hsl(var(--text-on-primary)) !important;
-}
-
 /* 日期文字 */
 [data-theme="bauhaus"] .gc-date,
 [data-theme="crt-terminal"] .gc-date {
@@ -126,3 +111,22 @@
   -webkit-text-fill-color: hsl(var(--text-primary));
   background-clip: unset;
 }
+
+[data-theme="console"] {
+  --surface-tab-radius: var(--radius-xs);
+  --surface-tab-color: hsl(var(--text-secondary));
+  --surface-tab-border: 1px solid transparent;
+  --surface-tab-active-icon-color: hsl(var(--text-on-primary));
+}
+
+[data-theme="receipt"] {
+  --surface-tab-radius: var(--radius-xs);
+  --surface-tab-color: hsl(var(--text-secondary));
+  --surface-tab-border: 1px solid transparent;
+  --surface-tab-active-icon-color: hsl(var(--text-on-primary));
+}
+
+[data-theme="light-panel"] {
+  --surface-tab-active-icon-color: hsl(var(--text-on-primary));
+}
+
