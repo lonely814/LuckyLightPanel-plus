@@ -4,7 +4,6 @@ import { useNavStore } from '@/stores/nav'
 import { useConfigStore } from '@/stores/config'
 import { THEMES } from '@/themes/registry'
 import { loadTheme } from '@/themes/loadTheme'
-import { applyLiquidPreset } from '@/themes/liquidPresets'
 import type { TabType } from '@/types'
 import LoadingScreen from '@/components/common/LoadingScreen.vue'
 import AppHeader from '@/components/layout/AppHeader.vue'
@@ -182,14 +181,6 @@ function applyThemeDetails() {
 
   // 减弱动效
   el.classList.toggle('motion-reduced', cfg.detailReduceMotion)
-
-  // 液态玻璃折射（_glass.css 里 [data-liquid='true'] 生效）
-  if (cfg.detailLiquid) {
-    applyLiquidPreset(cfg.detailLiquidPreset)
-    el.setAttribute('data-liquid', 'true')
-  } else {
-    el.removeAttribute('data-liquid')
-  }
 }
 
 watch(
@@ -199,9 +190,7 @@ watch(
     configStore.config.detailRadiusScale,
     configStore.config.detailGlassBlurScale,
     configStore.config.detailGlassOpacityScale,
-    configStore.config.detailReduceMotion,
-    configStore.config.detailLiquid,
-    configStore.config.detailLiquidPreset
+    configStore.config.detailReduceMotion
   ],
   () => {
     snapshotThemeDetails()

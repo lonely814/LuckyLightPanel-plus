@@ -69,9 +69,7 @@ const DEFAULT_CONFIG: UserConfig = {
   detailRadiusScale: 100,
   detailGlassBlurScale: 100,
   detailGlassOpacityScale: 100,
-  detailReduceMotion: false,
-  detailLiquid: false,
-  detailLiquidPreset: 'ice-ripple'
+  detailReduceMotion: false
 }
 
 export const useConfigStore = defineStore('config', () => {
@@ -218,7 +216,7 @@ export const useConfigStore = defineStore('config', () => {
       'layoutScale', 'siteCardSize', 'siteCardShape', 'networkMode', 'currentTab', 'showDescription', 'showTime',
       'showSearch', 'showHeader', 'searchEngine', 'customSearchUrl',
       'detailTextContrast', 'detailRadiusScale', 'detailGlassBlurScale',
-      'detailGlassOpacityScale', 'detailReduceMotion', 'detailLiquid', 'detailLiquidPreset'
+      'detailGlassOpacityScale', 'detailReduceMotion'
     ]
 
     let hasChanges = false

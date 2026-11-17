@@ -3,7 +3,6 @@ import { computed, ref } from 'vue'
 import { useConfigStore, PRESET_BACKGROUNDS } from '@/stores/config'
 import { X, RotateCcw, Palette, Eye, Check, Image, Github, Search, Globe, SlidersVertical } from 'lucide-vue-next'
 import { THEMES } from '@/themes/registry'
-import { LIQUID_PRESETS, DEFAULT_LIQUID_PRESET } from '@/themes/liquidPresets'
 
 // 导入本地图标
 import iconBing from '@/assets/icons/bing.png'
@@ -94,8 +93,6 @@ function resetDetails() {
   configStore.updateConfig('detailGlassBlurScale', 100)
   configStore.updateConfig('detailGlassOpacityScale', 100)
   configStore.updateConfig('detailReduceMotion', false)
-  configStore.updateConfig('detailLiquid', false)
-  configStore.updateConfig('detailLiquidPreset', DEFAULT_LIQUID_PRESET)
 }
 
 </script>
@@ -368,39 +365,6 @@ function resetDetails() {
                 @click="configStore.updateConfig('detailReduceMotion', !configStore.config.detailReduceMotion)"
               />
             </label>
-
-            <!-- 液态玻璃折射 -->
-            <label class="toggle-item">
-              <span class="toggle-label">
-                液态玻璃折射
-                <span class="toggle-sub">仅 Chromium 桌面端</span>
-              </span>
-              <div
-                class="switch-modern"
-                :class="{ active: configStore.config.detailLiquid }"
-                @click="configStore.updateConfig('detailLiquid', !configStore.config.detailLiquid)"
-              />
-            </label>
-
-            <!-- 液态玻璃预设（未开启折射时无可视差别，隐藏） -->
-            <div v-if="configStore.config.detailLiquid" class="liquid-presets">
-              <button
-                v-for="preset in LIQUID_PRESETS"
-                :key="preset.id"
-                class="liquid-preset"
-                :class="{ active: configStore.config.detailLiquidPreset === preset.id }"
-                @click="configStore.updateConfig('detailLiquidPreset', preset.id)"
-              >
-                <span
-                  class="preset-swatch"
-                  :style="{
-                    backdropFilter: `blur(${preset.blur}px)`,
-                    boxShadow: `inset 0 0 ${preset.innerBlur}px ${preset.innerSize}px rgba(255,255,255,0.7)`
-                  }"
-                />
-                <span class="preset-name">{{ preset.label }}</span>
-              </button>
-            </div>
           </div>
           <p class="toggle-hint">
             100% 为各主题默认值；调整后对所有主题生效
@@ -822,65 +786,6 @@ function resetDetails() {
 .toggle-label {
   font-size: 0.875rem;
   color: hsl(var(--text-secondary));
-}
-
-.toggle-sub {
-  display: block;
-  font-size: 0.6875rem;
-  color: hsl(var(--text-muted));
-}
-
-/* 液态玻璃预设网格 */
-.liquid-presets {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 0.75rem;
-  background: hsl(var(--glass-bg));
-  border: 1px solid hsl(var(--glass-border));
-}
-
-.liquid-preset {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.375rem 0.125rem;
-  border: 1px solid transparent;
-  border-radius: 0.5rem;
-  background: none;
-  cursor: pointer;
-  transition: border-color 200ms, background 200ms;
-}
-
-.liquid-preset:hover {
-  background: hsl(var(--glass-bg-hover));
-}
-
-.liquid-preset.active {
-  border-color: hsl(var(--neon-cyan) / 0.5);
-  background: hsl(var(--neon-cyan) / 0.1);
-}
-
-/* 缩略示意：只表现磨砂+内发光，折射由全站唯一 SVG 滤镜承担，无法逐卡预览 */
-.preset-swatch {
-  display: block;
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: 0.5rem;
-  background: rgba(var(--overlay-light-rgb), 0.06);
-}
-
-.preset-name {
-  font-size: 0.625rem;
-  line-height: 1.2;
-  text-align: center;
-  color: hsl(var(--text-muted));
-}
-
-.liquid-preset.active .preset-name {
-  color: hsl(var(--neon-cyan));
 }
 
 .toggle-hint {
