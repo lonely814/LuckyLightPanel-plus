@@ -58,6 +58,10 @@
   --warning: 35 88% 56%;
   --danger: 0 72% 60%;
   --shadow-card: 0 10px 30px -12px hsl(222 60% 2% / 0.6);
+  /* 液态玻璃：边缘高光与内阴影的强度，dark 偏冷白 */
+  --liquid-rim: 210 100% 92%;
+  --liquid-inner: 210 100% 80%;
+  --liquid-tint: 222 60% 6%;
 }
 
 [data-theme='light'] {
@@ -75,6 +79,9 @@
   --warning: 30 85% 40%;
   --danger: 0 70% 48%;
   --shadow-card: 0 10px 28px -16px hsl(220 40% 40% / 0.45);
+  --liquid-rim: 0 0% 100%;
+  --liquid-inner: 220 20% 100%;
+  --liquid-tint: 220 30% 92%;
 }
 
 @theme inline {
@@ -123,6 +130,75 @@
   box-shadow: var(--shadow-card);
   backdrop-filter: blur(var(--blur-glass)) saturate(140%);
   -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(140%);
+}
+
+/* 液态玻璃：glass 的高光版。三层叠加 —— 斜向高光、边缘描边、细颗粒。
+   不用 SVG filter 折射：Chromium 不会把 filter 作用到 backdrop 采样结果上。 */
+[data-liquid='true'] .glass {
+  position: relative;
+  background:
+    linear-gradient(
+      140deg,
+      hsl(var(--liquid-rim) / 0.16) 0%,
+      hsl(var(--liquid-tint) / 0.28) 26%,
+      transparent 52%,
+      hsl(var(--liquid-rim) / 0.08) 100%
+    ),
+    hsl(var(--surface) / var(--alpha-soft));
+  box-shadow:
+    var(--shadow-card),
+    inset 0 1px 0 hsl(var(--liquid-rim) / 0.7),
+    inset 0 -1px 0 hsl(var(--liquid-inner) / 0.2),
+    inset 0 0 24px -10px hsl(var(--liquid-inner) / 0.22);
+  backdrop-filter: blur(var(--blur-glass)) saturate(180%) brightness(1.06);
+}
+
+/* 边缘描边：1px 渐变环，模拟玻璃厚度 */
+[data-liquid='true'] .glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    hsl(var(--liquid-rim) / 0.85) 0%,
+    transparent 30%,
+    transparent 64%,
+    hsl(var(--liquid-rim) / 0.4) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* 细颗粒：静态 SVG 噪点，只做质感，成本一次 */
+[data-liquid='true'] .glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='60' height='60' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  opacity: 0.035;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  [data-liquid='true'] .glass {
+    background: hsl(var(--surface));
+    backdrop-filter: none;
+  }
+  [data-liquid='true'] .glass::before,
+  [data-liquid='true'] .glass::after {
+    display: none;
+  }
 }
 
 /* 三域网格共用：密度由 --density-* 驱动，布局切换不新增组件 */

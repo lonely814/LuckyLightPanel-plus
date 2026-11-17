@@ -29,7 +29,7 @@ const TOGGLES: { field: 'showHeader' | 'showDescription' | 'showTime'; label: st
   { field: 'showTime', label: '显示时间' }
 ]
 
-function toggle(key: 'showHeader' | 'showDescription' | 'showTime' | 'detailReduceMotion') {
+function toggle(key: 'showHeader' | 'showDescription' | 'showTime' | 'detailReduceMotion' | 'detailLiquid') {
   configStore.updateConfig(key, !configStore.config[key])
 }
 
@@ -44,6 +44,7 @@ function resetDetails() {
   configStore.updateConfig('detailGlassBlurScale', 100)
   configStore.updateConfig('detailGlassOpacityScale', 100)
   configStore.updateConfig('detailReduceMotion', false)
+  configStore.updateConfig('detailLiquid', false)
 }
 </script>
 
@@ -194,6 +195,19 @@ function resetDetails() {
                 :title="item.hint"
                 :value="configStore.config[item.field]"
                 @input="onRange(item.field, $event, true)"
+              />
+            </label>
+
+            <label class="flex items-center justify-between gap-3 text-sm text-fg">
+              <span>
+                液态玻璃
+                <span class="ml-1 text-xs text-fg-subtle">Chromium 桌面端</span>
+              </span>
+              <input
+                type="checkbox"
+                class="size-4 accent-[hsl(var(--primary))]"
+                :checked="configStore.config.detailLiquid"
+                @change="toggle('detailLiquid')"
               />
             </label>
 

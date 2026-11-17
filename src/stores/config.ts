@@ -46,7 +46,8 @@ export const DEFAULT_CONFIG: UserConfig = {
   detailRadiusScale: 100,
   detailGlassBlurScale: 100,
   detailGlassOpacityScale: 100,
-  detailReduceMotion: false
+  detailReduceMotion: false,
+  detailLiquid: false
 }
 
 /** 旧 9 套主题 → light / dark（只保留明暗两档） */
@@ -140,7 +141,8 @@ export function normalizeConfig(input: unknown): UserConfig {
     detailRadiusScale: num(raw.detailRadiusScale, d.detailRadiusScale),
     detailGlassBlurScale: num(raw.detailGlassBlurScale, d.detailGlassBlurScale),
     detailGlassOpacityScale: num(raw.detailGlassOpacityScale, d.detailGlassOpacityScale),
-    detailReduceMotion: bool(raw.detailReduceMotion, d.detailReduceMotion)
+    detailReduceMotion: bool(raw.detailReduceMotion, d.detailReduceMotion),
+    detailLiquid: bool(raw.detailLiquid, d.detailLiquid)
   }
 }
 

@@ -59,6 +59,11 @@ watch(
   reduce => document.documentElement.setAttribute('data-reduce-motion', String(reduce)),
   { immediate: true }
 )
+watch(
+  () => configStore.config.detailLiquid,
+  on => document.documentElement.setAttribute('data-liquid', String(on)),
+  { immediate: true }
+)
 
 watch(
   () => navStore.panelTitle,

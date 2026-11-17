@@ -188,6 +188,7 @@ export interface UserConfig {
   detailGlassBlurScale: number
   detailGlassOpacityScale: number
   detailReduceMotion: boolean
+  detailLiquid: boolean
 }
 
 export interface PresetBackground {
