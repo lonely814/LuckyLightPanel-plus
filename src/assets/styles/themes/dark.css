@@ -76,3 +76,14 @@
   --site-card-shine-opacity: 0.04;
   --site-card-shine-hover: 0.09;
 }
+
+/* 组件内主题适配迁出的 token */
+[data-theme="dark"] {
+  --surface-content-tabs-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  --surface-layout-dropdown-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  --surface-group-dropdown-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  --surface-link-dropdown-box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  --surface-network-dropdown-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  --surface-group-title-color: hsl(210 40% 85%);
+  --surface-overview-panel-box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}

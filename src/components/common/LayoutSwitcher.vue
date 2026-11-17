@@ -260,16 +260,15 @@ onUnmounted(() => {
   border: var(--surface-badge-border, 1px solid rgba(255, 255, 255, 0.12));
   cursor: pointer;
   transition: all 0.2s ease;
-  background: var(--surface-badge-bg, rgba(0, 0, 0, 0.25));
+  background: var(--surface-layout-badge-background, var(--surface-badge-bg, rgba(0, 0, 0, 0.25)));
   backdrop-filter: var(--surface-badge-backdrop, blur(12px) saturate(150%));
   -webkit-backdrop-filter: var(--surface-badge-backdrop, blur(12px) saturate(150%));
   color: var(--surface-badge-color, rgba(6, 182, 212, 0.95));
-  box-shadow: 
-    var(--surface-badge-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.15));
-}
+  box-shadow: var(--surface-layout-badge-box-shadow, var(--surface-badge-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.15)));
+  border-color: var(--surface-layout-badge-border-color, rgba(255, 255, 255, 0.12));}
 
 .layout-badge:hover {
-  background: var(--surface-badge-hover-bg, rgba(0, 0, 0, 0.35));
+  background: var(--surface-layout-badge-hover-background, var(--surface-badge-hover-bg, rgba(0, 0, 0, 0.35)));
   border-color: var(--surface-badge-hover-border-color, rgba(6, 182, 212, 0.35));
   box-shadow: 
     var(--surface-badge-hover-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.15), 0 0 12px -4px rgba(6, 182, 212, 0.3));
@@ -296,14 +295,12 @@ onUnmounted(() => {
   position: absolute;
   top: calc(100% + 8px);
   left: 50%;
-  background: rgba(15, 20, 30, 0.85);
+  background: var(--surface-layout-dropdown-background, rgba(15, 20, 30, 0.85));
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 14px;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: var(--surface-layout-dropdown-box-shadow, 0 8px 32px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05));
   padding: 10px;
   opacity: 0;
   visibility: hidden;
@@ -311,7 +308,7 @@ onUnmounted(() => {
   transform-origin: top center;
   transition: all 0.15s ease;
   z-index: 100;
-}
+  border-color: var(--surface-layout-dropdown-border-color, rgba(255, 255, 255, 0.1));}
 
 .layout-switcher-wrapper.open .layout-dropdown {
   opacity: 1;
@@ -349,7 +346,7 @@ onUnmounted(() => {
   border: 1px solid transparent;
   background: transparent;
   border-radius: 12px;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--surface-layout-option-color, rgba(255, 255, 255, 0.8));
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
@@ -360,15 +357,15 @@ onUnmounted(() => {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(135deg, transparent 0%, rgba(6, 182, 212, 0.1) 100%);
+  background: var(--surface-layout-option-before-background, linear-gradient(135deg, transparent 0%, rgba(6, 182, 212, 0.1) 100%));
   opacity: 0;
   transition: opacity 0.2s ease;
   pointer-events: none;
 }
 
 .layout-option:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.08);
+  background: var(--surface-layout-option-hover-background, rgba(255, 255, 255, 0.06));
+  border-color: var(--surface-layout-option-hover-border-color, rgba(255, 255, 255, 0.08));
 }
 
 .layout-option:hover::before {
@@ -376,12 +373,10 @@ onUnmounted(() => {
 }
 
 .layout-option.active {
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(139, 92, 246, 0.08) 100%);
-  border-color: rgba(6, 182, 212, 0.35);
+  background: var(--surface-layout-option-active-background, linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(139, 92, 246, 0.08) 100%));
+  border-color: var(--surface-layout-option-active-border-color, rgba(6, 182, 212, 0.35));
   color: #06b6d4;
-  box-shadow: 
-    0 0 20px -5px rgba(6, 182, 212, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: var(--surface-layout-option-active-box-shadow, 0 0 20px -5px rgba(6, 182, 212, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05));
 }
 
 .layout-option.active::after {
@@ -397,9 +392,9 @@ onUnmounted(() => {
 }
 
 .layout-option.active .layout-preview {
-  border-color: rgba(6, 182, 212, 0.5);
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
-  box-shadow: 0 0 12px -3px rgba(6, 182, 212, 0.3);
+  border-color: var(--surface-layout-option-active-layout-preview-border-color, rgba(6, 182, 212, 0.5));
+  background: var(--surface-layout-option-active-layout-preview-background, linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%));
+  box-shadow: var(--surface-layout-option-active-layout-preview-box-shadow, 0 0 12px -3px rgba(6, 182, 212, 0.3));
 }
 
 .layout-option.active .layout-preview::before {
@@ -412,7 +407,7 @@ onUnmounted(() => {
   height: 32px;
   border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.15) 100%);
+  background: var(--surface-layout-preview-background, linear-gradient(135deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.15) 100%));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -420,13 +415,13 @@ onUnmounted(() => {
   transition: all 0.2s ease;
   overflow: hidden;
   position: relative;
-}
+  border-color: var(--surface-layout-preview-border-color, rgba(255, 255, 255, 0.12));}
 
 .layout-preview::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+  background: var(--surface-layout-preview-before-background, linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%));
   pointer-events: none;
 }
 
@@ -475,14 +470,14 @@ onUnmounted(() => {
   height: 3px;
   width: 100%;
   border-radius: 1.5px;
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--surface-card-title-bar-background, rgba(255, 255, 255, 0.4));
 }
 
 .card-desc-bar {
   height: 2px;
   width: 70%;
   border-radius: 1px;
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--surface-card-desc-bar-background, rgba(255, 255, 255, 0.2));
 }
 
 .card-meta {
@@ -504,7 +499,7 @@ onUnmounted(() => {
   height: 2px;
   width: 10px;
   border-radius: 1px;
-  background: rgba(6, 182, 212, 0.4);
+  background: var(--surface-card-badge-background, rgba(6, 182, 212, 0.4));
 }
 
 /* ============ 紧凑布局预览 - 2x2 网格（更扁平） ============ */
@@ -522,7 +517,7 @@ onUnmounted(() => {
   gap: 4px;
   padding: 2px 3px;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--surface-compact-item-background, rgba(255, 255, 255, 0.06));
 }
 
 .compact-icon {
@@ -544,7 +539,7 @@ onUnmounted(() => {
 .compact-line {
   height: 2px;
   border-radius: 1px;
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--surface-compact-line-background, rgba(255, 255, 255, 0.3));
 }
 
 .compact-line.short {
@@ -567,7 +562,7 @@ onUnmounted(() => {
   gap: 3px;
   padding: 2px 3px;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--surface-list-row-background, rgba(255, 255, 255, 0.04));
 }
 
 .list-icon {
@@ -582,7 +577,7 @@ onUnmounted(() => {
   flex: 1;
   height: 3px;
   border-radius: 1.5px;
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--surface-list-text-background, rgba(255, 255, 255, 0.25));
 }
 
 .list-badge {
@@ -617,7 +612,7 @@ onUnmounted(() => {
   width: 10px;
   height: 10px;
   border-radius: 4px;
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.6) 0%, rgba(139, 92, 246, 0.4) 100%);
+  background: var(--surface-minimal-icon-background, linear-gradient(135deg, rgba(6, 182, 212, 0.6) 0%, rgba(139, 92, 246, 0.4) 100%));
   box-shadow: 0 2px 4px rgba(6, 182, 212, 0.3);
 }
 
@@ -750,101 +745,8 @@ onUnmounted(() => {
 }
 
 /* ============ 浅色主题适配 ============ */
-[data-theme="light"] .layout-badge {
-  background: rgba(255, 255, 255, 0.6);
-  border-color: rgba(0, 0, 0, 0.08);
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    0 2px 8px -2px rgba(0, 0, 0, 0.08);
-}
-
-[data-theme="light"] .layout-badge:hover {
-  background: rgba(255, 255, 255, 0.75);
-  border-color: rgba(6, 182, 212, 0.4);
-}
-
-[data-theme="light"] .layout-dropdown {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(0, 0, 0, 0.08);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-}
-
-[data-theme="light"] .layout-option {
-  color: rgba(0, 0, 0, 0.75);
-}
-
-[data-theme="light"] .layout-option::before {
-  background: linear-gradient(135deg, transparent 0%, rgba(6, 182, 212, 0.08) 100%);
-}
-
-[data-theme="light"] .layout-option:hover {
-  background: rgba(0, 0, 0, 0.04);
-  border-color: rgba(0, 0, 0, 0.06);
-}
-
-[data-theme="light"] .layout-option.active {
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(139, 92, 246, 0.06) 100%);
-  border-color: rgba(6, 182, 212, 0.4);
-  box-shadow: 
-    0 0 20px -5px rgba(6, 182, 212, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-
-[data-theme="light"] .layout-option.active .layout-preview {
-  border-color: rgba(6, 182, 212, 0.5);
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(139, 92, 246, 0.04) 100%);
-  box-shadow: 0 0 12px -3px rgba(6, 182, 212, 0.25);
-}
-
-[data-theme="light"] .layout-preview {
-  border-color: rgba(0, 0, 0, 0.1);
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.02) 100%);
-}
-
-[data-theme="light"] .layout-preview::before {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, transparent 50%);
-}
-
-[data-theme="light"] .card-title-bar {
-  background: rgba(0, 0, 0, 0.3);
-}
-
-[data-theme="light"] .card-desc-bar {
-  background: rgba(0, 0, 0, 0.15);
-}
-
-[data-theme="light"] .card-badge {
-  background: rgba(6, 182, 212, 0.5);
-}
-
-[data-theme="light"] .compact-item {
-  background: rgba(0, 0, 0, 0.03);
-}
-
-[data-theme="light"] .compact-line {
-  background: rgba(0, 0, 0, 0.15);
-}
-
-[data-theme="light"] .list-row {
-  background: rgba(0, 0, 0, 0.03);
-}
-
-[data-theme="light"] .list-text {
-  background: rgba(0, 0, 0, 0.15);
-}
-
-[data-theme="light"] .minimal-icon {
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.6) 0%, rgba(139, 92, 246, 0.4) 100%);
-}
 
 /* 深色主题适配 */
-[data-theme="dark"] .layout-dropdown {
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
-}
 
 /* 响应式 */
 @media (max-width: 640px) {

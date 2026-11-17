@@ -102,10 +102,7 @@ watch([currentTab, () => navStore.isLoading], async ([newTab, isLoading], [oldTa
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
   border: var(--surface-tabs-border, 1px solid hsl(var(--glass-border)));
   border-radius: var(--surface-tabs-radius, 16px);
-  box-shadow: var(--surface-tabs-shadow,
-    0 1px 2px rgba(31, 38, 135, 0.06),
-    0 8px 28px rgba(31, 38, 135, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05));
+  box-shadow: var(--surface-content-tabs-box-shadow, var(--surface-tabs-shadow, 0 1px 2px rgba(31, 38, 135, 0.06), 0 8px 28px rgba(31, 38, 135, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)));
 }
 
 /* 单个标签按钮 */
@@ -190,11 +187,6 @@ watch([currentTab, () => navStore.isLoading], async ([newTab, isLoading], [oldTa
 }
 
 /* 深色主题适配 */
-[data-theme="dark"] .content-tabs {
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
-}
 
 /* 响应式：小屏幕隐藏文字 */
 @media (max-width: 640px) {

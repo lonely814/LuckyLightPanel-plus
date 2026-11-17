@@ -178,15 +178,14 @@ onUnmounted(() => {
   border: var(--surface-badge-border, 1px solid rgba(255, 255, 255, 0.12));
   cursor: pointer;
   transition: all 0.2s ease;
-  background: var(--surface-badge-bg, rgba(0, 0, 0, 0.25));
+  background: var(--surface-group-badge-background, var(--surface-badge-bg, rgba(0, 0, 0, 0.25)));
   backdrop-filter: var(--surface-badge-backdrop, blur(12px) saturate(150%));
   -webkit-backdrop-filter: var(--surface-badge-backdrop, blur(12px) saturate(150%));
-  box-shadow: 
-    var(--surface-badge-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.15));
-}
+  box-shadow: var(--surface-group-badge-box-shadow, var(--surface-badge-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.15)));
+  border-color: var(--surface-group-badge-border-color, rgba(255, 255, 255, 0.12));}
 
 .group-badge:hover {
-  background: var(--surface-badge-hover-bg, rgba(0, 0, 0, 0.35));
+  background: var(--surface-group-badge-hover-background, var(--surface-badge-hover-bg, rgba(0, 0, 0, 0.35)));
   border-color: var(--surface-badge-hover-border-color, rgba(255, 255, 255, 0.18));
   box-shadow: var(--surface-badge-hover-shadow, none);
   transform: var(--surface-badge-hover-transform, none);
@@ -276,14 +275,12 @@ onUnmounted(() => {
   max-width: 220px;
   max-height: 320px;
   overflow-y: auto;
-  background: rgba(15, 20, 30, 0.92);
+  background: var(--surface-group-dropdown-background, rgba(15, 20, 30, 0.92));
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: var(--surface-group-dropdown-box-shadow, 0 8px 32px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05));
   padding: 6px;
   opacity: 0;
   visibility: hidden;
@@ -291,7 +288,7 @@ onUnmounted(() => {
   transform-origin: top center;
   transition: all 0.15s ease;
   z-index: 100;
-}
+  border-color: var(--surface-group-dropdown-border-color, rgba(255, 255, 255, 0.1));}
 
 .group-dropdown-wrapper.open .group-dropdown {
   opacity: 1;
@@ -305,7 +302,7 @@ onUnmounted(() => {
   align-items: center;
   width: 100%;
   border-radius: 8px;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--surface-group-option-color, rgba(255, 255, 255, 0.85));
   font-size: 13px;
   transition: all 0.15s ease;
   overflow: hidden;
@@ -340,7 +337,7 @@ button.group-option:hover {
 }
 
 .option-main:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--surface-option-main-hover-background, rgba(255, 255, 255, 0.08));
 }
 
 .option-icon {
@@ -364,8 +361,8 @@ button.group-option:hover {
 .option-count {
   flex-shrink: 0;
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.08);
+  color: var(--surface-option-count-color, rgba(255, 255, 255, 0.4));
+  background: var(--surface-option-count-background, rgba(255, 255, 255, 0.08));
   padding: 1px 6px;
   border-radius: 8px;
   margin-left: 4px;
@@ -382,7 +379,7 @@ button.group-option:hover {
   padding: 0;
   border: none;
   background: transparent;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--surface-option-checkbox-color, rgba(255, 255, 255, 0.4));
   font-size: 14px;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -390,8 +387,8 @@ button.group-option:hover {
 }
 
 .option-checkbox:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.7);
+  background: var(--surface-option-checkbox-hover-background, rgba(255, 255, 255, 0.1));
+  color: var(--surface-option-checkbox-hover-color, rgba(255, 255, 255, 0.7));
 }
 
 .option-checkbox.checked {
@@ -401,68 +398,13 @@ button.group-option:hover {
 /* 分割线 */
 .dropdown-divider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--surface-dropdown-divider-background, rgba(255, 255, 255, 0.08));
   margin: 4px 8px;
 }
 
 /* 浅色主题适配 */
-[data-theme="light"] .group-badge {
-  background: rgba(255, 255, 255, 0.6);
-  border-color: rgba(0, 0, 0, 0.08);
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    0 2px 8px -2px rgba(0, 0, 0, 0.08);
-}
-
-[data-theme="light"] .group-badge:hover {
-  background: rgba(255, 255, 255, 0.75);
-  border-color: rgba(0, 0, 0, 0.12);
-}
-
-[data-theme="light"] .group-dropdown {
-  background: rgba(255, 255, 255, 0.95);
-  border-color: rgba(0, 0, 0, 0.08);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-}
-
-[data-theme="light"] .group-option {
-  color: rgba(0, 0, 0, 0.75);
-}
-
-[data-theme="light"] .group-option:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-[data-theme="light"] .dropdown-divider {
-  background: rgba(0, 0, 0, 0.06);
-}
-
-[data-theme="light"] .option-count {
-  color: rgba(0, 0, 0, 0.45);
-  background: rgba(0, 0, 0, 0.06);
-}
-
-[data-theme="light"] .option-main:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-[data-theme="light"] .option-checkbox {
-  color: rgba(0, 0, 0, 0.35);
-}
-
-[data-theme="light"] .option-checkbox:hover {
-  background: rgba(0, 0, 0, 0.08);
-  color: rgba(0, 0, 0, 0.6);
-}
 
 /* 深色主题适配 */
-[data-theme="dark"] .group-dropdown {
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
-}
 
 /* 响应式 */
 @media (max-width: 640px) {

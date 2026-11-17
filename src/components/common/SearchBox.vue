@@ -104,22 +104,20 @@ function clearSearch() {
   border-radius: 18px;
   outline: none;
   transition: all 0.2s ease;
-  background: rgba(0, 0, 0, 0.25);
+  background: var(--surface-search-input-background, rgba(0, 0, 0, 0.25));
   backdrop-filter: blur(12px) saturate(150%);
   -webkit-backdrop-filter: blur(12px) saturate(150%);
-  color: rgba(255, 255, 255, 0.9);
-  box-shadow: 
-    inset 0 1px 2px rgba(0, 0, 0, 0.1),
-    0 1px 0 rgba(255, 255, 255, 0.05);
-}
+  color: var(--surface-search-input-color, rgba(255, 255, 255, 0.9));
+  box-shadow: var(--surface-search-input-box-shadow, inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.05));
+  border-color: var(--surface-search-input-border-color, rgba(255, 255, 255, 0.12));}
 
 .search-input::placeholder {
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--surface-search-input-placeholder-color, rgba(255, 255, 255, 0.45));
 }
 
 .search-input:focus {
-  background: rgba(0, 0, 0, 0.35);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--surface-search-input-focus-background, rgba(0, 0, 0, 0.35));
+  border-color: var(--surface-search-input-focus-border-color, rgba(255, 255, 255, 0.2));
 }
 
 .search-clear {
@@ -138,7 +136,7 @@ function clearSearch() {
 }
 
 .search-clear:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--surface-search-clear-hover-background, rgba(255, 255, 255, 0.15));
 }
 
 .search-clear i {
@@ -212,27 +210,6 @@ function clearSearch() {
 }
 
 /* 浅色主题适配 */
-[data-theme="light"] .search-input {
-  background: rgba(255, 255, 255, 0.6);
-  border-color: rgba(0, 0, 0, 0.08);
-  color: rgba(0, 0, 0, 0.85);
-  box-shadow: 
-    inset 0 1px 2px rgba(0, 0, 0, 0.05),
-    0 1px 0 rgba(255, 255, 255, 0.8);
-}
-
-[data-theme="light"] .search-input::placeholder {
-  color: rgba(0, 0, 0, 0.4);
-}
-
-[data-theme="light"] .search-input:focus {
-  background: rgba(255, 255, 255, 0.75);
-  border-color: rgba(0, 0, 0, 0.12);
-}
-
-[data-theme="light"] .search-clear:hover {
-  background: rgba(0, 0, 0, 0.08);
-}
 
 /* 响应式 */
 @media (max-width: 640px) {

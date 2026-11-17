@@ -119,16 +119,15 @@ onUnmounted(() => {
   border: var(--surface-badge-border, 1px solid rgba(255, 255, 255, 0.12));
   cursor: pointer;
   transition: all 0.2s ease;
-  background: var(--surface-badge-bg, rgba(0, 0, 0, 0.25));
+  background: var(--surface-network-badge-background, var(--surface-badge-bg, rgba(0, 0, 0, 0.25)));
   backdrop-filter: var(--surface-badge-backdrop, blur(12px) saturate(150%));
   -webkit-backdrop-filter: var(--surface-badge-backdrop, blur(12px) saturate(150%));
   color: var(--surface-badge-color, rgba(168, 85, 247, 0.95));
-  box-shadow: 
-    var(--surface-badge-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.15));
-}
+  box-shadow: var(--surface-network-badge-box-shadow, var(--surface-badge-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.15)));
+  border-color: var(--surface-network-badge-border-color, rgba(255, 255, 255, 0.12));}
 
 .network-badge:hover {
-  background: var(--surface-badge-hover-bg, rgba(0, 0, 0, 0.35));
+  background: var(--surface-network-badge-hover-background, var(--surface-badge-hover-bg, rgba(0, 0, 0, 0.35)));
   border-color: var(--surface-badge-hover-border-color, rgba(168, 85, 247, 0.35));
   box-shadow: 
     var(--surface-badge-hover-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.15), 0 0 12px -4px rgba(168, 85, 247, 0.3));
@@ -157,14 +156,12 @@ onUnmounted(() => {
   left: 50%;
   min-width: 120px;
   max-width: 160px;
-  background: rgba(15, 20, 30, 0.85);
+  background: var(--surface-network-dropdown-background, rgba(15, 20, 30, 0.85));
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: var(--surface-network-dropdown-box-shadow, 0 8px 32px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05));
   padding: 6px;
   opacity: 0;
   visibility: hidden;
@@ -172,7 +169,7 @@ onUnmounted(() => {
   transform-origin: top center;
   transition: all 0.15s ease;
   z-index: 100;
-}
+  border-color: var(--surface-network-dropdown-border-color, rgba(255, 255, 255, 0.1));}
 
 .network-dropdown-wrapper.open .network-dropdown {
   opacity: 1;
@@ -190,7 +187,7 @@ onUnmounted(() => {
   border: none;
   background: transparent;
   border-radius: 8px;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--surface-network-option-color, rgba(255, 255, 255, 0.85));
   font-size: 13px;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -198,7 +195,7 @@ onUnmounted(() => {
 }
 
 .network-option:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--surface-network-option-hover-background, rgba(255, 255, 255, 0.08));
 }
 
 .network-option.active {
@@ -214,41 +211,8 @@ onUnmounted(() => {
 }
 
 /* 浅色主题适配 */
-[data-theme="light"] .network-badge {
-  background: rgba(255, 255, 255, 0.6);
-  border-color: rgba(0, 0, 0, 0.08);
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    0 2px 8px -2px rgba(0, 0, 0, 0.08);
-}
-
-[data-theme="light"] .network-badge:hover {
-  background: rgba(255, 255, 255, 0.75);
-  border-color: rgba(168, 85, 247, 0.4);
-}
-
-[data-theme="light"] .network-dropdown {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(0, 0, 0, 0.08);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-}
-
-[data-theme="light"] .network-option {
-  color: rgba(0, 0, 0, 0.75);
-}
-
-[data-theme="light"] .network-option:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
 
 /* 深色主题适配 */
-[data-theme="dark"] .network-dropdown {
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
-}
 
 /* 响应式 */
 @media (max-width: 640px) {

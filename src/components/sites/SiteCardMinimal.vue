@@ -44,7 +44,7 @@ defineProps<{
   bottom: -2rem;
   left: 50%;
   transform: translateX(-50%) translateY(4px);
-  background: hsl(var(--glass-bg));
+  background: var(--surface-minimal-name-background, hsl(var(--glass-bg)));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid hsl(var(--glass-border));
@@ -56,12 +56,13 @@ defineProps<{
   transition: all 200ms ease;
   z-index: 100;
   pointer-events: none;
-}
+  border-color: var(--surface-minimal-name-border-color, 1px solid hsl(var(--glass-border)));
+  box-shadow: var(--surface-minimal-name-box-shadow, none);}
 
 .minimal-name span {
   font-size: 0.75rem;
   font-weight: 500;
-  color: hsl(var(--text-primary));
+  color: var(--surface-minimal-name-span-color, hsl(var(--text-primary)));
 }
 
 .minimal-inner:hover .minimal-name {
@@ -90,13 +91,5 @@ defineProps<{
 }
 
 /* 浅色主题适配 */
-[data-theme="light"] .minimal-name {
-  background: hsl(220 15% 98% / 0.95);
-  border-color: hsl(220 15% 85%);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
 
-[data-theme="light"] .minimal-name span {
-  color: hsl(220 45% 15%);
-}
 </style>

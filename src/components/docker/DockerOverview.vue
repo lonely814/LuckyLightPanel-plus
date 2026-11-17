@@ -282,17 +282,16 @@ function getMemoryBarWidth(value: number): string {
   border: var(--surface-badge-border, 1px solid rgba(255, 255, 255, 0.12));
   cursor: pointer;
   transition: all 0.2s ease;
-  background: var(--surface-badge-bg, rgba(0, 0, 0, 0.25));
+  background: var(--surface-overview-badge-background, var(--surface-badge-bg, rgba(0, 0, 0, 0.25)));
   backdrop-filter: var(--surface-badge-backdrop, blur(12px) saturate(150%));
   -webkit-backdrop-filter: var(--surface-badge-backdrop, blur(12px) saturate(150%));
   position: relative;
   overflow: hidden;
-  box-shadow: 
-    var(--surface-badge-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.15));
-}
+  box-shadow: var(--surface-overview-badge-box-shadow, var(--surface-badge-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.15)));
+  border-color: var(--surface-overview-badge-border-color, rgba(255, 255, 255, 0.12));}
 
 .overview-badge:hover {
-  background: var(--surface-badge-hover-bg, rgba(0, 0, 0, 0.35));
+  background: var(--surface-overview-badge-hover-background, var(--surface-badge-hover-bg, rgba(0, 0, 0, 0.35)));
   border-color: var(--surface-badge-hover-border-color, rgba(6, 182, 212, 0.35));
   box-shadow: 
     var(--surface-badge-hover-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.15), 0 0 12px -4px rgba(6, 182, 212, 0.3));
@@ -326,15 +325,12 @@ function getMemoryBarWidth(value: number): string {
   top: calc(100% + 10px);
   left: 50%;
   width: 340px;
-  background: rgba(15, 20, 30, 0.88);
+  background: var(--surface-overview-panel-background, rgba(15, 20, 30, 0.88));
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
-  box-shadow: 
-    0 10px 40px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(255, 255, 255, 0.03),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: var(--surface-overview-panel-box-shadow, 0 10px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.06));
   opacity: 0;
   visibility: hidden;
   transform: translateX(-50%) translateY(-10px) scale(0.95);
@@ -342,7 +338,7 @@ function getMemoryBarWidth(value: number): string {
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 200;
   overflow: hidden;
-}
+  border-color: var(--surface-overview-panel-border-color, rgba(255, 255, 255, 0.1));}
 
 .overview-wrapper.open .overview-panel {
   opacity: 1;
@@ -356,11 +352,11 @@ function getMemoryBarWidth(value: number): string {
   align-items: center;
   gap: 10px;
   padding: 14px 16px;
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(168, 85, 247, 0.12) 100%);
+  background: var(--surface-panel-header-background, linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(168, 85, 247, 0.12) 100%));
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   position: relative;
   overflow: hidden;
-}
+  border-bottom-color: var(--surface-panel-header-border-bottom-color, rgba(255, 255, 255, 0.06));}
 
 .header-glow {
   position: absolute;
@@ -385,7 +381,7 @@ function getMemoryBarWidth(value: number): string {
 .header-title {
   font-size: 14px;
   font-weight: 600;
-  color: hsl(var(--text-primary));
+  color: var(--surface-header-title-color, hsl(var(--text-primary)));
   position: relative;
   z-index: 1;
 }
@@ -444,7 +440,7 @@ function getMemoryBarWidth(value: number): string {
 .section-title {
   font-size: 13px;
   font-weight: 600;
-  color: hsl(var(--text-primary));
+  color: var(--surface-section-title-color, hsl(var(--text-primary)));
 }
 
 /* 排行榜列表 */
@@ -461,20 +457,20 @@ function getMemoryBarWidth(value: number): string {
   gap: 10px;
   padding: 8px 10px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface-rank-item-background, rgba(255, 255, 255, 0.03));
   border: 1px solid rgba(255, 255, 255, 0.04);
   transition: all 0.2s ease;
-}
+  border-color: var(--surface-rank-item-border-color, rgba(255, 255, 255, 0.04));}
 
 .rank-item:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--surface-rank-item-hover-background, rgba(255, 255, 255, 0.06));
   border-color: rgba(255, 255, 255, 0.08);
 }
 
 /* 排名第一特殊样式 */
 .rank-item.rank-1 {
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.08) 0%, rgba(251, 191, 36, 0.03) 100%);
-  border-color: rgba(251, 191, 36, 0.15);
+  background: var(--surface-rank-item-rank-1-background, linear-gradient(135deg, rgba(251, 191, 36, 0.08) 0%, rgba(251, 191, 36, 0.03) 100%));
+  border-color: var(--surface-rank-item-rank-1-border-color, rgba(251, 191, 36, 0.15));
 }
 
 .rank-item.rank-1:hover {
@@ -492,7 +488,7 @@ function getMemoryBarWidth(value: number): string {
   font-size: 11px;
   font-weight: 700;
   color: var(--rank-color);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--surface-rank-number-background, rgba(255, 255, 255, 0.05));
   border: 1px solid var(--rank-color);
   flex-shrink: 0;
   transition: all 0.2s ease;
@@ -515,7 +511,7 @@ function getMemoryBarWidth(value: number): string {
 .rank-name {
   font-size: 12px;
   font-weight: 500;
-  color: hsl(var(--text-primary));
+  color: var(--surface-rank-name-color, hsl(var(--text-primary)));
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -525,7 +521,7 @@ function getMemoryBarWidth(value: number): string {
 .rank-bar-wrapper {
   height: 4px;
   border-radius: 2px;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--surface-rank-bar-wrapper-background, rgba(255, 255, 255, 0.06));
   overflow: hidden;
 }
 
@@ -549,7 +545,7 @@ function getMemoryBarWidth(value: number): string {
 .rank-value {
   font-size: 12px;
   font-weight: 600;
-  color: hsl(var(--text-secondary));
+  color: var(--surface-rank-value-color, hsl(var(--text-secondary)));
   font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
   min-width: 56px;
   text-align: right;
@@ -603,7 +599,7 @@ function getMemoryBarWidth(value: number): string {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--surface-footer-dots-span-background, rgba(255, 255, 255, 0.15));
 }
 
 .footer-dots span:nth-child(2) {
@@ -618,7 +614,7 @@ function getMemoryBarWidth(value: number): string {
   justify-content: center;
   padding: 32px 16px;
   gap: 12px;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--surface-empty-state-color, rgba(255, 255, 255, 0.45));
 }
 
 .empty-icon {
@@ -634,91 +630,13 @@ function getMemoryBarWidth(value: number): string {
 .no-data {
   padding: 16px;
   text-align: center;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--surface-no-data-color, rgba(255, 255, 255, 0.45));
   font-size: 12px;
 }
 
 /* 浅色主题适配 */
-[data-theme="light"] .overview-badge {
-  background: rgba(255, 255, 255, 0.6);
-  border-color: rgba(0, 0, 0, 0.08);
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    0 2px 8px -2px rgba(0, 0, 0, 0.08);
-}
-
-[data-theme="light"] .overview-badge:hover {
-  background: rgba(255, 255, 255, 0.75);
-  border-color: rgba(6, 182, 212, 0.4);
-}
-
-[data-theme="light"] .overview-panel {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(0, 0, 0, 0.08);
-  box-shadow: 
-    0 10px 40px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-}
-
-[data-theme="light"] .panel-header {
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%);
-  border-bottom-color: rgba(0, 0, 0, 0.05);
-}
-
-[data-theme="light"] .header-title {
-  color: rgba(0, 0, 0, 0.85);
-}
-
-[data-theme="light"] .section-title {
-  color: rgba(0, 0, 0, 0.85);
-}
-
-[data-theme="light"] .rank-item {
-  background: rgba(0, 0, 0, 0.02);
-  border-color: rgba(0, 0, 0, 0.04);
-}
-
-[data-theme="light"] .rank-item:hover {
-  background: rgba(0, 0, 0, 0.04);
-}
-
-[data-theme="light"] .rank-item.rank-1 {
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.06) 0%, rgba(251, 191, 36, 0.02) 100%);
-  border-color: rgba(251, 191, 36, 0.12);
-}
-
-[data-theme="light"] .rank-name {
-  color: rgba(0, 0, 0, 0.85);
-}
-
-[data-theme="light"] .rank-value {
-  color: rgba(0, 0, 0, 0.6);
-}
-
-[data-theme="light"] .rank-number {
-  background: rgba(0, 0, 0, 0.03);
-}
-
-[data-theme="light"] .rank-bar-wrapper {
-  background: rgba(0, 0, 0, 0.04);
-}
-
-[data-theme="light"] .empty-state,
-[data-theme="light"] .no-data {
-  color: rgba(0, 0, 0, 0.4);
-}
-
-[data-theme="light"] .footer-dots span {
-  background: rgba(0, 0, 0, 0.1);
-}
 
 /* 深色主题 */
-[data-theme="dark"] .overview-panel {
-  box-shadow: 
-    0 12px 48px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(255, 255, 255, 0.03),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
 
 /* 响应式 - 移动端适配 */
 @media (max-width: 640px) {

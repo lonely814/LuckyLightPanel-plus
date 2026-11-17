@@ -360,13 +360,10 @@ onMounted(() => {
 .group-title {
   font-size: 1.125rem;
   font-weight: 600;
-  color: hsl(var(--text-secondary));
+  color: var(--surface-group-title-color, hsl(var(--text-secondary)));
 }
 
 /* 深色主题分组标题 - 提高亮度增强可读性 */
-[data-theme="dark"] .group-title {
-  color: hsl(210 40% 85%);
-}
 
 /* ============ 服务网格布局 ============ */
 .service-grid {
@@ -440,7 +437,7 @@ onMounted(() => {
   height: 4rem;
   margin: 0 auto 1rem;
   border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--surface-empty-icon-background, rgba(255, 255, 255, 0.05));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -451,16 +448,10 @@ onMounted(() => {
 }
 
 .empty-text {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--surface-empty-text-color, rgba(255, 255, 255, 0.5));
   font-size: 0.875rem;
 }
 
 /* 浅色主题适配 */
-[data-theme="light"] .empty-icon {
-  background: rgba(0, 0, 0, 0.04);
-}
 
-[data-theme="light"] .empty-text {
-  color: rgba(0, 0, 0, 0.45);
-}
 </style>

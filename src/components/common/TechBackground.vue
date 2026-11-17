@@ -40,7 +40,7 @@ const backgroundStyle = computed(() => configStore.backgroundStyle)
   position: absolute;
   border-radius: 50%;
   filter: blur(80px);
-  opacity: 0.5;
+  opacity: var(--surface-bg-aurora-opacity, 0.5);
   will-change: transform;
   pointer-events: none;
 }
@@ -97,9 +97,6 @@ const backgroundStyle = computed(() => configStore.backgroundStyle)
 }
 
 /* 亮色主题降低光斑浓度 */
-[data-theme="light"] .bg-aurora {
-  opacity: 0.32;
-}
 
 /* 减少动画偏好 */
 @media (prefers-reduced-motion: reduce) {
